@@ -7,9 +7,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Hopper">
-<meta name="description" content="Hopper: Brisbane rooms and jobs checked against Queensland rules. 布里斯班招租与找工。">
-<title>Hopper — Brisbane, sorted</title>
+<meta name="apple-mobile-web-app-title" content="Loka">
+<meta name="description" content="Loka: Brisbane rooms and jobs checked against Queensland rules. 布里斯班招租与找工。">
+<title>Loka — Brisbane, sorted</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#F4F0E7;--bg2:#EBE4D6;--panel:#FFFFFF;--line:rgba(25,21,18,.1);--txt:#191512;--mut:#6B645A;--lime:#1F6F5C;--soft:#E3F0EB;--hot:#E2683C;--sky:#C99A2B;--serif:'Bodoni Moda','Noto Serif SC',serif}
@@ -155,7 +155,7 @@ a{color:var(--lime)}
 <div class="toast" id="toast"></div>
 <script>
 // ───────── config ─────────
-const BRAND={en:'Hopper',zh:'布村生活站',url:'hopper.com.au'};
+const BRAND={en:'Loka',zh:'布村生活站',url:'hopper.com.au'};
 // Rules the app checks listings against. Sources: Qld Government rental law pages (bond, rent in advance), Fair Work Ombudsman (wages from 1 July 2026), Home Affairs condition 8105 (student hours).
 const RULES={bondWeeks:4,advRoom:2,advFixedWeeks:4,minWage:26.44,minCasual:33.05,studentHrs:48};
 
@@ -169,7 +169,7 @@ homes:[
  {id:'h2',type:'room',title:'Double room, big kitchen · 双人间大厨房',area:'Sunnybank Hills',rent:230,bond:920,bills:false,furn:true,near:'Griffith Nathan',verified:true,zh:true,reward:30,ago:8,by:'Kelvin',contact:'0400 000 001',note:'10 min bus to Griffith Nathan. Bills split 4 ways.'},
  {id:'h3',type:'unit',title:'2 bed unit, whole place · 整租两房',area:'Toowong',rent:640,bond:2560,bills:false,furn:false,near:'UQ',verified:false,zh:false,reward:60,role:'head',ago:20,by:'Priya',contact:'priya@example.com',note:'Lease takeover from January. Train and CityCat nearby.'},
  {id:'h4',type:'room',title:'Master room, "6 weeks bond" · 主卧',area:'Rochedale',rent:260,bond:1560,adv:4,bills:true,furn:true,near:'',verified:false,zh:true,reward:30,ago:26,by:'Sam',contact:'WeChat: sam_demo',note:'Lister asked for 6 weeks bond and cash only.'},
- {id:'h5',type:'student',title:'Studio in student building · 学生公寓单间',area:'South Brisbane',rent:495,bond:1980,bills:true,furn:true,near:'QUT / Griffith South Bank',verified:true,zh:false,reward:50,ago:30,by:'Hopper',contact:'via Hopper',note:'Gym and study rooms. 6 or 12 month terms.'},
+ {id:'h5',type:'student',title:'Studio in student building · 学生公寓单间',area:'South Brisbane',rent:495,bond:1980,bills:true,furn:true,near:'QUT / Griffith South Bank',verified:true,zh:false,reward:50,ago:30,by:'Loka',contact:'via Loka',note:'Gym and study rooms. 6 or 12 month terms.'},
  {id:'h6',type:'room',title:'Single room, girls only house · 女生合租',area:'Calamvale',rent:195,bond:0,zh:true,reward:30,ago:5,bills:true,furn:true,near:'',verified:false,by:'Wendy',contact:'WeChat: wendy_demo',note:'Near the shops and bus. Mandarin and English spoken.'}
 ],
 jobs:[
@@ -286,7 +286,7 @@ function render(){
   </div>
   <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
   <div class="sec">${t('Where things are','都在哪儿')}</div><div class="map">${mapSvg()}</div><div class="note">${t('Tap a suburb to see its rooms and jobs.','点一个区，看那里的房和工。')}</div>
-  <div class="sec">${t('More on Hopper','Hopper 还能做什么')}</div>
+  <div class="sec">${t('More on Loka','Loka 还能做什么')}</div>
   <div class="tiles">
    <button class="tile" data-a="tab" data-v="earn"><div class="e">✦</div><div class="n">${t('Be a scout','做探房员')}</div><div class="d">${t('Visit, photograph, verify','实地看房、拍照、核实')}</div></button>
    <button class="tile" data-a="tab" data-v="play"><div class="e">🏸</div><div class="n">${t('Squads','拼局')}</div><div class="d">${need.length} ${t('need players now','个局正在缺人')}</div></button>
@@ -295,7 +295,7 @@ function render(){
    <button class="tile" data-a="tab" data-v="guide" style="grid-column:1/3"><div class="e">🧭</div><div class="n">${t('First 30 days','落地 30 天')} · ${S.done.length}/${GUIDE.length}</div><div class="d">${t('The checklist and the rules that stop you getting ripped off','落地清单和防坑规则')}</div></button>
   </div>
   <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['📋','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['🏠','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['💰','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${g[0]}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
-  <div class="res">${t('Hopper is flagging','Hopper 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Hopper works and the listing rules','Hopper 怎么运作 · 发布规则')}</button>`;
+  <div class="res">${t('Loka is flagging','Loka 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Loka works and the listing rules','Loka 怎么运作 · 发布规则')}</button>`;
   if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
  }
  if(tab==='homes'){
@@ -325,11 +325,11 @@ function render(){
   h+=back+`<h1>${t('Need a hand? <em>Name the price.</em>','找人帮忙？<em>明码标价。</em>')}</h1><div class="sub">${t('Airport pickups, moving, translation at inspections, coaching.','接机、搬家、看房翻译、陪练。')}</div>`;
   h+=S.tasks.map(k=>`<div class="card"><div class="row"><div><div class="tt">${esc(k.title)}</div><div class="meta">${esc(k.area)} · ${t('posted by','发布人')} ${esc(k.by)}</div></div><span class="badge b-open">$${k.reward}</span></div>
    <div class="foot"><span>${k.helpers.length} ${t('offered to help','人愿意帮')}</span><button data-a="offer" data-v="${k.id}" style="color:var(--lime);font-weight:700">${k.helpers.includes(S.me)&&S.me?t('Offered ✓','已报名 ✓'):t('I can help','我可以帮')}</button></div></div>`).join('');
-  h+=`<div class="note">${t('Payment is settled directly between the two people. Hopper does not hold money in this version.','由双方直接结算，本版本 Hopper 不经手资金。')}</div><button class="btn" data-a="newtask">+ ${t('Post a task','发布任务')}</button>`;
+  h+=`<div class="note">${t('Payment is settled directly between the two people. Loka does not hold money in this version.','由双方直接结算，本版本 Loka 不经手资金。')}</div><button class="btn" data-a="newtask">+ ${t('Post a task','发布任务')}</button>`;
  }
  if(tab==='earn'){const mx=Math.max(...S.scouts.map(x=>x.earned));
-  h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Hopper pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Hopper 不按入住或入职发放现金。')}</div>
-  <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Post it here','发到 Hopper','30 seconds, with a contact.','30 秒，留个联系方式。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
+  h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Loka pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Loka 不按入住或入职发放现金。')}</div>
+  <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Post it here','发到 Loka','30 seconds, with a contact.','30 秒，留个联系方式。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
   <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="newhome">${t('Post a room','发房源')}</button></div></div>
   <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
@@ -363,8 +363,8 @@ function render(){
   ${compareHtml(sh)}
   <div class="sec">${t('Saved jobs','收藏的工作')}</div>${sj.map(x=>`<button class="card" data-a="job" data-v="${x.id}"><div class="tt">$${x.pay}/${t('h','时')} · ${esc(x.title)}</div><div class="meta">${esc(x.area)}</div></button>`).join('')||`<div class="note">${t('Tap ♥ on a job to keep it here.','点 ♥ 收藏工作。')}</div>`}
   <div class="sec">${t('Your squads','我的局')}</div>${mine.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></button>`).join('')||`<div class="note">${t('None yet.','还没有。')}</div>`}
-  <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Hopper scout','成为 Hopper 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
-  <button class="btn ghost" data-a="tab" data-v="about">${t('How Hopper works · listing rules','Hopper 怎么运作 · 发布规则')}</button>
+  <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Loka scout','成为 Loka 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
+  <button class="btn ghost" data-a="tab" data-v="about">${t('How Loka works · listing rules','Loka 怎么运作 · 发布规则')}</button>
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
@@ -388,7 +388,7 @@ function calc(){const set=(id,html)=>{const e=document.getElementById(id);if(e)e
 function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl=homeFlags(x),room=x.type!=='unit';
  openSheet(`<div class="pic" style="border-radius:18px;overflow:hidden">${art(x)}</div><div class="price" style="margin-top:10px">$${x.rent}<small>/${t('wk','周')} · ${t(HT[x.type][1],HT[x.type][2])}</small></div>
  <div class="tt" style="font-size:19px">${esc(x.title)}</div><div class="meta">${esc(x.area)}${x.near?' · '+t('near ','近 ')+esc(x.near):''}</div>
- ${x.verified?`<button class="ok" data-a="vinfo">✓ ${t('Hopper verified','Hopper 已核实')}${x.vdate?' · '+esc(x.vdate):''} ⓘ</button>`:`<button class="tag" data-a="vinfo">${t('Not verified yet','尚未核实')} ⓘ</button>`}<span class="tag">${x.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>${x.furn?`<span class="tag">${t('Furnished','带家具')}</span>`:''}
+ ${x.verified?`<button class="ok" data-a="vinfo">✓ ${t('Loka verified','Loka 已核实')}${x.vdate?' · '+esc(x.vdate):''} ⓘ</button>`:`<button class="tag" data-a="vinfo">${t('Not verified yet','尚未核实')} ⓘ</button>`}<span class="tag">${x.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>${x.furn?`<span class="tag">${t('Furnished','带家具')}</span>`:''}
  ${fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join('')}<div class="note">${esc(x.note)}</div>
  <div class="res">${t('Asked bond','要求押金')}: <b>$${x.bond}</b> (${(x.bond/x.rent).toFixed(1)} ${t('weeks','周')})<br>${t('Legal maximum up front','合法最高入住款')}: $${x.rent*RULES.bondWeeks} ${t('bond','押金')} + $${x.rent*(room?RULES.advRoom:RULES.advFixedWeeks)} ${t('rent in advance','预付房租')}</div>
  ${(()=>{const js=S.jobs.filter(j=>zone(j.area)===zone(x.area)&&!jobFlags(j).length).sort((a,b)=>wk(b)-wk(a)).slice(0,3);return js.length?`<div class="sec">${t('Jobs that could pay for it','能撑起这份房租的工作')}</div>`+js.map(j=>`<button class="mini" data-a="job" data-v="${j.id}"><span><b>${esc(j.title)}</b><i>${esc(j.area)} · ≈ $${wk(j)}/${t('wk before tax','周（税前）')}</i></span><em class="${x.rent/wk(j)<=.4?'gd':'bd'}">${Math.round(x.rent/wk(j)*100)}%<small>${t('of pay','占收入')}</small></em></button>`).join('')+`<div class="note">${t('Share of that job’s weekly pay this rent would take. Under about a third is comfortable.','这份房租占该工作周薪的比例，三分之一以内比较宽松。')}</div>`:''})()}
@@ -396,7 +396,7 @@ function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl
  <button class="btn ghost" data-a="enq" data-v="${x.id}">${t('Copy a ready enquiry message','复制一段现成的询问信息')}</button>
  <button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>
  <button class="btn" data-a="fav" data-k="homes" data-v="${x.id}" data-re="home">${isSaved('homes',x.id)?t('Saved ♥','已收藏 ♥'):t('Save this home','收藏')}</button>
- <div class="sec">${t('Before you pay','付款之前')}</div>${[['See the room yourself, in person or on a live video call.','亲自看房，或实时视频看房。'],['Get a written agreement before any money moves.','先拿到书面协议，再付任何钱。'],[`Bond is ${RULES.bondWeeks} weeks of rent at most. Ask for the RTA bond number.`,`押金最多 ${RULES.bondWeeks} 周房租，记得索取 RTA 押金编号。`],['You can show your ID without handing over a copy.','证件可以只出示，不必交复印件。']].map(r=>`<div class="li y">${t(r[0],r[1])}</div>`).join('')}<div class="note">${t('Hopper is a notice board, not an agent. It does not hold money or sign agreements.','Hopper 是信息板，不是中介，不经手资金，也不代签协议。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div><button class="link" data-a="report" data-k="homes" data-v="${x.id}">${t('Report this listing','举报这条房源')}</button>`)}
+ <div class="sec">${t('Before you pay','付款之前')}</div>${[['See the room yourself, in person or on a live video call.','亲自看房，或实时视频看房。'],['Get a written agreement before any money moves.','先拿到书面协议，再付任何钱。'],[`Bond is ${RULES.bondWeeks} weeks of rent at most. Ask for the RTA bond number.`,`押金最多 ${RULES.bondWeeks} 周房租，记得索取 RTA 押金编号。`],['You can show your ID without handing over a copy.','证件可以只出示，不必交复印件。']].map(r=>`<div class="li y">${t(r[0],r[1])}</div>`).join('')}<div class="note">${t('Loka is a notice board, not an agent. It does not hold money or sign agreements.','Loka 是信息板，不是中介，不经手资金，也不代签协议。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div><button class="link" data-a="report" data-k="homes" data-v="${x.id}">${t('Report this listing','举报这条房源')}</button>`)}
 function jobDetail(id){const x=S.jobs.find(q=>q.id===id);if(!x)return;const fl=jobFlags(x);
  openSheet(`<div class="tt" style="font-size:21px">${esc(x.title)}</div><div class="meta">${esc(x.area)} · ${esc(x.hrs)} · ${esc(x.lang)}</div><div class="price" style="margin-top:8px">$${x.pay}<small>/${t('h','时')} · ${x.casual?t('casual','临时'):t('part time','兼职')}</small></div>
  ${fl.length?fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join(''):`<span class="ok">✓ ${t('At or above national minimum','不低于全国最低工资')}</span>`}<div class="note">${esc(x.note)}</div>
@@ -431,24 +431,24 @@ function adminHtml(){const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map
 const ROLE={owner:['Owner','业主'],head:['Tenant sub-letting','二房东（转租）'],agent:['Licensed agent','持牌中介']};
 const IC={home:'<path d="M3 11l9-7 9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',homes:'<path d="M3 19v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 16h18M6 10V6h12v4"/>',jobs:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',ask:'<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'};
 function seedQA(){return[
- {id:'q1',q:'Landlord wants the bond in cash with no receipt. What do I do? · 房东要现金押金又不给收据，怎么办？',area:'Sunnybank',by:'Amy',ago:5,a:[{by:'Hopper',text:'Ask for a receipt and the RTA bond number. In Queensland a bond has to be lodged with the RTA within 10 days. 要收据和 RTA 押金编号；昆州押金须在 10 天内存入 RTA。'}]},
+ {id:'q1',q:'Landlord wants the bond in cash with no receipt. What do I do? · 房东要现金押金又不给收据，怎么办？',area:'Sunnybank',by:'Amy',ago:5,a:[{by:'Loka',text:'Ask for a receipt and the RTA bond number. In Queensland a bond has to be lodged with the RTA within 10 days. 要收据和 RTA 押金编号；昆州押金须在 10 天内存入 RTA。'}]},
  {id:'q2',q:'Single room in Sunnybank Hills: what should I check before I say yes? · Sunnybank Hills 单间，答应之前要确认什么？',area:'Sunnybank Hills',by:'小林',ago:20,a:[{by:'Kelvin',text:'Ask if bills are included, how many people share the bathroom, and the minimum stay. 先问包不包水电网、几个人共用卫生间、最短租期。'}]},
  {id:'q3',q:'Sunnybank to UQ without a car: what works for you? · 没车从 Sunnybank 去 UQ，大家怎么走？',area:'Sunnybank',by:'Jun',ago:30,a:[]}]}
-function enqText(x){return `Hi, I saw your listing on Hopper: ${x.title} ($${x.rent}/wk, ${x.area}). Is it still available? Could I inspect it this week?\nCould you also confirm: the bond amount and that it will be lodged with the RTA, whether bills are included, and the minimum stay. Thank you!\n\n你好，我在 Hopper 看到你的房源（$${x.rent}/周，${x.area}）。请问还在吗？这周可以看房吗？\n另外想确认：押金金额以及是否会存入 RTA、是否包水电网、最短租期。谢谢！`}
+function enqText(x){return `Hi, I saw your listing on Loka: ${x.title} ($${x.rent}/wk, ${x.area}). Is it still available? Could I inspect it this week?\nCould you also confirm: the bond amount and that it will be lodged with the RTA, whether bills are included, and the minimum stay. Thank you!\n\n你好，我在 Loka 看到你的房源（$${x.rent}/周，${x.area}）。请问还在吗？这周可以看房吗？\n另外想确认：押金金额以及是否会存入 RTA、是否包水电网、最短租期。谢谢！`}
 function verifiedSheet(){const li=(c,en,zh)=>`<div class="li ${c}">${t(en,zh)}</div>`;
  openSheet(`<div class="tt" style="font-family:var(--serif);font-size:26px;font-weight:500">${t('What “Verified” means','“已核实”代表什么')}</div>
- <div class="sec">${t('Hopper checked','Hopper 核实过')}</div>${li('y','Someone from Hopper saw the place, in person or on a live video call.','Hopper 的人亲自或通过实时视频看过房。')}${li('y','The lister showed photo ID. We looked at it and kept no copy.','发布人出示过带照片的证件；我们只查看，不留存。')}${li('y','The lister showed they can let it: they own it, or they have written permission to sub-let.','发布人证明有权出租：是业主，或持有书面转租同意。')}${li('y','The rent is one fixed weekly price and the bond is 4 weeks or less.','租金是固定周租，押金不超过 4 周。')}
- <div class="sec">${t('Hopper did not check','Hopper 没有核实')}</div>${li('n','Building safety, smoke alarms or repairs.','房屋安全、烟雾报警器或维修状况。')}${li('n','How the lister or housemates will behave.','房东或室友日后的为人。')}${li('n','The terms of your tenancy agreement.','你的租约条款。')}${li('n','That the place is still available today.','房源今天是否仍然空置。')}
+ <div class="sec">${t('Loka checked','Loka 核实过')}</div>${li('y','Someone from Loka saw the place, in person or on a live video call.','Loka 的人亲自或通过实时视频看过房。')}${li('y','The lister showed photo ID. We looked at it and kept no copy.','发布人出示过带照片的证件；我们只查看，不留存。')}${li('y','The lister showed they can let it: they own it, or they have written permission to sub-let.','发布人证明有权出租：是业主，或持有书面转租同意。')}${li('y','The rent is one fixed weekly price and the bond is 4 weeks or less.','租金是固定周租，押金不超过 4 周。')}
+ <div class="sec">${t('Loka did not check','Loka 没有核实')}</div>${li('n','Building safety, smoke alarms or repairs.','房屋安全、烟雾报警器或维修状况。')}${li('n','How the lister or housemates will behave.','房东或室友日后的为人。')}${li('n','The terms of your tenancy agreement.','你的租约条款。')}${li('n','That the place is still available today.','房源今天是否仍然空置。')}
  <div class="note">${t('Verified is not a guarantee. Inspect the place yourself and get a written agreement before you pay anything.','“已核实”不是担保。付款前请亲自看房并拿到书面协议。')}</div>`)}
 function verifyForm(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const ck=(i,en,zh)=>`<label class="tick"><input type="checkbox" id="${i}"><span>${t(en,zh)}</span></label>`;
  openSheet(`<div class="tt" style="font-size:21px">${t('Verify this listing','核实这条房源')}</div><div class="meta">${esc(x.title)} · ${esc(x.area)}</div>
  ${ck('v1','I saw the place, in person or on a live video call.','我亲自或通过实时视频看过房。')}${ck('v2','I sighted the lister’s photo ID and kept no copy or photo of it.','我查看过发布人的证件，没有留存复印件或照片。')}${ck('v3','I sighted proof they can let it: ownership, or written permission to sub-let.','我查看过出租权证明：产权，或书面转租同意。')}${ck('v4','Rent is one fixed price, bond is 4 weeks or less, rent in advance is within the limit.','租金为固定价，押金不超过 4 周，预付房租未超上限。')}
  <button class="btn" data-a="adverok" data-v="${id}">${t('Mark verified','标记已核实')}</button><div class="note">${t('Only tick what you actually did. The Verified badge is a public claim.','只勾选你确实做过的事。“已核实”标记是对外的公开声明。')}</div>`)}
 function aboutHtml(){const r=(b,en,zh)=>`<div class="rule"><b>${b}</b> · ${t(en,zh)}</div>`;
- return `<h1>${t('How Hopper <em>works.</em>','Hopper <em>怎么运作。</em>')}</h1><div class="sub">${t('A free notice board for rooms and jobs, with checks built in.','一个免费的房源和工作信息板，自带规则检查。')}</div>
- <div class="sec">${t('What Hopper is not','Hopper 不是什么')}</div>
- ${r(t('Not an agent','不是中介'),'Hopper is not a real estate agent. It does not negotiate, arrange inspections for a lister, or sign anything.','Hopper 不是房产中介，不代谈价格、不代办看房、不代签任何文件。')}
- ${r(t('No money','不经手资金'),'Hopper never collects rent or bond, and takes no fee or commission when someone moves in.','Hopper 不代收租金或押金，成交也不收取任何费用或佣金。')}
+ return `<h1>${t('How Loka <em>works.</em>','Loka <em>怎么运作。</em>')}</h1><div class="sub">${t('A free notice board for rooms and jobs, with checks built in.','一个免费的房源和工作信息板，自带规则检查。')}</div>
+ <div class="sec">${t('What Loka is not','Loka 不是什么')}</div>
+ ${r(t('Not an agent','不是中介'),'Loka is not a real estate agent. It does not negotiate, arrange inspections for a lister, or sign anything.','Loka 不是房产中介，不代谈价格、不代办看房、不代签任何文件。')}
+ ${r(t('No money','不经手资金'),'Loka never collects rent or bond, and takes no fee or commission when someone moves in.','Loka 不代收租金或押金，成交也不收取任何费用或佣金。')}
  ${r(t('Your deal','你们的约定'),'Any agreement is between the renter and the lister.','任何租约都是租客和发布人之间的事。')}
  <div class="sec">${t('Listing rules','发布规则')}</div>
  ${r(t('Fixed price','固定价格'),'One weekly rent. No price ranges and no “make an offer”.','只写一个周租，不能写区间，也不能“欢迎出价”。')}
@@ -458,7 +458,7 @@ function aboutHtml(){const r=(b,en,zh)=>`<div class="rule"><b>${b}</b> · ${t(en
  ${r(t('Honest','真实'),'Real photos and true details. Misleading listings are removed.','照片和信息必须真实，误导性房源会被删除。')}
  <button class="btn ghost" data-a="vinfo">${t('What “Verified” means','“已核实”代表什么')}</button>
  <div class="sec">${t('Your information','你的信息')}</div>
- ${r('ID','When Hopper verifies a lister we look at ID and keep no copy. Renters can also show ID without handing over a copy.','Hopper 核实发布人时只查看证件、不留存。租客也可以只出示证件，不交复印件。')}
+ ${r('ID','When Loka verifies a lister we look at ID and keep no copy. Renters can also show ID without handing over a copy.','Loka 核实发布人时只查看证件、不留存。租客也可以只出示证件，不交复印件。')}
  ${r(t('This demo','演示版'),'What you type stays on this phone.','你输入的内容只保存在这台手机上。')}
  <div class="note">${t('General information, not legal advice. For your own situation check the Residential Tenancies Authority.','以上为一般信息，不构成法律建议。具体情况请查阅昆州 RTA。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div>`}
 function askHtml(){return `<h1>${t('Ask Brisbane. <em>Someone here knows.</em>','问问布村。<em>总有人知道。</em>')}</h1><div class="sub">${t('Renting, work, getting around, settling in. Ask in English or 中文.','租房、打工、出行、落地，中英文都可以问。')}</div>
@@ -481,9 +481,9 @@ function homeForm(){openSheet(`<div class="tt" style="font-size:21px">${t('List 
  <label class="tick"><input type="checkbox" id="h_c1"><span>${t('The rent above is the fixed price. I will not ask for or accept more.','以上租金为固定价格，我不会要求或接受更高的出价。')}</span></label>
  <label class="tick"><input type="checkbox" id="h_c2"><span>${t('If I take a bond, I will lodge it with the RTA within 10 days.','如收取押金，我会在 10 天内存入 RTA。')}</span></label>
  <label class="tick"><input type="checkbox" id="h_c3"><span>${t('If I am sub-letting, I have the owner’s written permission.','如属转租，我已取得业主的书面同意。')}</span></label>
- <label class="tick"><input type="checkbox" id="h_c4"><span>${t('This listing is true and I accept the Hopper listing rules.','信息属实，我接受 Hopper 发布规则。')}</span></label>${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="h_by">`}
+ <label class="tick"><input type="checkbox" id="h_c4"><span>${t('This listing is true and I accept the Loka listing rules.','信息属实，我接受 Loka 发布规则。')}</span></label>${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="h_by">`}
  <label>${t('Details','详情')}</label><textarea id="h_note" rows="2"></textarea><button class="btn" data-a="createhome">${t('Publish','发布')}</button>
- <div class="note">${t('Hopper does not publish a bond above 4 weeks of rent, or more rent in advance than Queensland allows.','押金超过 4 周房租、或预付房租超过昆州上限的房源，Hopper 不予发布。')}</div>`)}
+ <div class="note">${t('Loka does not publish a bond above 4 weeks of rent, or more rent in advance than Queensland allows.','押金超过 4 周房租、或预付房租超过昆州上限的房源，Loka 不予发布。')}</div>`)}
 function jobForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Post a job','发布工作')}</div>
  <label>${t('Role','职位')}</label><input id="j_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="j_area"></div><div><label>${t('Hours','工时')}</label><input id="j_hrs" placeholder="15–20 h/wk"></div></div>
  <div class="g2"><div><label>${t('Hourly pay $','时薪 $')}</label><input id="j_pay" type="number" step="0.01"></div><div><label>${t('Type','类型')}</label><select id="j_cas"><option value="1">${t('Casual','临时工')}</option><option value="0">${t('Part / full time','兼职/全职')}</option></select></div></div>

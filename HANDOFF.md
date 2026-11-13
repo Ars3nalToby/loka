@@ -1,8 +1,8 @@
-# Hopper: handoff brief
+# Loka: handoff brief
 
 Paste this file, plus `index.html`, into any coding assistant to continue the build.
 
-## What Hopper is
+## What Loka is
 
 A bilingual (English / 中文) community notice board for Brisbane, starting narrow:
 **rooms for Chinese-speaking international students around Sunnybank**.
@@ -12,6 +12,9 @@ Owner goal: a place where people come together, talk, and solve everyday problem
 First milestone: 20 real room matches before the February university intake.
 
 ## Current state (be honest about this)
+
+- **Renamed from Hopper to Loka.** The domain in `BRAND.url` (`hopper.com.au`) is still the old
+  one until a Loka domain is chosen. The localStorage key stays `hopper-demo-v5` so demo data is kept.
 
 - One static file, `index.html`: HTML, CSS and vanilla JS, no build step, no framework.
 - **All data is localStorage on each visitor's own device.** Nothing is shared between users.
@@ -47,7 +50,7 @@ They are product requirements, not suggestions. Constants live in `RULES` in `in
 | "Verified" needs all four checks ticked and stores a date. | `verifyForm`, `adverok` |
 | "Verified" always links to what was and was not checked. | `verifiedSheet` |
 | ID documents are sighted only. **Never store ID images or numbers.** | policy, `aboutHtml` |
-| Hopper never negotiates, collects rent or bond, or takes a fee per move-in. | policy, `aboutHtml` |
+| Loka never negotiates, collects rent or bond, or takes a fee per move-in. | policy, `aboutHtml` |
 | Scouts earn points only, never cash per letting. | `earn` tab |
 
 The last two rows exist because being paid to let someone else's property can require a
