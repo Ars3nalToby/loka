@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F4F0E7">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hopper">
+<meta name="description" content="Hopper: Brisbane rooms and jobs checked against Queensland rules. 布里斯班招租与找工。">
+<title>Hopper — Brisbane, sorted</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#F4F0E7;--bg2:#EBE4D6;--panel:#FFFFFF;--line:rgba(25,21,18,.1);--txt:#191512;--mut:#6B645A;--lime:#1F6F5C;--soft:#E3F0EB;--hot:#E2683C;--sky:#C99A2B;--serif:'Bodoni Moda','Noto Serif SC',serif}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--ink);overflow-x:hidden;color:var(--txt);font-family:'DM Sans','Noto Sans SC',system-ui,sans-serif;font-weight:400;line-height:1.5;padding-bottom:92px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.wrap{max-width:520px;margin:0 auto;padding:0 18px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 8px}
+.logo{font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:-.5px;font-style:italic}
+.logo b{color:var(--hot);font-style:normal}
+.logo small{font-family:'DM Sans','Noto Sans SC',sans-serif;font-style:normal;font-size:12px;color:var(--mut);margin-left:8px;letter-spacing:.5px;font-weight:500}
+.lang{border:1px solid rgba(25,21,18,.2);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:500;background:#fff}
+.demo{background:var(--bg2);color:var(--mut);font-size:12px;border-radius:12px;padding:9px 12px;margin:6px 0 14px}
+h1{font-family:var(--serif);font-size:38px;font-weight:500;letter-spacing:-.8px;line-height:1.05;margin:10px 0 8px}
+h1 em{color:var(--lime);font-style:italic}
+.sub{color:var(--mut);font-size:14.5px;margin-bottom:16px;max-width:34em}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;border:1px solid rgba(25,21,18,.16);background:#fff;border-radius:99px;padding:7px 14px;font-size:13px;color:var(--mut);font-weight:500}
+.chip.on{background:var(--txt);color:var(--ink);border-color:var(--txt)}
+.card{background:var(--panel);border-radius:20px;padding:16px;margin-bottom:14px;display:block;width:100%;text-align:left;box-shadow:0 1px 0 rgba(25,21,18,.04),0 10px 30px -18px rgba(25,21,18,.28);animation:fade .45s cubic-bezier(.16,1,.3,1) both}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+.card.photo{padding:0;overflow:hidden}
+.card.photo .body{padding:13px 16px 16px}
+.pic{height:150px;position:relative;overflow:hidden;background:var(--bg2)}.pic svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.pic .heart{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.9);border-radius:50%;width:36px;height:36px;font-size:17px;color:rgba(25,21,18,.4)}
+.pic .heart.on{color:var(--hot)}
+.pic .pp{font-size:14px;line-height:1.25;position:absolute;bottom:10px;right:12px;background:rgba(255,255,255,.94);border-radius:10px;padding:3px 11px}
+.pic .vf{position:absolute;bottom:12px;left:12px;background:var(--lime);color:#fff;font-size:11px;font-weight:600;border-radius:99px;padding:4px 10px}
+.row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tt{font-weight:600;font-size:16.5px;line-height:1.25}
+.meta{color:var(--mut);font-size:13px;margin-top:4px}
+.price{font-family:var(--serif);font-weight:600;font-size:23px;color:var(--lime);white-space:nowrap}.price small{font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:11px;color:var(--mut);font-weight:400}
+.badge{font-weight:600;font-size:12px;border-radius:99px;padding:5px 11px;white-space:nowrap}
+.b-need{background:var(--hot);color:#fff}.b-open{background:var(--soft);color:var(--lime)}.b-full{background:var(--bg2);color:var(--mut)}
+.bar{height:5px;background:var(--bg2);border-radius:9px;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lime);border-radius:9px}
+.foot{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:8px}
+.tag{display:inline-block;font-size:11.5px;font-weight:600;border-radius:99px;padding:4px 10px;margin:8px 6px 0 0;background:var(--bg2);color:var(--mut)}
+.tag.g{background:rgba(201,154,43,.16);color:#8a6a14}.tag.b{background:var(--soft);color:var(--lime)}
+.ok{display:inline-block;font-size:11.5px;font-weight:600;border-radius:99px;padding:4px 10px;margin:8px 6px 0 0;background:var(--soft);color:var(--lime)}
+.flag{display:block;background:#fbe9e1;color:#a13d1a;font-size:12.5px;border-radius:12px;padding:8px 11px;margin-top:10px}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(244,240,231,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:8px 6px 16px}
+nav button{flex:1;max-width:110px;font-size:11.5px;color:var(--mut);padding:6px 2px;font-weight:500}
+nav button span{display:block;font-size:20px;filter:grayscale(1);opacity:.6}
+nav button.on{color:var(--txt);font-weight:700}nav button.on span{filter:none;opacity:1}
+.fab{position:fixed;right:18px;bottom:96px;background:var(--txt);color:var(--ink);font-weight:600;border-radius:99px;padding:14px 22px;box-shadow:0 12px 28px -8px rgba(25,21,18,.5);font-size:14.5px}
+.sheet{position:fixed;inset:0;background:rgba(25,21,18,.45);display:none;align-items:flex-end;z-index:9}
+.sheet.on{display:flex}
+.sheet .in{position:relative;background:var(--ink);width:100%;max-width:520px;margin:0 auto;border-radius:26px 26px 0 0;padding:20px 18px 28px;max-height:92vh;overflow-y:auto}
+.x{position:absolute;top:14px;right:14px;font-size:16px;color:var(--mut);background:#fff;border-radius:50%;width:34px;height:34px;z-index:3;box-shadow:0 2px 8px rgba(25,21,18,.15)}
+.btn{display:block;width:100%;background:var(--lime);color:#fff;font-weight:600;border-radius:14px;padding:14px;font-size:15px;margin-top:12px;text-align:center}
+.btn.ghost{background:#fff;border:1px solid rgba(25,21,18,.2);color:var(--txt)}
+.btn.hot{background:var(--hot);color:#fff}
+.pl{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.av{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--soft);align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-right:9px;color:var(--lime)}
+.paid{font-size:12px;border-radius:99px;padding:4px 10px;background:var(--bg2);color:var(--mut);font-weight:600}
+.paid.y{background:var(--soft);color:var(--lime)}
+label{display:block;font-size:12px;color:var(--mut);margin:13px 0 5px;font-weight:500}
+input,select,textarea{width:100%;background:#fff;border:1px solid rgba(25,21,18,.14);border-radius:12px;padding:12px;font-size:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sec{font-family:var(--serif);font-style:italic;font-size:21px;margin:26px 0 10px}
+.poster{width:100%;border-radius:16px;margin-top:12px;display:block;box-shadow:0 18px 40px -20px rgba(25,21,18,.5)}
+.themes{display:flex;gap:8px;margin-top:12px}
+.themes button{flex:1;border:1px solid rgba(25,21,18,.16);background:#fff;border-radius:12px;padding:9px;font-size:13px}
+.themes button.on{border-color:var(--txt);font-weight:700}
+.stat{flex:1;background:#fff;border-radius:16px;padding:14px;text-align:center}
+.stat b{display:block;font-family:var(--serif);font-size:28px;font-weight:600;color:var(--lime)}
+.stat span{font-size:11px;color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:160px;transform:translateX(-50%);background:var(--txt);color:var(--ink);font-weight:600;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:20;white-space:nowrap}
+.toast.on{opacity:1}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 12px}
+.hero{border-radius:22px;padding:16px;min-height:168px;text-align:left;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;color:#fff}
+.hero .e{position:absolute;top:10px;right:12px;font-size:46px;opacity:.9}
+.hero .n{font-family:var(--serif);font-size:27px;font-weight:500;line-height:1}.hero .d{font-size:12.5px;opacity:.88;margin-top:6px}
+.hero.r{background:linear-gradient(155deg,#2a8a72,#1F6F5C 55%,#154d40)}.hero.j{background:linear-gradient(155deg,#ef8a5f,#E2683C 55%,#b84c26)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 6px}
+.tile{background:#fff;border-radius:18px;padding:14px;text-align:left;box-shadow:0 10px 30px -20px rgba(25,21,18,.3)}
+.tile .e{font-size:22px}.tile .n{font-weight:600;font-size:15px;margin-top:4px}.tile .d{font-size:12px;color:var(--mut)}
+.search{margin-bottom:12px;border-radius:99px;padding-left:18px}
+.back{color:var(--mut);font-size:14px;padding:4px 0 6px}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;text-align:left;width:100%}
+.chk .bx{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(25,21,18,.3);flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+.chk.on .bx{background:var(--lime);border-color:var(--lime)}.chk.on .tx{color:var(--mut);text-decoration:line-through}
+.res{background:var(--bg2);border-radius:14px;padding:13px;margin-top:12px;font-size:14px}
+.res b{color:var(--lime);font-family:var(--serif);font-size:22px}
+.rule{font-size:13.5px;color:var(--mut);padding:10px 0;border-bottom:1px solid var(--line)}.rule b{color:var(--txt)}
+.map{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px -20px rgba(25,21,18,.3)}
+.map svg{display:block;width:100%;height:auto}
+.pin{cursor:pointer}.pin circle{transition:.2s}.pin:active circle{r:20}
+.xhs{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.xhs a{flex:none;width:150px;background:#fff;border-radius:16px;padding:13px;text-decoration:none;color:var(--txt);font-size:13.5px;font-weight:600;line-height:1.3}
+.xhs a span{display:block;font-size:24px;margin-bottom:8px}.xhs a i{display:block;font-style:normal;font-size:11px;color:#c8413a;margin-top:8px;font-weight:600}
+.lb{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.lb .rk{font-family:var(--serif);font-size:20px;width:22px;color:var(--sky);font-style:italic}
+.lb .tr{flex:1;height:8px;background:var(--bg2);border-radius:9px;overflow:hidden}.lb .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--sky),var(--hot));border-radius:9px}
+.step{display:flex;gap:12px;padding:10px 0}.step b{font-family:var(--serif);font-size:26px;color:var(--hot);font-style:italic;width:24px}
+.cta{display:flex;gap:10px}.cta .btn{margin-top:12px}
+
+.sheet.on .in{animation:up .38s cubic-bezier(.16,1,.3,1) both}@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet.on .in{animation:none}}
+.bar2{display:flex;justify-content:space-between;align-items:center;margin:4px 0 14px;font-size:13px;color:var(--mut)}
+.post{background:var(--txt);color:var(--ink);font-weight:600;border-radius:99px;padding:9px 16px;font-size:13.5px;white-space:nowrap}
+.match{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:var(--txt);color:var(--ink);border-radius:22px;padding:16px 18px;margin-bottom:4px}
+.match b{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:22px;line-height:1.15}.match i{display:block;font-style:normal;font-size:12.5px;opacity:.75;margin-top:4px}
+.match em{font-style:normal;flex:none;width:40px;height:40px;border-radius:50%;background:var(--hot);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.mini{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:#fff;border-radius:14px;padding:11px 14px;margin-bottom:8px}
+.mini span{min-width:0;flex:1}.mini b{display:block;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini i{display:block;font-style:normal;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini em{font-style:normal;flex:none;text-align:right;font-family:var(--serif);font-weight:600;font-size:19px;line-height:1}.mini em small{display:block;font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:10px;font-weight:500;color:var(--mut);margin-top:3px}
+.mini em.gd{color:var(--lime)}.mini em.bd{color:var(--hot)}
+.link{display:block;margin:14px auto 0;font-size:13px;color:var(--mut);text-decoration:underline;text-underline-offset:3px}
+.cmp{overflow-x:auto;background:#fff;border-radius:16px;padding:6px 4px}.cmp table{border-collapse:collapse;width:100%;font-size:13px}
+.cmp table{table-layout:fixed}.cmp th{width:82px;text-align:left;color:var(--mut);font-weight:500;padding:9px 6px 9px 10px;font-size:12px}.cmp td{padding:9px 8px;border-left:1px solid var(--line);font-size:12.5px;overflow-wrap:anywhere}.cmp tr+tr th,.cmp tr+tr td{border-top:1px solid var(--line)}
+.tt{overflow-wrap:anywhere}.card .row>button{min-width:0}
+.lb .paid{flex:none}
+
+.sheet .in>.x+.tt,.sheet .in>.x+.tt+.meta{padding-right:44px}
+.sheet .in>.pic{margin-top:38px}
+header{position:sticky;top:0;z-index:5;background:rgba(244,240,231,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);margin:0 -18px;padding:14px 18px 8px}
+.card{animation-fill-mode:backwards}
+button.card,.hero,.tile,.btn,.mini,.match,.post{transition:transform .15s cubic-bezier(.16,1,.3,1)}
+button.card:active,.hero:active,.tile:active,.btn:active,.mini:active,.match:active,.post:active{transform:scale(.975)}
+.sheet .in::before{content:'';display:block;width:40px;height:4px;border-radius:9px;background:rgba(25,21,18,.18);margin:-8px auto 12px}
+nav{padding-bottom:max(16px,env(safe-area-inset-bottom))}
+nav button svg{display:block;margin:0 auto 3px;width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:.7}
+nav button.on svg{opacity:1;stroke:var(--lime)}
+.toast{white-space:normal;max-width:86vw;text-align:center}
+.tick{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;margin:10px 0 0;color:var(--txt);font-weight:400}
+.tick input{width:20px;height:20px;padding:0;flex:none;margin-top:1px;accent-color:var(--lime)}
+.li{font-size:13.5px;padding:8px 0 8px 22px;position:relative;border-bottom:1px solid var(--line)}
+.li::before{position:absolute;left:0;font-weight:700}.li.y::before{content:'✓';color:var(--lime)}.li.n::before{content:'–';color:var(--mut)}
+button.vf,button.ok,button.tag{cursor:pointer}
+a{color:var(--lime)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav id="nav"></nav>
+<div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+// ───────── config ─────────
+const BRAND={en:'Hopper',zh:'布村生活站',url:'hopper.com.au'};
+// Rules the app checks listings against. Sources: Qld Government rental law pages (bond, rent in advance), Fair Work Ombudsman (wages from 1 July 2026), Home Affairs condition 8105 (student hours).
+const RULES={bondWeeks:4,advRoom:2,advFixedWeeks:4,minWage:26.44,minCasual:33.05,studentHrs:48};
+
+const KEY='hopper-demo-v5';
+const mem={};
+const store={get(){try{return JSON.parse(localStorage.getItem(KEY))||null}catch(e){return mem.d||null}},set(d){mem.d=d;try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}}};
+function nextDay(dow,h,m){const d=new Date();d.setHours(h,m||0,0,0);let add=(dow-d.getDay()+7)%7;if(add===0&&d<new Date())add=7;d.setDate(d.getDate()+add);return d.toISOString()}
+function seed(){return{me:'',lang:'en',saved:{homes:[],jobs:[]},done:[],
+homes:[
+ {id:'h1',type:'room',title:'Sunny room near UQ, own bathroom · 近UQ带独卫',area:'St Lucia',rent:320,bond:1280,bills:true,furn:true,near:'UQ',verified:true,zh:true,reward:40,ago:3,by:'Mei',contact:'WeChat: mei_demo',note:'5 min walk to the UQ Lakes bus stop. Two quiet housemates. 两位安静室友。'},
+ {id:'h2',type:'room',title:'Double room, big kitchen · 双人间大厨房',area:'Sunnybank Hills',rent:230,bond:920,bills:false,furn:true,near:'Griffith Nathan',verified:true,zh:true,reward:30,ago:8,by:'Kelvin',contact:'0400 000 001',note:'10 min bus to Griffith Nathan. Bills split 4 ways.'},
+ {id:'h3',type:'unit',title:'2 bed unit, whole place · 整租两房',area:'Toowong',rent:640,bond:2560,bills:false,furn:false,near:'UQ',verified:false,zh:false,reward:60,role:'head',ago:20,by:'Priya',contact:'priya@example.com',note:'Lease takeover from January. Train and CityCat nearby.'},
+ {id:'h4',type:'room',title:'Master room, "6 weeks bond" · 主卧',area:'Rochedale',rent:260,bond:1560,adv:4,bills:true,furn:true,near:'',verified:false,zh:true,reward:30,ago:26,by:'Sam',contact:'WeChat: sam_demo',note:'Lister asked for 6 weeks bond and cash only.'},
+ {id:'h5',type:'student',title:'Studio in student building · 学生公寓单间',area:'South Brisbane',rent:495,bond:1980,bills:true,furn:true,near:'QUT / Griffith South Bank',verified:true,zh:false,reward:50,ago:30,by:'Hopper',contact:'via Hopper',note:'Gym and study rooms. 6 or 12 month terms.'},
+ {id:'h6',type:'room',title:'Single room, girls only house · 女生合租',area:'Calamvale',rent:195,bond:0,zh:true,reward:30,ago:5,bills:true,furn:true,near:'',verified:false,by:'Wendy',contact:'WeChat: wendy_demo',note:'Near the shops and bus. Mandarin and English spoken.'}
+],
+jobs:[
+ {id:'j1',hpw:16,zh:true,cash:false,reward:40,ago:2,title:'Bubble tea shop all-rounder · 奶茶店店员',area:'Sunnybank',pay:33.5,casual:true,hrs:'12–20 h/wk',student:true,lang:'中文 + English',by:'Lily',contact:'WeChat: lily_demo',note:'Evenings and weekends. Training provided.'},
+ {id:'j2',hpw:20,zh:true,cash:true,reward:30,ago:6,title:'Kitchen hand · 厨房帮工',area:'Sunnybank Hills',pay:20,casual:true,hrs:'20 h/wk',student:true,lang:'中文',by:'Anon',contact:'0400 000 002',note:'Cash in hand. 现金。'},
+ {id:'j3',hpw:20,zh:false,cash:false,reward:50,ago:12,title:'Warehouse picker, mornings · 仓库拣货',area:'Rochedale',pay:34.8,casual:true,hrs:'15–25 h/wk',student:true,lang:'English',by:'Marcus',contact:'jobs@example.com',note:'5am starts. Forklift ticket a plus.'},
+ {id:'j4',hpw:24,zh:true,cash:false,reward:50,ago:18,title:'Pharmacy assistant, part time · 药房助理',area:'Calamvale',pay:28.1,casual:false,hrs:'24 h/wk',student:true,lang:'中文 + English',by:'Jun',contact:'jun@example.com',note:'Retail experience preferred.'},
+ {id:'j5',hpw:6,zh:false,cash:false,reward:40,ago:40,title:'Maths tutor Yr 7–10 · 数学家教',area:'Indooroopilly',pay:45,casual:true,hrs:'4–8 h/wk',student:true,lang:'English',by:'Hannah',contact:'hannah@example.com',note:'Blue Card needed.'}
+],
+squads:[
+ {id:'s1',sport:'bad',title:'Thursday doubles · 周四双打',area:'Coopers Plains',venue:'Coopers Plains courts (3 courts)',start:nextDay(4,20),mins:120,level:'mid',price:15,cap:12,host:'Kelvin',payid:'0400 000 000',note:'Feather shuttles provided. 提供羽毛球。',players:['Kelvin','Mei','Jason L','Amy','Tom','小林','Priya','Daniel','Yuki','Ben','Sarah'].map((n,i)=>({n,paid:i<8})),wait:[]},
+ {id:'s2',sport:'run',title:'River loop easy 5K · 河滨养生跑',area:'South Bank',venue:'Meet at the Wheel of Brisbane',start:nextDay(3,18,30),mins:45,level:'easy',price:0,cap:15,host:'Hannah',payid:'',note:"Pace about 6'00\"/km. Coffee after. 跑完喝咖啡。",players:['Hannah','Leo','Zhang Wei','Chloe','Marcus','Ivy'].map(n=>({n,paid:true})),wait:[]},
+ {id:'s3',sport:'ride',title:'Sunday Mt Coot-tha climb · 周日爬坡',area:'Toowong',venue:'Meet at the bottom of the front side',start:nextDay(0,6),mins:120,level:'hard',price:0,cap:10,host:'Raj',payid:'',note:'Road bikes, lights needed.',players:['Raj','Simon','阿杰','Olivia'].map(n=>({n,paid:true})),wait:[]},
+ {id:'s4',sport:'bad',title:'Beginner social · 新手养生局',area:'Calamvale',venue:'Calamvale courts (2 courts)',start:nextDay(6,10),mins:120,level:'easy',price:12,cap:8,host:'Wendy',payid:'wendy@example.com',note:'Total beginners welcome. 完全新手友好。',players:['Wendy','Kai','Jess','Bo','Nina','Chris','Anh','Fiona'].map(n=>({n,paid:true})),wait:['Derek']},
+ {id:'s5',sport:'social',title:'Hotpot table, 2 seats left · 火锅拼桌',area:'Sunnybank',venue:'Sunnybank, restaurant TBC by host',start:nextDay(5,19),mins:120,level:'easy',price:0,cap:6,host:'Lily',payid:'',note:'Split the bill at the table. 现场AA。',players:['Lily','Sam','Vivian','Jun'].map(n=>({n,paid:true})),wait:[]}
+],reports:[{k:'homes',id:'h4',why:'Asked for 6 weeks bond'},{k:'jobs',id:'j2',why:'Pay under minimum'}],scouts:[{n:'Mei',leads:14,won:6,earned:240,owed:80},{n:'Kelvin',leads:11,won:4,earned:150,owed:30},{n:'阿杰',leads:9,won:3,earned:120,owed:60},{n:'Priya',leads:6,won:2,earned:80,owed:0},{n:'Wendy',leads:4,won:1,earned:30,owed:30}],tasks:[
+ {id:'t1',title:'Carry a parcel Sunnybank → St Lucia · 顺路捎东西',area:'Sunnybank',reward:25,by:'Mei',helpers:[]},
+ {id:'t2',title:'1 hr badminton coaching, beginner · 陪练一小时',area:'Coopers Plains',reward:60,by:'Tom',helpers:['Kelvin']},
+ {id:'t3',title:'Bilingual help at a rental inspection · 看房陪同翻译',area:'Rochedale',reward:50,by:'Jun',helpers:[]},
+ {id:'t4',title:'Airport pickup, 2 suitcases · 接机',area:'Brisbane Airport',reward:45,by:'Anh',helpers:[]}
+]}}
+let S=store.get()||seed();if(!S.qa)S.qa=seedQA();
+let tab='home',filter='all',posterTheme='neon';
+let hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false},jf={q:'',fair:false,zh:false,cash:false};
+let mq={b:350,z:'south',zh:false};
+const save=()=>store.set(S);
+// ───────── helpers ─────────
+const t=(en,zh)=>S.lang==='zh'?zh:en;
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SPORT={bad:['🏸','Badminton','羽毛球'],run:['🏃','Run','跑步'],ride:['🚴','Ride','骑行'],social:['🍲','Social','饭局/社交']};
+const LEVEL={easy:['Easy / social','养生'],mid:['Intermediate','中级'],hard:['Hard / fast','拉练']};
+const sp=k=>SPORT[k]||SPORT.social;
+function when(iso){const d=new Date(iso);const days=S.lang==='zh'?['周日','周一','周二','周三','周四','周五','周六']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+ let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'pm':'am';h=h%12||12;return `${days[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${h}${m?':'+String(m).padStart(2,'0'):''}${ap}`}
+const left=q=>q.cap-q.players.length;
+function badge(q){const l=left(q);if(l<=0)return `<span class="badge b-full">${t('Full','已满')}${q.wait.length?' +'+q.wait.length:''}</span>`;
+ if(l<=2)return `<span class="badge b-need">${t('Need '+l,q.cap+'缺'+l)}</span>`;return `<span class="badge b-open">${l} ${t('spots','空位')}</span>`}
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),1800)}
+const inSquad=q=>S.me&&q.players.some(p=>p.n===S.me);
+const inWait=q=>S.me&&q.wait.includes(S.me);
+
+
+// ───────── checks: the thing the big portals don't do ─────────
+function homeFlags(h){const f=[];if(h.bond>h.rent*RULES.bondWeeks)f.push(t(`Bond is ${(h.bond/h.rent).toFixed(1)} weeks of rent. Qld limit is ${RULES.bondWeeks} weeks.`,`押金相当于 ${(h.bond/h.rent).toFixed(1)} 周房租，昆州上限是 ${RULES.bondWeeks} 周。`));
+ if(/cash only|只收现金/i.test(h.note||''))f.push(t('Cash only. Ask for a receipt and an RTA bond lodgement number.','只收现金：记得要收据和 RTA 押金编号。'));const am=h.agr==='fixed'?RULES.advFixedWeeks:RULES.advRoom;if(h.adv>am)f.push(t(`Asks for ${h.adv} weeks of rent in advance. The Qld limit here is ${am} weeks.`,`要求预付 ${h.adv} 周房租，昆州此类租约上限是 ${am} 周。`));if(h.role==='head'&&!h.consent)f.push(t('Sub-let by a tenant. Ask to see the owner’s written permission before you pay.','二房东转租：付款前请对方出示业主的书面同意。'));return f}
+function jobFlags(j){const min=j.casual?RULES.minCasual:RULES.minWage;return j.pay<min?[t(`$${j.pay}/h is under the national minimum for ${j.casual?'casual':'permanent'} adults ($${min.toFixed(2)}).`,`时薪 $${j.pay} 低于全国成人${j.casual?'临时工':'正式工'}最低工资（$${min.toFixed(2)}）。`)]:[]}
+let LC='';
+const HT={room:['🛏','Room','单间'],unit:['🏢','Whole place','整租'],student:['🎓','Student housing','学生公寓']};
+const GRAD=['hsl(158 38% 78%),hsl(165 34% 60%)','hsl(24 80% 84%),hsl(16 70% 70%)','hsl(42 70% 82%),hsl(36 62% 66%)','hsl(200 45% 84%),hsl(205 40% 68%)','hsl(340 50% 88%),hsl(350 45% 74%)','hsl(90 34% 82%),hsl(110 28% 66%)'];
+const PAL=[['#DCEBE3','#C9B79C','#1F6F5C','#E2683C','#F6E7C8'],['#F7E3D4','#B99B7E','#E2683C','#1F6F5C','#FBF3E4'],['#F3E6BE','#B8A27A','#C99A2B','#2E5E7E','#FFF8E6'],['#DCE8F0','#A9B5B0','#2E5E7E','#E2683C','#F4F0E7'],['#F2DDE0','#BFA596','#B5546A','#1F6F5C','#FBF1EE'],['#E2EBD3','#B5AC8C','#5E7F3A','#C99A2B','#F8F6E6']];
+function art(x){const n=x.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0),p=PAL[n%PAL.length],[wall,floor,ac,ac2,lite]=p,night=n%3===0;
+ let g='';
+ if(x.type==='room'){
+  g=`<rect width="400" height="150" fill="${wall}"/><rect y="112" width="400" height="38" fill="${floor}"/><rect y="110" width="400" height="3" fill="rgba(25,21,18,.12)"/>
+  <rect x="44" y="20" width="78" height="62" rx="4" fill="${night?'#27384d':'#cfe6f2'}" stroke="#fff" stroke-width="5"/><path d="M83 20v62M44 51h78" stroke="#fff" stroke-width="3"/>${night?`<circle cx="102" cy="36" r="7" fill="#f6e7a8"/>`:`<circle cx="64" cy="38" r="9" fill="#ffd98a"/>`}
+  <rect x="150" y="30" width="34" height="42" rx="3" fill="#fff"/><rect x="155" y="35" width="24" height="32" rx="2" fill="${ac2}" opacity=".8"/><circle cx="167" cy="47" r="6" fill="${lite}"/>
+  <path d="M262 0v26" stroke="#6b5a45" stroke-width="2"/><path d="M246 44h32l-7-18h-18z" fill="${ac2}"/><ellipse cx="262" cy="46" rx="9" ry="3" fill="#ffe9b0"/>
+  <ellipse cx="216" cy="132" rx="100" ry="9" fill="rgba(25,21,18,.08)"/>
+  <rect x="136" y="74" width="150" height="16" rx="6" fill="${ac}"/><rect x="136" y="86" width="150" height="26" rx="5" fill="${lite}"/><path d="M194 86h92v26h-92z" fill="${ac2}" opacity=".88"/><rect x="146" y="78" width="40" height="14" rx="7" fill="#fff"/><rect x="140" y="110" width="6" height="12" fill="#6b5a45"/><rect x="276" y="110" width="6" height="12" fill="#6b5a45"/>
+  <g transform="translate(-288,-6)"><rect x="304" y="100" width="18" height="16" rx="3" fill="${ac2}"/><path d="M313 100c-10-14-10-26-2-34 2 12 6 20 2 34zm0 0c8-12 14-18 18-30-10 4-18 14-18 30z" fill="${ac}"/></g>`}
+ else{const tall=x.type==='student',sky=night?'#2b3a52':'#d7ebf3';let w='';
+  const bl=(bx,by,bw,bh,col,cols,rows)=>{let r=`<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="3" fill="${col}"/>`;const gx=bw/(cols*2+1),gy=bh/(rows*2+1);for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)r+=`<rect x="${(bx+gx*(1+i*2)).toFixed(1)}" y="${(by+gy*(1+j*2)).toFixed(1)}" width="${gx.toFixed(1)}" height="${(gy*1.1).toFixed(1)}" rx="1.5" fill="${(i*7+j*3+n)%4===0?'#ffe3a1':night?'#42546e':'#fff'}" opacity=".9"/>`;return r};
+  w+=bl(40,tall?46:70,70,tall?104:80,lite,3,tall?5:3)+bl(128,tall?18:44,104,tall?132:106,ac,4,tall?6:4)+bl(250,tall?58:78,86,tall?92:72,ac2,3,tall?4:3);
+  g=`<rect width="400" height="150" fill="${sky}"/>${night?'<circle cx="296" cy="26" r="9" fill="#f6e7a8"/>':'<circle cx="292" cy="28" r="13" fill="#ffd98a"/><path d="M20 34c10-10 26-8 30 0 12-4 20 4 18 10H18c-6 0-6-8 2-10z" fill="#fff" opacity=".8"/>'}${w}
+  <rect y="136" width="400" height="14" fill="${floor}"/><rect x="168" y="118" width="24" height="20" rx="2" fill="#6b5a45"/><circle cx="241" cy="116" r="10" fill="#5E7F3A"/><rect x="239" y="124" width="4" height="14" fill="#6b5a45"/><circle cx="119" cy="120" r="8" fill="#6f9a52"/><rect x="117" y="126" width="4" height="12" fill="#6b5a45"/>`}
+ return `<svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${g}</svg>`}
+const ZONE={'St Lucia':'west','Toowong':'west','Indooroopilly':'west','South Brisbane':'inner','Sunnybank':'south','Sunnybank Hills':'south','Calamvale':'south','Coopers Plains':'south','Rochedale':'south'};
+const ZN={west:['West · UQ side','西区 · UQ 一带'],inner:['Inner city','市中心'],south:['South · Sunnybank side','南区 · Sunnybank 一带']};
+const zone=a=>ZONE[a]||'other';const wk=j=>Math.round(j.pay*(j.hpw||15));
+const ago=x=>x.ago==null?t('just now','刚刚'):x.ago<24?x.ago+t('h ago','小时前'):Math.round(x.ago/24)+t('d ago','天前');
+const grad=id=>GRAD[(id.charCodeAt(id.length-1))%GRAD.length];
+const isSaved=(k,id)=>S.saved[k].includes(id);
+
+function listHomes(){let l=S.homes.filter(h=>(hf.type==='all'||h.type===hf.type)&&(!hf.max||h.rent<=hf.max)&&(!hf.bills||h.bills)&&(!hf.clean||!homeFlags(h).length)&&(!hf.zh||h.zh)&&(!hf.nobond||!h.bond)&&(!hf.q||(h.area+' '+h.title+' '+h.near).toLowerCase().includes(hf.q.toLowerCase()))).sort((a,b)=>a.rent-b.rent);
+ LC=l.length+' '+t(l.length===1?'room':'rooms','个房源');
+ return l.map(h=>{const fl=homeFlags(h);return `<div class="card photo"><div class="pic">${art(h)}
+  ${h.verified?`<button class="vf" data-a="vinfo">✓ ${t('Verified','已核实')} ⓘ</button>`:''}<button class="heart ${isSaved('homes',h.id)?'on':''}" data-a="fav" data-k="homes" data-v="${h.id}">♥</button>
+  <div class="pp"><span class="price">$${h.rent}<small>/${t('wk','周')}</small></span></div></div>
+  <div class="body"><button data-a="home" data-v="${h.id}" style="text-align:left;width:100%"><div class="tt">${esc(h.title)}</div><div class="meta">📍 ${esc(h.area)}${h.near?' · '+t('near ','近 ')+esc(h.near):''} · ${ago(h)}</div></button>
+  ${h.zh?`<span class="tag b">${t('中文 OK','中文沟通')}</span>`:''}${!h.bond?`<span class="tag g">${t('No bond','免押金')}</span>`:''}<span class="tag">${h.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>
+  ${fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join('')}</div></div>`}).join('')||`<div class="note">${t('No rooms match. Loosen a filter.','没有符合的房源，放宽筛选试试。')}</div>`}
+function listJobs(){let l=S.jobs.filter(j=>(!jf.fair||!jobFlags(j).length)&&(!jf.zh||j.zh)&&(!jf.cash||j.cash)&&(!jf.q||(j.area+' '+j.title).toLowerCase().includes(jf.q.toLowerCase()))).sort((a,b)=>b.pay-a.pay);
+ LC=l.length+' '+t(l.length===1?'job':'jobs','个工作');
+ return l.map(j=>{const fl=jobFlags(j);return `<div class="card"><div class="row"><button data-a="job" data-v="${j.id}" style="text-align:left;flex:1"><div class="tt">${esc(j.title)}</div><div class="meta">📍 ${esc(j.area)} · ${esc(j.hrs)} · ${ago(j)}</div></button>
+  <div style="text-align:right"><div class="price">$${j.pay}<small>/${t('hr','时')}</small></div><button class="heart ${isSaved('jobs',j.id)?'on':''}" data-a="fav" data-k="jobs" data-v="${j.id}" style="font-size:18px;color:${isSaved('jobs',j.id)?'var(--hot)':'rgba(25,21,18,.25)'}">♥</button></div></div>
+  ${j.zh?`<span class="tag b">${t('Mandarin a plus','会中文优先')}</span>`:''}${j.cash?`<span class="tag g">${t('Cash','现金')}</span>`:''}<span class="tag">${j.casual?t('Casual','临时'):t('Part time','兼职')}</span>
+  ${fl.length?fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join(''):`<span class="ok">✓ ${t('Legal pay','时薪合法')}</span>`}</div>`}).join('')||`<div class="note">${t('No jobs match.','没有符合的工作。')}</div>`}
+
+const MAP=[['Toowong',96,96,0,-22,'middle'],['St Lucia',150,168,22,5,'start'],['Indooroopilly',64,196,0,34,'middle'],['South Brisbane',226,112,22,5,'start'],['Coopers Plains',204,250,-22,5,'end'],['Sunnybank',270,288,22,5,'start'],['Sunnybank Hills',222,338,-22,5,'end'],['Calamvale',276,388,22,5,'start'],['Rochedale',352,236,0,-22,'middle']];
+function mapSvg(){const cnt=a=>S.homes.filter(h=>h.area===a).length+S.jobs.filter(j=>j.area===a).length;
+ const river="M-10 150 C36 176 52 96 104 138 S150 214 190 150 S226 60 262 96 S318 150 346 96 S400 40 430 70";
+ return `<svg viewBox="0 0 420 430" role="img" aria-label="${t('Map of Brisbane suburbs with listings','布里斯班各区房源与工作地图')}"><rect width="420" height="430" fill="#F8F5EE"/>
+ <circle cx="120" cy="150" r="78" fill="#E3F0EB" opacity=".55"/><circle cx="262" cy="320" r="104" fill="#F6E7D8" opacity=".6"/>
+ <path d="${river}" fill="none" stroke="#cfe3ee" stroke-width="20" stroke-linecap="round"/><path d="${river}" fill="none" stroke="#e9f3f7" stroke-width="7" stroke-linecap="round"/>
+ <path d="M236 132 L214 236 L250 300 L262 420 M214 236 L360 232 M96 110 L62 186" stroke="#E4DCCB" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="1 9"/>
+ <text x="330" y="52" font-family="Bodoni Moda,serif" font-style="italic" font-size="14" fill="#8fa3ad" text-anchor="middle">Brisbane River</text>
+ <g transform="translate(386,396)"><circle r="15" fill="#fff"/><path d="M0-10 4 4 0 1-4 4z" fill="#E2683C"/><text y="-17" text-anchor="middle" font-size="9" font-weight="700" fill="#6B645A">N</text></g>
+ <rect x="252" y="62" width="34" height="18" rx="9" fill="#191512"/><text x="269" y="75" text-anchor="middle" font-size="10" font-weight="700" fill="#F4F0E7">CBD</text>
+ ${MAP.map(m=>{const c=cnt(m[0]);return `<g class="pin" data-a="pin" data-v="${m[0]}"><circle cx="${m[1]}" cy="${m[2]}" r="26" fill="transparent"/><circle cx="${m[1]}" cy="${m[2]}" r="${c?16:8}" fill="${c?'#1F6F5C':'#d8d0c0'}" stroke="#fff" stroke-width="3"/><text x="${m[1]}" y="${m[2]+4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${c||''}</text><text class="ml" x="${m[1]+m[3]}" y="${m[2]+m[4]}" text-anchor="${m[5]}" font-size="12" font-weight="600" fill="#191512" paint-order="stroke" stroke="#F8F5EE" stroke-width="4">${m[0]}</text></g>`}).join('')}</svg>`}
+
+const GUIDE=[['tfn','Apply for a Tax File Number (free, from the ATO)','申请税号 TFN（ATO 免费办理）'],['bank','Open a bank account and set up PayID','开银行账户并设置 PayID'],['sim','Get an Australian SIM','办一张澳洲手机卡'],['go','Set up public transport payment (Translink)','设置公交支付（Translink）'],['vevo','Check your visa work conditions on VEVO','在 VEVO 查看签证工作条件'],['bond','Before paying any bond: confirm it will be lodged with the RTA','交押金前：确认押金会存入 RTA'],['entry','Fill in the entry condition report with dated photos','填写入住状况报告并拍照留底'],['oshc','Know how your health cover works and find a GP','了解医疗保险，找好家庭医生 GP'],['fw','Save the Fair Work pay calculator link','收藏 Fair Work 工资计算器'],['mates','Join one squad this week','这周参加一个局']];
+
+function render(){
+ document.documentElement.lang=S.lang==='zh'?'zh':'en';
+ const a=document.getElementById('app');const back=`<button class="back" data-a="tab" data-v="home">← ${t('Home','首页')}</button>`;
+ let h=`<header><div class="logo">${esc(BRAND.en)}<b>.</b><small>${esc(BRAND.zh)}</small></div><button class="lang" data-a="lang">${S.lang==='zh'?'English':'中文'}</button></header>`;
+ if(tab==='home'){
+  const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
+  h+=`<div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
+  <h1>${t('Find a room. Find a job. <em>In your language.</em>','招租，找工。<em>用你的语言。</em>')}</h1><div class="sub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div>
+  <div class="duo">
+   <button class="hero r" data-a="tab" data-v="homes"><span class="e">🏠</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
+   <button class="hero j" data-a="tab" data-v="jobs"><span class="e">💼</span><div class="n">${t('Jobs','找工')}</div><div class="d">${S.jobs.length} ${t('listed','条')} · ${t('up to','最高')} $${Math.max(...S.jobs.map(x=>x.pay))}/${t('hr','时')}</div></button>
+  </div>
+  <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
+  <div class="sec">${t('Where things are','都在哪儿')}</div><div class="map">${mapSvg()}</div><div class="note">${t('Tap a suburb to see its rooms and jobs.','点一个区，看那里的房和工。')}</div>
+  <div class="sec">${t('More on Hopper','Hopper 还能做什么')}</div>
+  <div class="tiles">
+   <button class="tile" data-a="tab" data-v="earn"><div class="e">✦</div><div class="n">${t('Be a scout','做探房员')}</div><div class="d">${t('Visit, photograph, verify','实地看房、拍照、核实')}</div></button>
+   <button class="tile" data-a="tab" data-v="play"><div class="e">🏸</div><div class="n">${t('Squads','拼局')}</div><div class="d">${need.length} ${t('need players now','个局正在缺人')}</div></button>
+   <button class="tile" data-a="tab" data-v="help"><div class="e">🤝</div><div class="n">${t('Favours','帮忙')}</div><div class="d">${t('Pickups, moving, translation','接机、搬家、翻译')}</div></button>
+   <button class="tile" data-a="tab" data-v="tools"><div class="e">🧮</div><div class="n">${t('Money tools','算账工具')}</div><div class="d">${t('Move-in cost, pay check','入住成本、工资核对')}</div></button>
+   <button class="tile" data-a="tab" data-v="guide" style="grid-column:1/3"><div class="e">🧭</div><div class="n">${t('First 30 days','落地 30 天')} · ${S.done.length}/${GUIDE.length}</div><div class="d">${t('The checklist and the rules that stop you getting ripped off','落地清单和防坑规则')}</div></button>
+  </div>
+  <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['📋','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['🏠','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['💰','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${g[0]}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
+  <div class="res">${t('Hopper is flagging','Hopper 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Hopper works and the listing rules','Hopper 怎么运作 · 发布规则')}</button>`;
+  if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
+ }
+ if(tab==='homes'){
+  h+=`<h1>${t('Rooms, <em>without the traps.</em>','招租，<em>不踩坑。</em>')}</h1><div class="sub">${t('Sorted cheapest first. Red flags are worked out from Queensland rental rules.','按价格从低到高。红色警示根据昆州租房规定自动计算。')}</div>
+  <input class="search" id="hq" placeholder="${t('Suburb or uni, e.g. Sunnybank, UQ','区或学校，如 Sunnybank、UQ')}" value="${esc(hf.q)}">
+  <div class="chips">${[['all','✨',t('All','全部')],...Object.keys(HT).map(k=>[k,HT[k][0],t(HT[k][1],HT[k][2])])].map(c=>`<button class="chip ${hf.type===c[0]?'on':''}" data-a="hf" data-k="type" data-v="${c[0]}">${c[1]} ${c[2]}</button>`).join('')}</div>
+  <div class="chips">${[[0,t('Any price','不限价')],[250,'≤ $250'],[350,'≤ $350'],[500,'≤ $500']].map(c=>`<button class="chip ${hf.max===c[0]?'on':''}" data-a="hf" data-k="max" data-v="${c[0]}">${c[1]}</button>`).join('')}<button class="chip ${hf.zh?'on':''}" data-a="hf" data-k="zh">${t('中文 OK','中文沟通')}</button><button class="chip ${hf.nobond?'on':''}" data-a="hf" data-k="nobond">${t('No bond','免押金')}</button><button class="chip ${hf.bills?'on':''}" data-a="hf" data-k="bills">${t('Bills included','包水电')}</button><button class="chip ${hf.clean?'on':''}" data-a="hf" data-k="clean">${t('No red flags','无警示')}</button></div>
+  <div class="bar2"><span id="cnt"></span><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div><div id="list">${listHomes()}</div>`;
+ }
+ if(tab==='jobs'){
+  h+=`<h1>${t('Jobs that <em>pay legally.</em>','找工，<em>时薪合法。</em>')}</h1><div class="sub">${t(`National minimum from 1 July 2026: $${RULES.minWage}/h, or $${RULES.minCasual}/h casual. Your award may be higher.`,`2026年7月1日起全国最低工资：$${RULES.minWage}/时，临时工 $${RULES.minCasual}/时。行业 award 可能更高。`)}</div>
+  <input class="search" id="jq" placeholder="${t('Suburb or role','区或职位')}" value="${esc(jf.q)}">
+  <div class="chips"><button class="chip ${jf.zh?'on':''}" data-a="jf" data-k="zh">${t('Mandarin a plus','会中文优先')}</button><button class="chip ${jf.cash?'on':''}" data-a="jf" data-k="cash">${t('Cash','现金')}</button><button class="chip ${jf.fair?'on':''}" data-a="jf" data-k="fair">${t('Hide under-minimum pay','隐藏低于最低工资')}</button></div>
+  <div class="bar2"><span id="cnt"></span><button class="post" data-a="newjob">+ ${t('Post a job','发布工作')}</button></div><div id="list">${listJobs()}</div>`;
+ }
+ if(tab==='play'){
+  const list=S.squads.filter(q=>filter==='all'||q.sport===filter).sort((x,y)=>new Date(x.start)-new Date(y.start));
+  h+=back+`<h1>${t('One spot short? <em>Fill it in a tap.</em>','差一个人？<em>一键凑齐。</em>')}</h1><div class="sub">${t('Games, runs, rides and tables that need people this week.','本周正在缺人的球局、跑团、骑行和饭局。')}</div>
+  <div class="chips">${[['all','✨',t('All','全部')],...Object.keys(SPORT).map(k=>[k,SPORT[k][0],t(SPORT[k][1],SPORT[k][2])])].map(c=>`<button class="chip ${filter===c[0]?'on':''}" data-a="filter" data-v="${c[0]}">${c[1]} ${c[2]}</button>`).join('')}</div>`;
+  h+=list.map(q=>{const pct=Math.min(100,q.players.length/q.cap*100);return `<button class="card" data-a="open" data-v="${q.id}">
+   <div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div>
+   <span class="tag">${t(LEVEL[q.level][0],LEVEL[q.level][1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span>${inSquad(q)?`<span class="tag b">${t("You're in",'已上车')}</span>`:''}
+   <div class="bar"><i style="width:${pct}%"></i></div><div class="foot"><span>${q.players.length}/${q.cap} ${t('in','人')}</span><span>${t('Host','局主')}: ${esc(q.host)}</span></div></button>`}).join('');
+  h+=`<button class="btn" data-a="new">+ ${t('Start a squad','发起一局')}</button>`;
+ }
+ if(tab==='help'){
+  h+=back+`<h1>${t('Need a hand? <em>Name the price.</em>','找人帮忙？<em>明码标价。</em>')}</h1><div class="sub">${t('Airport pickups, moving, translation at inspections, coaching.','接机、搬家、看房翻译、陪练。')}</div>`;
+  h+=S.tasks.map(k=>`<div class="card"><div class="row"><div><div class="tt">${esc(k.title)}</div><div class="meta">${esc(k.area)} · ${t('posted by','发布人')} ${esc(k.by)}</div></div><span class="badge b-open">$${k.reward}</span></div>
+   <div class="foot"><span>${k.helpers.length} ${t('offered to help','人愿意帮')}</span><button data-a="offer" data-v="${k.id}" style="color:var(--lime);font-weight:700">${k.helpers.includes(S.me)&&S.me?t('Offered ✓','已报名 ✓'):t('I can help','我可以帮')}</button></div></div>`).join('');
+  h+=`<div class="note">${t('Payment is settled directly between the two people. Hopper does not hold money in this version.','由双方直接结算，本版本 Hopper 不经手资金。')}</div><button class="btn" data-a="newtask">+ ${t('Post a task','发布任务')}</button>`;
+ }
+ if(tab==='earn'){const mx=Math.max(...S.scouts.map(x=>x.earned));
+  h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Hopper pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Hopper 不按入住或入职发放现金。')}</div>
+  <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Post it here','发到 Hopper','30 seconds, with a contact.','30 秒，留个联系方式。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
+  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="newhome">${t('Post a room','发房源')}</button></div></div>
+  <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
+  <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
+ }
+ if(tab==='ask')h+=askHtml();
+ if(tab==='about')h+=back+aboutHtml();
+ if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
+ if(tab==='guide'){
+  h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
+  h+=GUIDE.map(g=>`<button class="chk ${S.done.includes(g[0])?'on':''}" data-a="done" data-v="${g[0]}"><span class="bx">${S.done.includes(g[0])?'✓':''}</span><span class="tx">${t(g[1],g[2])}</span></button>`).join('');
+  h+=`<div class="sec">${t('Rules worth knowing','必知规则')}</div>
+  <div class="rule"><b>${t('Bond','押金')}</b> · ${t('Maximum 4 weeks of rent in Queensland, lodged with the RTA.','昆州最多 4 周房租，须存入 RTA。')}</div>
+  <div class="rule"><b>${t('Rent in advance','预付房租')}</b> · ${t('At most 2 weeks for a room or periodic agreement, 1 month for a fixed-term lease.','合租房间或无固定期租约最多 2 周，固定期租约最多 1 个月。')}</div>
+  <div class="rule"><b>${t('Rent increases','涨租')}</b> · ${t('No more than once every 12 months, and the limit follows the property.','每 12 个月最多一次，且跟着房子走。')}</div>
+  <div class="rule"><b>${t('Rent bidding','竞价租房')}</b> · ${t('Banned. Nobody may ask you to offer above the advertised rent.','已禁止，不得要求你出价高于挂牌价。')}</div>
+  <div class="rule"><b>${t('Minimum wage','最低工资')}</b> · $${RULES.minWage}/${t('h','时')}, ${t('casual','临时工')} $${RULES.minCasual}/${t('h','时')} (${t('from 1 July 2026','2026年7月1日起')}).</div>
+  <div class="rule"><b>${t('Student visa work','学生签证打工')}</b> · ${t('48 hours per fortnight while your course is in session. Check VEVO for your own conditions.','上课期间每两周 48 小时，具体以 VEVO 为准。')}</div>
+  <div class="note">${t('General information, not legal or migration advice. Check the RTA, Fair Work Ombudsman and Home Affairs for your situation.','以上为一般信息，不构成法律或移民建议，请以 RTA、Fair Work、Home Affairs 为准。')}</div>`;
+ }
+ if(tab==='tools'){
+  h+=back+`<h1>${t('Do the maths first.','先把账算清。')}</h1>
+  <div class="card"><div class="tt">🏠 ${t('Move-in cost','入住要准备多少钱')}</div><div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="m_rent" type="number" value="300"></div><div><label>${t('Agreement','租约类型')}</label><select id="m_type"><option value="room">${t('Shared room','合租房间')}</option><option value="fixed">${t('Fixed lease','固定期租约')}</option></select></div></div><div class="res" id="m_out"></div></div>
+  <div class="card"><div class="tt">🧾 ${t('Rent split','分摊房租')}</div><div class="g2"><div><label>${t('Total rent per week $','总周租 $')}</label><input id="r_total" type="number" value="640"></div><div><label>${t('Room sizes m², comma separated','各房间面积 m²，逗号分隔')}</label><input id="r_sizes" value="14,11"></div></div><div class="res" id="r_out"></div></div>
+  <div class="card"><div class="tt">💵 ${t('Is my pay legal?','我的时薪合法吗')}</div><div class="g2"><div><label>${t('Hourly rate $','时薪 $')}</label><input id="p_rate" type="number" value="22"></div><div><label>${t('Type','类型')}</label><select id="p_type"><option value="c">${t('Casual','临时工')}</option><option value="p">${t('Part / full time','兼职/全职')}</option></select></div></div><div><label>${t('Hours per week','每周工时')}</label><input id="p_hrs" type="number" value="20"></div><div class="res" id="p_out"></div></div>
+  <div class="card"><div class="tt">⏱ ${t('Student visa hours','学生签证工时')}</div><div class="g2"><div><label>${t('Week 1 hours','第 1 周工时')}</label><input id="s_w1" type="number" value="26"></div><div><label>${t('Week 2 hours','第 2 周工时')}</label><input id="s_w2" type="number" value="24"></div></div><div class="res" id="s_out"></div></div>`;
+ }
+ if(tab==='me'){
+  const mine=S.squads.filter(inSquad),sh=S.homes.filter(x=>isSaved('homes',x.id)),sj=S.jobs.filter(x=>isSaved('jobs',x.id));
+  h+=`<h1>${S.me?esc(S.me):t('Who are you?','你是谁？')}</h1><label>${t('Display name','显示名字')}</label><input id="meName" value="${esc(S.me)}" placeholder="${t('e.g. Jing','例如 阿良')}"><button class="btn" data-a="saveme">${t('Save','保存')}</button>
+  <div class="sec">${t('Saved homes','收藏的房源')}</div>${sh.map(x=>`<button class="card" data-a="home" data-v="${x.id}"><div class="tt">$${x.rent}/${t('wk','周')} · ${esc(x.title)}</div><div class="meta">${esc(x.area)}</div></button>`).join('')||`<div class="note">${t('Tap ♥ on a home to keep it here.','点 ♥ 收藏房源。')}</div>`}
+  ${compareHtml(sh)}
+  <div class="sec">${t('Saved jobs','收藏的工作')}</div>${sj.map(x=>`<button class="card" data-a="job" data-v="${x.id}"><div class="tt">$${x.pay}/${t('h','时')} · ${esc(x.title)}</div><div class="meta">${esc(x.area)}</div></button>`).join('')||`<div class="note">${t('Tap ♥ on a job to keep it here.','点 ♥ 收藏工作。')}</div>`}
+  <div class="sec">${t('Your squads','我的局')}</div>${mine.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></button>`).join('')||`<div class="note">${t('None yet.','还没有。')}</div>`}
+  <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Hopper scout','成为 Hopper 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
+  <button class="btn ghost" data-a="tab" data-v="about">${t('How Hopper works · listing rules','Hopper 怎么运作 · 发布规则')}</button>
+  <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
+  <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
+ }
+ a.innerHTML=h;
+ const main=['help','guide','tools','earn','play','about'].includes(tab)?'home':tab==='admin'?'me':tab;
+ document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
+ if(tab==='tools')calc();
+ const c=document.getElementById('cnt');if(c)c.textContent=LC;
+}
+const num=id=>{const e=document.getElementById(id);return e?Math.max(0,parseFloat(e.value)||0):0};
+function calc(){const set=(id,html)=>{const e=document.getElementById(id);if(e)e.innerHTML=html};
+ const rent=num('m_rent'),fixed=(document.getElementById('m_type')||{}).value==='fixed',bond=rent*RULES.bondWeeks,adv=rent*(fixed?RULES.advFixedWeeks:RULES.advRoom);
+ set('m_out',`${t('The most you can be asked for up front','入住前最多可被要求支付')}: <b>$${Math.round(bond+adv)}</b><br>${t('Bond up to','押金最多')} $${Math.round(bond)} + ${t('rent in advance up to','预付房租最多')} $${Math.round(adv)}${fixed?' '+t('(about 1 month)','（约 1 个月）'):''}. ${t('Asked for more? That is a red flag.','被要求更多？这是危险信号。')}`);
+ const total=num('r_total'),sz=((document.getElementById('r_sizes')||{}).value||'').split(/[,，\s]+/).map(Number).filter(x=>x>0),sum=sz.reduce((a,b)=>a+b,0);
+ set('r_out',sz.length>1?sz.map((s,i)=>`${t('Room','房间')} ${i+1} (${s} m²): <b>$${Math.round((total*0.5/sz.length)+(total*0.5*s/sum))}</b>/${t('wk','周')}`).join('<br>')+`<br><span class="note">${t('Half split evenly for shared areas, half by room size.','一半按人头平分公共区域，一半按房间面积。')}</span>`:t('Enter at least two room sizes.','至少输入两个房间面积。'));
+ const rate=num('p_rate'),cas=(document.getElementById('p_type')||{}).value!=='p',min=cas?RULES.minCasual:RULES.minWage,hrs=num('p_hrs'),gap=(min-rate)*hrs;
+ set('p_out',rate>=min?`<b>✓</b> ${t('At or above the national minimum. Your award rate may still be higher, so check the Fair Work pay calculator.','不低于全国最低工资。行业 award 可能更高，请用 Fair Work 计算器核对。')}`:`<b style="color:var(--hot)">$${gap.toFixed(0)}</b> ${t('short every week, about','每周少拿，约')} <b style="color:var(--hot)">$${(gap*52).toFixed(0)}</b> ${t('a year, against the adult national minimum of','一年，对比成人全国最低工资')} $${min.toFixed(2)}/${t('h','时')}. ${t('Juniors and some awards differ. The Fair Work Ombudsman helps regardless of visa.','未成年和部分 award 另有标准。Fair Work 不论签证都会受理。')}`);
+ const w=num('s_w1')+num('s_w2');
+ set('s_out',w<=RULES.studentHrs?`<b>${w}</b> / ${RULES.studentHrs} ${t('hours this fortnight. Within the limit while your course is in session.','小时（本两周）。在上课期间的限额内。')}`:`<b style="color:var(--hot)">${w}</b> / ${RULES.studentHrs}: ${t('over by','超出')} ${w-RULES.studentHrs} ${t('hours. This can put a student visa at risk during term. Limits do not apply in official course breaks.','小时。学期内超时可能影响学生签证；官方假期不受此限。')}`)}
+
+function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl=homeFlags(x),room=x.type!=='unit';
+ openSheet(`<div class="pic" style="border-radius:18px;overflow:hidden">${art(x)}</div><div class="price" style="margin-top:10px">$${x.rent}<small>/${t('wk','周')} · ${t(HT[x.type][1],HT[x.type][2])}</small></div>
+ <div class="tt" style="font-size:19px">${esc(x.title)}</div><div class="meta">${esc(x.area)}${x.near?' · '+t('near ','近 ')+esc(x.near):''}</div>
+ ${x.verified?`<button class="ok" data-a="vinfo">✓ ${t('Hopper verified','Hopper 已核实')}${x.vdate?' · '+esc(x.vdate):''} ⓘ</button>`:`<button class="tag" data-a="vinfo">${t('Not verified yet','尚未核实')} ⓘ</button>`}<span class="tag">${x.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>${x.furn?`<span class="tag">${t('Furnished','带家具')}</span>`:''}
+ ${fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join('')}<div class="note">${esc(x.note)}</div>
+ <div class="res">${t('Asked bond','要求押金')}: <b>$${x.bond}</b> (${(x.bond/x.rent).toFixed(1)} ${t('weeks','周')})<br>${t('Legal maximum up front','合法最高入住款')}: $${x.rent*RULES.bondWeeks} ${t('bond','押金')} + $${x.rent*(room?RULES.advRoom:RULES.advFixedWeeks)} ${t('rent in advance','预付房租')}</div>
+ ${(()=>{const js=S.jobs.filter(j=>zone(j.area)===zone(x.area)&&!jobFlags(j).length).sort((a,b)=>wk(b)-wk(a)).slice(0,3);return js.length?`<div class="sec">${t('Jobs that could pay for it','能撑起这份房租的工作')}</div>`+js.map(j=>`<button class="mini" data-a="job" data-v="${j.id}"><span><b>${esc(j.title)}</b><i>${esc(j.area)} · ≈ $${wk(j)}/${t('wk before tax','周（税前）')}</i></span><em class="${x.rent/wk(j)<=.4?'gd':'bd'}">${Math.round(x.rent/wk(j)*100)}%<small>${t('of pay','占收入')}</small></em></button>`).join('')+`<div class="note">${t('Share of that job’s weekly pay this rent would take. Under about a third is comfortable.','这份房租占该工作周薪的比例，三分之一以内比较宽松。')}</div>`:''})()}
+ <div class="sec">${t('Contact','联系方式')}</div><div class="tt">${esc(x.contact)}</div><div class="meta">${t('Listed by','发布人')} ${esc(x.by)}${x.role&&ROLE[x.role]?' · '+t(ROLE[x.role][0],ROLE[x.role][1]):''}</div>
+ <button class="btn ghost" data-a="enq" data-v="${x.id}">${t('Copy a ready enquiry message','复制一段现成的询问信息')}</button>
+ <button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>
+ <button class="btn" data-a="fav" data-k="homes" data-v="${x.id}" data-re="home">${isSaved('homes',x.id)?t('Saved ♥','已收藏 ♥'):t('Save this home','收藏')}</button>
+ <div class="sec">${t('Before you pay','付款之前')}</div>${[['See the room yourself, in person or on a live video call.','亲自看房，或实时视频看房。'],['Get a written agreement before any money moves.','先拿到书面协议，再付任何钱。'],[`Bond is ${RULES.bondWeeks} weeks of rent at most. Ask for the RTA bond number.`,`押金最多 ${RULES.bondWeeks} 周房租，记得索取 RTA 押金编号。`],['You can show your ID without handing over a copy.','证件可以只出示，不必交复印件。']].map(r=>`<div class="li y">${t(r[0],r[1])}</div>`).join('')}<div class="note">${t('Hopper is a notice board, not an agent. It does not hold money or sign agreements.','Hopper 是信息板，不是中介，不经手资金，也不代签协议。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div><button class="link" data-a="report" data-k="homes" data-v="${x.id}">${t('Report this listing','举报这条房源')}</button>`)}
+function jobDetail(id){const x=S.jobs.find(q=>q.id===id);if(!x)return;const fl=jobFlags(x);
+ openSheet(`<div class="tt" style="font-size:21px">${esc(x.title)}</div><div class="meta">${esc(x.area)} · ${esc(x.hrs)} · ${esc(x.lang)}</div><div class="price" style="margin-top:8px">$${x.pay}<small>/${t('h','时')} · ${x.casual?t('casual','临时'):t('part time','兼职')}</small></div>
+ ${fl.length?fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join(''):`<span class="ok">✓ ${t('At or above national minimum','不低于全国最低工资')}</span>`}<div class="note">${esc(x.note)}</div>
+ <div class="res">${t('At','按')} ${x.hpw||15} ${t('h a week this pays about','小时/周计算，约')} <b>$${wk(x)}</b>/${t('wk before tax','周（税前）')}</div>
+ ${(()=>{const hs=S.homes.filter(h=>zone(h.area)===zone(x.area)&&!homeFlags(h).length).sort((a,b)=>a.rent-b.rent).slice(0,3);return hs.length?`<div class="sec">${t('Rooms near this job','这份工作附近的房')}</div>`+hs.map(h=>`<button class="mini" data-a="home" data-v="${h.id}"><span><b>$${h.rent}/${t('wk','周')} · ${esc(h.area)}</b><i>${esc(h.title)}</i></span><em class="${h.rent/wk(x)<=.4?'gd':'bd'}">${Math.round(h.rent/wk(x)*100)}%<small>${t('of pay','占收入')}</small></em></button>`).join(''):''})()}
+ <div class="sec">${t('Contact','联系方式')}</div><div class="tt">${esc(x.contact)}</div><div class="meta">${t('Posted by','发布人')} ${esc(x.by)}</div>
+ <button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>
+ <button class="btn" data-a="fav" data-k="jobs" data-v="${x.id}" data-re="job">${isSaved('jobs',x.id)?t('Saved ♥','已收藏 ♥'):t('Save this job','收藏')}</button><button class="link" data-a="report" data-k="jobs" data-v="${x.id}">${t('Report this job','举报这份工作')}</button>`)}
+function matchSheet(){const ch=(k,v,l)=>`<button class="chip ${mq[k]===v?'on':''}" data-a="mq" data-k="${k}" data-v="${v}">${l}</button>`;
+ const rooms=S.homes.filter(h=>!homeFlags(h).length&&h.rent<=mq.b&&zone(h.area)===mq.z&&(!mq.zh||h.zh)).sort((a,b)=>(b.verified-a.verified)||a.rent-b.rent);
+ const jobs=S.jobs.filter(j=>!jobFlags(j).length&&zone(j.area)===mq.z&&(!mq.zh||j.zh)).sort((a,b)=>wk(b)-wk(a));const best=jobs[0];
+ openSheet(`<div class="tt" style="font-family:var(--serif);font-size:28px;font-weight:500">${t('Match me','帮我配')}</div>
+ <label>1 · ${t('Weekly rent budget','每周房租预算')}</label><div class="chips">${ch('b',250,'≤ $250')}${ch('b',350,'≤ $350')}${ch('b',500,'≤ $500')}${ch('b',9999,t('Flexible','不限'))}</div>
+ <label>2 · ${t('Side of town','想住哪边')}</label><div class="chips">${Object.keys(ZN).map(z=>ch('z',z,t(ZN[z][0],ZN[z][1]))).join('')}</div>
+ <label>3 · ${t('Language','语言')}</label><div class="chips">${ch('zh',false,t('English is fine','英文就行'))}${ch('zh',true,t('中文 needed','需要中文沟通'))}</div>
+ <div class="sec">${rooms.length} ${t('rooms fit','个房源符合')}</div>${rooms.map(h=>`<button class="mini" data-a="home" data-v="${h.id}"><span><b>$${h.rent}/${t('wk','周')} · ${esc(h.area)}</b><i>${h.verified?'✓ '+t('scout visited','探房员看过')+' · ':''}${esc(h.title)}</i></span>${best?`<em class="${h.rent/wk(best)<=.4?'gd':'bd'}">${Math.round(h.rent/wk(best)*100)}%<small>${t('of pay','占收入')}</small></em>`:''}</button>`).join('')||`<div class="note">${t('Nothing clean in this corner yet. Try a wider budget or another side of town.','这个组合暂时没有合规房源，放宽预算或换个区试试。')}</div>`}
+ <div class="sec">${jobs.length} ${t('jobs on the same side','同区工作')}</div>${jobs.map(j=>`<button class="mini" data-a="job" data-v="${j.id}"><span><b>${esc(j.title)}</b><i>${esc(j.area)} · $${j.pay}/${t('hr','时')}</i></span><em class="gd">$${wk(j)}<small>/${t('wk','周')}</small></em></button>`).join('')||`<div class="note">${t('No legal-pay jobs here yet.','这边暂时没有时薪合法的工作。')}</div>`}
+ ${best&&rooms.length?`<div class="note">${t('Percentages compare each rent with the best-paying job on this list, before tax.','百分比 = 房租 ÷ 列表中周薪最高的工作（税前）。')}</div>`:''}`)}
+function compareHtml(sh){if(sh.length<2)return'';const row=(l,f)=>`<tr><th>${l}</th>${sh.map(x=>`<td>${f(x)}</td>`).join('')}</tr>`;
+ return `<div class="sec">${t('Compare saved rooms','对比收藏的房')}</div><div class="cmp"><table><tr><th></th>${sh.map(x=>`<td><b>${esc(x.area)}</b></td>`).join('')}</tr>
+ ${row(t('Rent / wk','周租'),x=>'$'+x.rent)}${row(t('Bond','押金'),x=>x.bond?'$'+x.bond+' · '+(x.bond/x.rent).toFixed(1)+t(' wks',' 周'):t('None','无'))}${row(t('Bills','水电网'),x=>x.bills?t('Included','包含'):t('Extra','另计'))}${row(t('Scout visited','实地核实'),x=>x.verified?'✓':'–')}${row(t('Up front','入住款'),x=>'$'+(x.bond+x.rent*2))}${row(t('Red flags','警示'),x=>homeFlags(x).length?'⚠ '+homeFlags(x).length:'–')}</table></div>
+ <div class="note">${t('Up front = asked bond + 2 weeks rent.','入住款 = 要求的押金 + 2 周房租。')}</div>`}
+function adminHtml(){const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map(x=>({k:'jobs',x}))],find=r=>S[r.k].find(q=>q.id===r.id);
+ const owed=S.scouts.reduce((a,b)=>a+b.owed,0),q=S.reports.filter(find);
+ return `<h1>${t('Admin <em>desk.</em>','管理<em>后台。</em>')}</h1><div class="sub">${t('Only you would see this. In this demo it is open; the real one sits behind your login.','正式版只有你登录后可见，演示版暂时开放。')}</div>
+ <div style="display:flex;gap:10px"><div class="stat"><b>${all.length}</b><span>${t('listings','条信息')}</span></div><div class="stat"><b>${q.length}</b><span>${t('reported','被举报')}</span></div><div class="stat"><b>${S.homes.filter(x=>x.verified).length}</b><span>${t('verified','已核实')}</span></div></div>
+ <div class="sec">${t('Review queue','待处理')}</div>${q.map(r=>{const x=find(r);return `<div class="card"><div class="tt">${esc(x.title)}</div><div class="meta">${esc(x.area)} · ${t('reported','举报原因')}: ${esc(r.why)}</div><div class="cta"><button class="btn ghost" data-a="adkeep" data-k="${r.k}" data-v="${r.id}">${t('Keep','保留')}</button><button class="btn hot" data-a="addel" data-k="${r.k}" data-v="${r.id}">${t('Remove','删除')}</button></div></div>`}).join('')||`<div class="note">${t('Queue is clear.','没有待处理的举报。')}</div>`}
+ <div class="sec">${t('Rooms','房源')}</div>${S.homes.map(x=>`<div class="lb"><span style="flex:1;min-width:0"><b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.title)}</b><span class="meta">$${x.rent} · ${esc(x.area)}</span></span><button class="paid ${x.verified?'y':''}" data-a="adver" data-v="${x.id}">${x.verified?'✓ '+t('Verified','已核实'):t('Mark verified','标记核实')}</button></div>`).join('')}
+ <div class="sec">${t('Scouts','探房员')}</div>${S.scouts.map((x,i)=>`<div class="lb"><span style="flex:1"><b>${esc(x.n)}</b> <span class="meta">${x.leads} ${t('leads','条线索')} · ${x.won} ${t('matched','成交')}</span></span><span class="paid y">${x.earned} ${t('pts','分')}</span></div>`).join('')}
+ <div class="note">${t('Points only. No cash is paid per move-in or hire.','只计积分，不按入住或入职发放现金。')}</div>`}
+// ───────── trust, rules, community ─────────
+const ROLE={owner:['Owner','业主'],head:['Tenant sub-letting','二房东（转租）'],agent:['Licensed agent','持牌中介']};
+const IC={home:'<path d="M3 11l9-7 9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',homes:'<path d="M3 19v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 16h18M6 10V6h12v4"/>',jobs:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',ask:'<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'};
+function seedQA(){return[
+ {id:'q1',q:'Landlord wants the bond in cash with no receipt. What do I do? · 房东要现金押金又不给收据，怎么办？',area:'Sunnybank',by:'Amy',ago:5,a:[{by:'Hopper',text:'Ask for a receipt and the RTA bond number. In Queensland a bond has to be lodged with the RTA within 10 days. 要收据和 RTA 押金编号；昆州押金须在 10 天内存入 RTA。'}]},
+ {id:'q2',q:'Single room in Sunnybank Hills: what should I check before I say yes? · Sunnybank Hills 单间，答应之前要确认什么？',area:'Sunnybank Hills',by:'小林',ago:20,a:[{by:'Kelvin',text:'Ask if bills are included, how many people share the bathroom, and the minimum stay. 先问包不包水电网、几个人共用卫生间、最短租期。'}]},
+ {id:'q3',q:'Sunnybank to UQ without a car: what works for you? · 没车从 Sunnybank 去 UQ，大家怎么走？',area:'Sunnybank',by:'Jun',ago:30,a:[]}]}
+function enqText(x){return `Hi, I saw your listing on Hopper: ${x.title} ($${x.rent}/wk, ${x.area}). Is it still available? Could I inspect it this week?\nCould you also confirm: the bond amount and that it will be lodged with the RTA, whether bills are included, and the minimum stay. Thank you!\n\n你好，我在 Hopper 看到你的房源（$${x.rent}/周，${x.area}）。请问还在吗？这周可以看房吗？\n另外想确认：押金金额以及是否会存入 RTA、是否包水电网、最短租期。谢谢！`}
+function verifiedSheet(){const li=(c,en,zh)=>`<div class="li ${c}">${t(en,zh)}</div>`;
+ openSheet(`<div class="tt" style="font-family:var(--serif);font-size:26px;font-weight:500">${t('What “Verified” means','“已核实”代表什么')}</div>
+ <div class="sec">${t('Hopper checked','Hopper 核实过')}</div>${li('y','Someone from Hopper saw the place, in person or on a live video call.','Hopper 的人亲自或通过实时视频看过房。')}${li('y','The lister showed photo ID. We looked at it and kept no copy.','发布人出示过带照片的证件；我们只查看，不留存。')}${li('y','The lister showed they can let it: they own it, or they have written permission to sub-let.','发布人证明有权出租：是业主，或持有书面转租同意。')}${li('y','The rent is one fixed weekly price and the bond is 4 weeks or less.','租金是固定周租，押金不超过 4 周。')}
+ <div class="sec">${t('Hopper did not check','Hopper 没有核实')}</div>${li('n','Building safety, smoke alarms or repairs.','房屋安全、烟雾报警器或维修状况。')}${li('n','How the lister or housemates will behave.','房东或室友日后的为人。')}${li('n','The terms of your tenancy agreement.','你的租约条款。')}${li('n','That the place is still available today.','房源今天是否仍然空置。')}
+ <div class="note">${t('Verified is not a guarantee. Inspect the place yourself and get a written agreement before you pay anything.','“已核实”不是担保。付款前请亲自看房并拿到书面协议。')}</div>`)}
+function verifyForm(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const ck=(i,en,zh)=>`<label class="tick"><input type="checkbox" id="${i}"><span>${t(en,zh)}</span></label>`;
+ openSheet(`<div class="tt" style="font-size:21px">${t('Verify this listing','核实这条房源')}</div><div class="meta">${esc(x.title)} · ${esc(x.area)}</div>
+ ${ck('v1','I saw the place, in person or on a live video call.','我亲自或通过实时视频看过房。')}${ck('v2','I sighted the lister’s photo ID and kept no copy or photo of it.','我查看过发布人的证件，没有留存复印件或照片。')}${ck('v3','I sighted proof they can let it: ownership, or written permission to sub-let.','我查看过出租权证明：产权，或书面转租同意。')}${ck('v4','Rent is one fixed price, bond is 4 weeks or less, rent in advance is within the limit.','租金为固定价，押金不超过 4 周，预付房租未超上限。')}
+ <button class="btn" data-a="adverok" data-v="${id}">${t('Mark verified','标记已核实')}</button><div class="note">${t('Only tick what you actually did. The Verified badge is a public claim.','只勾选你确实做过的事。“已核实”标记是对外的公开声明。')}</div>`)}
+function aboutHtml(){const r=(b,en,zh)=>`<div class="rule"><b>${b}</b> · ${t(en,zh)}</div>`;
+ return `<h1>${t('How Hopper <em>works.</em>','Hopper <em>怎么运作。</em>')}</h1><div class="sub">${t('A free notice board for rooms and jobs, with checks built in.','一个免费的房源和工作信息板，自带规则检查。')}</div>
+ <div class="sec">${t('What Hopper is not','Hopper 不是什么')}</div>
+ ${r(t('Not an agent','不是中介'),'Hopper is not a real estate agent. It does not negotiate, arrange inspections for a lister, or sign anything.','Hopper 不是房产中介，不代谈价格、不代办看房、不代签任何文件。')}
+ ${r(t('No money','不经手资金'),'Hopper never collects rent or bond, and takes no fee or commission when someone moves in.','Hopper 不代收租金或押金，成交也不收取任何费用或佣金。')}
+ ${r(t('Your deal','你们的约定'),'Any agreement is between the renter and the lister.','任何租约都是租客和发布人之间的事。')}
+ <div class="sec">${t('Listing rules','发布规则')}</div>
+ ${r(t('Fixed price','固定价格'),'One weekly rent. No price ranges and no “make an offer”.','只写一个周租，不能写区间，也不能“欢迎出价”。')}
+ ${r(t('Bond','押金'),'4 weeks of rent at most, lodged with the RTA within 10 days.','最多 4 周房租，并在 10 天内存入 RTA。')}
+ ${r(t('Rent in advance','预付房租'),'2 weeks at most for a room or periodic agreement, 1 month for a fixed term.','合租房间或无固定期租约最多 2 周，固定期租约最多 1 个月。')}
+ ${r(t('Sub-letting','转租'),'A tenant who sub-lets needs the owner’s written permission.','租客转租须有业主的书面同意。')}
+ ${r(t('Honest','真实'),'Real photos and true details. Misleading listings are removed.','照片和信息必须真实，误导性房源会被删除。')}
+ <button class="btn ghost" data-a="vinfo">${t('What “Verified” means','“已核实”代表什么')}</button>
+ <div class="sec">${t('Your information','你的信息')}</div>
+ ${r('ID','When Hopper verifies a lister we look at ID and keep no copy. Renters can also show ID without handing over a copy.','Hopper 核实发布人时只查看证件、不留存。租客也可以只出示证件，不交复印件。')}
+ ${r(t('This demo','演示版'),'What you type stays on this phone.','你输入的内容只保存在这台手机上。')}
+ <div class="note">${t('General information, not legal advice. For your own situation check the Residential Tenancies Authority.','以上为一般信息，不构成法律建议。具体情况请查阅昆州 RTA。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div>`}
+function askHtml(){return `<h1>${t('Ask Brisbane. <em>Someone here knows.</em>','问问布村。<em>总有人知道。</em>')}</h1><div class="sub">${t('Renting, work, getting around, settling in. Ask in English or 中文.','租房、打工、出行、落地，中英文都可以问。')}</div>
+ <div class="bar2"><span>${S.qa.length} ${t('questions','个问题')}</span><button class="post" data-a="asknew">+ ${t('Ask','提问')}</button></div>
+ ${S.qa.map(k=>`<button class="card" data-a="askopen" data-v="${k.id}"><div class="tt">${esc(k.q)}</div><div class="meta">${k.area?'📍 '+esc(k.area)+' · ':''}${esc(k.by)} · ${ago(k)}</div><span class="tag ${k.a.length?'b':''}">${k.a.length} ${t(k.a.length===1?'answer':'answers','个回答')}</span></button>`).join('')}
+ <div class="note">${t('Sample questions. Answers come from other members and are not professional advice.','示例问题。回答来自其他用户，不构成专业建议。')}</div>`}
+function askForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Ask a question','提一个问题')}</div><label>${t('Your question','你的问题')}</label><textarea id="q_text" rows="3"></textarea><label>${t('Suburb (optional)','区域（可选）')}</label><input id="q_area">${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="q_by">`}<button class="btn" data-a="askcreate">${t('Post question','发布问题')}</button><div class="note">${t('Leave out phone numbers, addresses and other private details.','不要写电话、地址等隐私信息。')}</div>`)}
+function askDetail(id){const k=S.qa.find(x=>x.id===id);if(!k)return;
+ openSheet(`<div class="tt" style="font-size:19px">${esc(k.q)}</div><div class="meta">${esc(k.by)} · ${ago(k)}</div>
+ <div class="sec">${k.a.length} ${t(k.a.length===1?'answer':'answers','个回答')}</div>${k.a.map(r=>`<div class="pl" style="display:block"><b>${esc(r.by)}</b><div style="margin-top:3px">${esc(r.text)}</div></div>`).join('')||`<div class="note">${t('No answers yet. Be the first.','还没有回答，来做第一个。')}</div>`}
+ <label>${t('Your answer','你的回答')}</label><textarea id="r_text" rows="2"></textarea>${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="r_by">`}<button class="btn" data-a="askreply" data-v="${id}">${t('Post answer','发布回答')}</button>`)}
+function homeForm(){openSheet(`<div class="tt" style="font-size:21px">${t('List a place','发布房源')}</div>
+ <label>${t('Type','类型')}</label><select id="h_type">${Object.keys(HT).map(k=>`<option value="${k}">${HT[k][0]} ${t(HT[k][1],HT[k][2])}</option>`).join('')}</select>
+ <label>${t('Title','标题')}</label><input id="h_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="h_area"></div><div><label>${t('Near (uni / station)','靠近（学校/车站）')}</label><input id="h_near"></div></div>
+ <div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="h_rent" type="number"></div><div><label>${t('Bond $','押金 $')}</label><input id="h_bond" type="number"></div></div>
+ <div class="g2"><div><label>${t('Bills','水电网')}</label><select id="h_bills"><option value="1">${t('Included','包含')}</option><option value="0">${t('Extra','另计')}</option></select></div><div><label>${t('Furnished','家具')}</label><select id="h_furn"><option value="1">${t('Yes','有')}</option><option value="0">${t('No','无')}</option></select></div></div>
+ <div class="g2"><div><label>${t('Agreement','租约类型')}</label><select id="h_agr"><option value="room">${t('Room / periodic','合租 / 无固定期')}</option><option value="fixed">${t('Fixed-term lease','固定期租约')}</option></select></div><div><label>${t('Rent in advance (weeks)','预付房租（周）')}</label><input id="h_adv" type="number" value="2"></div></div>
+ <label>${t('You are','你的身份')}</label><select id="h_role">${Object.keys(ROLE).map(k=>`<option value="${k}">${t(ROLE[k][0],ROLE[k][1])}</option>`).join('')}</select>
+ <label>${t('Contact (WeChat / phone / email)','联系方式（微信/电话/邮箱）')}</label><input id="h_contact">
+ <label class="tick"><input type="checkbox" id="h_c1"><span>${t('The rent above is the fixed price. I will not ask for or accept more.','以上租金为固定价格，我不会要求或接受更高的出价。')}</span></label>
+ <label class="tick"><input type="checkbox" id="h_c2"><span>${t('If I take a bond, I will lodge it with the RTA within 10 days.','如收取押金，我会在 10 天内存入 RTA。')}</span></label>
+ <label class="tick"><input type="checkbox" id="h_c3"><span>${t('If I am sub-letting, I have the owner’s written permission.','如属转租，我已取得业主的书面同意。')}</span></label>
+ <label class="tick"><input type="checkbox" id="h_c4"><span>${t('This listing is true and I accept the Hopper listing rules.','信息属实，我接受 Hopper 发布规则。')}</span></label>${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="h_by">`}
+ <label>${t('Details','详情')}</label><textarea id="h_note" rows="2"></textarea><button class="btn" data-a="createhome">${t('Publish','发布')}</button>
+ <div class="note">${t('Hopper does not publish a bond above 4 weeks of rent, or more rent in advance than Queensland allows.','押金超过 4 周房租、或预付房租超过昆州上限的房源，Hopper 不予发布。')}</div>`)}
+function jobForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Post a job','发布工作')}</div>
+ <label>${t('Role','职位')}</label><input id="j_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="j_area"></div><div><label>${t('Hours','工时')}</label><input id="j_hrs" placeholder="15–20 h/wk"></div></div>
+ <div class="g2"><div><label>${t('Hourly pay $','时薪 $')}</label><input id="j_pay" type="number" step="0.01"></div><div><label>${t('Type','类型')}</label><select id="j_cas"><option value="1">${t('Casual','临时工')}</option><option value="0">${t('Part / full time','兼职/全职')}</option></select></div></div>
+ <label>${t('Languages','语言')}</label><input id="j_lang" value="English"><label>${t('Contact','联系方式')}</label><input id="j_contact">${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="j_by">`}
+ <label>${t('Details','详情')}</label><textarea id="j_note" rows="2"></textarea><button class="btn" data-a="createjob">${t('Publish','发布')}</button>
+ <div class="note">${t('Pay under the national minimum is shown to job seekers with a warning.','低于全国最低工资的职位会向求职者显示警示。')}</div>`)}
+function openSheet(html){document.getElementById('sheetIn').innerHTML=`<button class="x" data-a="close">✕</button>`+html;document.getElementById('sheet').classList.add('on')}
+function closeSheet(){document.getElementById('sheet').classList.remove('on')}
+
+function detail(id){const q=S.squads.find(x=>x.id===id);if(!q)return;const isHost=S.me&&q.host===S.me,me=inSquad(q),w=inWait(q),l=left(q);
+ let h=`<div class="tt" style="font-size:21px">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${q.mins} min<br>${esc(q.venue)}, ${esc(q.area)}</div>
+ <span class="tag">${t(LEVEL[q.level][0],LEVEL[q.level][1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span> ${badge(q)}
+ ${q.note?`<div class="note">${esc(q.note)}</div>`:''}`;
+ if(!S.me)h+=`<label>${t('Your name to join','填名字上车')}</label><input id="joinName" placeholder="${t('e.g. Jing','例如 阿良')}">`;
+ if(me)h+=`<button class="btn ghost" data-a="leave" data-v="${id}">${t('Drop out (next on waitlist takes your spot)','退出（候补自动顶上）')}</button>`;
+ else if(w)h+=`<button class="btn ghost" data-a="leave" data-v="${id}">${t('Leave waitlist','退出候补')}</button>`;
+ else h+=`<button class="btn ${l<=2&&l>0?'hot':''}" data-a="join" data-v="${id}">${l>0?t('Join this squad','上车'):t('Join waitlist','排候补')}</button>`;
+ if(q.price&&q.payid&&me)h+=`<div class="card" style="margin-top:12px"><div class="meta">${t('Pay the host by PayID','用 PayID 付给局主')}</div><div class="tt">${esc(q.payid)} · $${q.price}</div><button class="btn ghost" data-a="copy" data-v="${esc(q.payid)}">${t('Copy PayID','复制 PayID')}</button><button class="btn" data-a="paid" data-v="${id}">${q.players.find(p=>p.n===S.me).paid?t('Marked as paid ✓','已标记付款 ✓'):t("I've paid",'我已付款')}</button></div>`;
+ h+=`<button class="btn ghost" data-a="poster" data-v="${id}">🖼 ${t('Make a share poster','生成朋友圈海报')}</button><button class="btn ghost" data-a="invite" data-v="${id}">${t('Copy invite text','复制邀请文案')}</button>
+ <div class="sec">${t('Roster','名单')} ${q.players.length}/${q.cap}${q.price?' · '+q.players.filter(p=>p.paid).length+' '+t('paid','已付'):''}</div>`;
+ h+=q.players.map(p=>`<div class="pl"><span><span class="av">${esc(p.n.slice(0,1).toUpperCase())}</span>${esc(p.n)}${p.n===q.host?' ★':''}</span>${q.price?(isHost?`<button class="paid ${p.paid?'y':''}" data-a="hostpaid" data-v="${id}" data-n="${esc(p.n)}">${p.paid?t('Paid','已付'):t('Unpaid — tap','未付·点击')}</button>`:`<span class="paid ${p.paid?'y':''}">${p.paid?t('Paid','已付'):t('Unpaid','未付')}</span>`):''}</div>`).join('');
+ if(q.wait.length)h+=`<div class="sec">${t('Waitlist','候补')}</div>`+q.wait.map((n,i)=>`<div class="pl"><span><span class="av">${i+1}</span>${esc(n)}</span></div>`).join('');
+ if(isHost)h+=`<div class="note">${t('You are the host: tap a payment tag to confirm it.','你是局主：点付款标签即可确认。')}</div>`;
+ openSheet(h)}
+
+function squadForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Start a squad','发起一局')}</div>
+ <label>${t('Type','类型')}</label><select id="f_sport">${Object.keys(SPORT).map(k=>`<option value="${k}">${SPORT[k][0]} ${t(SPORT[k][1],SPORT[k][2])}</option>`).join('')}</select>
+ <label>${t('Title','标题')}</label><input id="f_title" placeholder="${t('Thursday doubles','周四双打')}">
+ <div class="g2"><div><label>${t('Suburb','区域')}</label><input id="f_area" placeholder="Sunnybank Hills"></div><div><label>${t('Venue / meeting point','场地/集合点')}</label><input id="f_venue"></div></div>
+ <div class="g2"><div><label>${t('Date & time','日期时间')}</label><input id="f_start" type="datetime-local"></div><div><label>${t('Minutes','时长(分钟)')}</label><input id="f_mins" type="number" value="120"></div></div>
+ <div class="g2"><div><label>${t('Level','水平')}</label><select id="f_level">${Object.keys(LEVEL).map(k=>`<option value="${k}">${t(LEVEL[k][0],LEVEL[k][1])}</option>`).join('')}</select></div><div><label>${t('Spots','人数')}</label><input id="f_cap" type="number" value="8"></div></div>
+ <div class="g2"><div><label>${t('$ per person (0 = free)','人均 $（0=免费）')}</label><input id="f_price" type="number" value="15"></div><div><label>${t('Your PayID (optional)','你的 PayID（可选）')}</label><input id="f_payid"></div></div>
+ ${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="f_host">`}
+ <label>${t('Note','备注')}</label><textarea id="f_note" rows="2"></textarea>
+ <button class="btn" data-a="create">${t('Publish squad','发布')}</button>`)}
+
+function taskForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Post a task','发布任务')}</div>
+ <label>${t('What do you need?','需要什么帮忙？')}</label><input id="k_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="k_area"></div><div><label>${t('Reward $','酬劳 $')}</label><input id="k_reward" type="number" value="30"></div></div>
+ ${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="k_by">`}<button class="btn" data-a="createtask">${t('Post','发布')}</button>`)}
+
+// ───────── poster (canvas → image; long-press to save) ─────────
+const THEMES={neon:{bg:['#F4F0E7','#EBE4D6'],ac:'#1F6F5C',tx:'#191512',mu:'#6B645A',on:'#fff'},gold:{bg:['#0d0b08','#2a2010'],ac:'#f3c969',tx:'#fff7e6',mu:'#b9a988',on:'#1a1408'},day:{bg:['#E2683C','#b84c26'],ac:'#F4F0E7',tx:'#ffffff',mu:'#ffd9c9',on:'#191512'}};
+function drawPoster(q){const T=THEMES[posterTheme],c=document.createElement('canvas');c.width=1080;c.height=1440;const x=c.getContext('2d');
+ const g=x.createLinearGradient(0,0,1080,1440);g.addColorStop(0,T.bg[0]);g.addColorStop(1,T.bg[1]);x.fillStyle=g;x.fillRect(0,0,1080,1440);
+ x.globalAlpha=.10;x.fillStyle=T.ac;x.beginPath();x.arc(1010,250,330,0,7);x.fill();x.globalAlpha=.08;x.beginPath();x.arc(60,1400,260,0,7);x.fill();x.globalAlpha=1;x.fillStyle=T.ac;x.fillRect(80,160,120,8);
+ const F=(w,s)=>x.font=`${w} ${s}px "Bodoni Moda","Noto Serif SC",serif`;
+ x.fillStyle=T.ac;F(900,54);x.fillText(BRAND.en+'. '+BRAND.zh,80,120);
+ x.fillStyle=T.mu;F(500,34);x.textAlign='right';x.fillText('BRISBANE',1000,120);x.textAlign='left';
+ const l=left(q);x.fillStyle=T.ac;F(900,l>0&&l<=9?300:190);
+ const big=l>0?(S.lang==='zh'?`${q.cap}缺${l}`:`NEED ${l}`):(S.lang==='zh'?'已满员':'FULL');
+ let fs=l>0?300:220;F(900,fs);while(x.measureText(big).width>900){fs-=10;F(900,fs)}x.fillText(big,74,560);
+ x.fillStyle=T.tx;F(700,62);wrap(x,sp(q.sport)[0]+' '+q.title,80,700,920,80,2);
+ x.fillStyle=T.mu;F(500,44);x.fillText(when(q.start)+' · '+q.mins+' min',80,900);
+ x.fillStyle=T.tx;F(500,44);wrap(x,'📍 '+q.venue+', '+q.area,80,972,920,58,2);
+ const pills=[t(LEVEL[q.level][0],LEVEL[q.level][1]),q.price?'$'+q.price+t(' each','/人'):t('Free','免费'),q.players.length+'/'+q.cap+t(' in',' 人')];let px=80;F(700,38);
+ pills.forEach(p=>{const w=x.measureText(p).width+48;x.strokeStyle=T.ac;x.lineWidth=3;rr(x,px,1108,w,70,35);x.stroke();x.fillStyle=T.ac;x.fillText(p,px+24,1157);px+=w+18});
+ x.fillStyle=T.ac;rr(x,80,1236,920,130,34);x.fill();x.fillStyle=T.on;F(900,50);x.textAlign='center';x.fillText(t('Tap in before it fills','名额有限，先到先得'),540,1298);F(500,34);x.fillText(BRAND.url+' · '+t('hosted by ','局主 ')+q.host,540,1344);x.textAlign='left';
+ return c.toDataURL('image/png')}
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function wrap(x,s,a,b,w,lh,max){let line='',n=0;for(const ch of Array.from(s)){if(x.measureText(line+ch).width>w){x.fillText(line,a,b+n*lh);n++;line=ch.trim();if(n>=max)return}else line+=ch}if(n<max)x.fillText(line,a,b+n*lh)}
+function poster(id){const q=S.squads.find(x=>x.id===id);const go=()=>openSheet(`<div class="tt" style="font-size:21px">${t('Share poster','分享海报')}</div><div class="meta">${t('Long-press the image to save it, then post to WeChat Moments, Instagram or your group.','长按图片保存，发朋友圈 / 微信群 / Instagram。')}</div>
+ <div class="themes">${[['neon',t('Cream','奶白')],['gold',t('Black gold','黑金')],['day',t('Coral','珊瑚橙')]].map(m=>`<button class="${posterTheme===m[0]?'on':''}" data-a="theme" data-v="${m[0]}" data-id="${id}">${m[1]}</button>`).join('')}</div>
+ <img class="poster" alt="${esc(q.title)} poster" src="${drawPoster(q)}"><button class="btn ghost" data-a="open" data-v="${id}">${t('Back','返回')}</button>`);
+ (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(go,go)}
+function inviteText(q){const l=left(q);return S.lang==='zh'?`${sp(q.sport)[0]} ${q.title}\n${when(q.start)}｜${q.venue}, ${q.area}\n${LEVEL[q.level][1]}｜${q.price?'$'+q.price+'/人':'免费'}\n${l>0?`还差 ${l} 人`:'已满，可排候补'} → ${BRAND.url}`:`${sp(q.sport)[0]} ${q.title}\n${when(q.start)} | ${q.venue}, ${q.area}\n${LEVEL[q.level][0]} | ${q.price?'$'+q.price+' each':'Free'}\n${l>0?`${l} spot${l>1?'s':''} left`:'Full, waitlist open'} → ${BRAND.url}`}
+function copy(s,msg){try{navigator.clipboard.writeText(s).then(()=>toast(msg),()=>toast(t('Copy blocked here','此处无法复制')))}catch(e){toast(t('Copy blocked here','此处无法复制'))}}
+
+
+// ───────── actions ─────────
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+document.addEventListener('input',e=>{const id=e.target.id;const L=document.getElementById('list');
+ if(id==='hq'){hf.q=e.target.value;L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}
+ else if(id==='jq'){jf.q=e.target.value;L.innerHTML=listJobs();document.getElementById('cnt').textContent=LC}
+ else if(tab==='tools')calc()});
+document.addEventListener('change',()=>{if(tab==='tools')calc()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sheet')closeSheet();return}
+ const a=b.dataset.a,v=b.dataset.v,q=S.squads.find(x=>x.id===v);
+ if(a==='lang'){S.lang=S.lang==='zh'?'en':'zh';save();render()}
+ if(a==='tab'){tab=v;closeSheet();render();scrollTo(0,0)}
+ if(a==='filter'){filter=v;render()}
+ if(a==='hf'){const k=b.dataset.k;if(k==='type')hf.type=v;else if(k==='max')hf.max=+v;else hf[k]=!hf[k];render()}
+ if(a==='jf'){const k=b.dataset.k;jf[k]=!jf[k];render()}
+ if(a==='pin'){hf={type:'all',max:0,q:v,bills:false,clean:false,zh:false,nobond:false};jf.q=v;tab=S.homes.some(h=>h.area===v)?'homes':'jobs';render();scrollTo(0,0)}
+ if(a==='match')matchSheet();
+ if(a==='vinfo')verifiedSheet();
+ if(a==='enq'){const x=S.homes.find(h=>h.id===v);if(x)copy(enqText(x),t('Message copied','信息已复制'))}
+ if(a==='adverok'){const x=S.homes.find(h=>h.id===v);if(['v1','v2','v3','v4'].some(i=>{const e=document.getElementById(i);return !e||!e.checked}))return toast(t('Tick all four checks first','请先完成四项核实'));const d=new Date();x.verified=true;x.vdate=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();save();closeSheet();render();toast(t('Marked verified','已标记核实'))}
+ if(a==='asknew')askForm();
+ if(a==='askopen')askDetail(v);
+ if(a==='askcreate'){const by=S.me||val('q_by'),qq=val('q_text');if(!by||!qq)return toast(t('Name and question are required','名字和问题必填'));S.me=by;S.qa.unshift({id:'q'+Date.now(),q:qq,area:val('q_area'),by,ago:0,a:[]});save();closeSheet();render()}
+ if(a==='askreply'){const by=S.me||val('r_by'),tx=val('r_text'),k=S.qa.find(x=>x.id===v);if(!by||!tx||!k)return toast(t('Name and answer are required','名字和回答必填'));S.me=by;k.a.push({by,text:tx});save();render();askDetail(v)}
+ if(a==='mq'){const k=b.dataset.k;mq[k]=k==='b'?+v:k==='zh'?v==='true':v;matchSheet()}
+ if(a==='report'){if(!S.reports.some(r=>r.id===v))S.reports.push({k:b.dataset.k,id:v,why:t('Reported by a user','用户举报')});save();toast(t('Reported. Thank you.','已举报，谢谢。'))}
+ if(a==='adkeep'){S.reports=S.reports.filter(r=>r.id!==v);save();render()}
+ if(a==='addel'){const k=b.dataset.k;S[k]=S[k].filter(x=>x.id!==v);S.reports=S.reports.filter(r=>r.id!==v);S.saved[k]=S.saved[k].filter(i=>i!==v);save();render();toast(t('Removed','已删除'))}
+ if(a==='adver'){const x=S.homes.find(q=>q.id===v);if(x.verified){x.verified=false;x.vdate='';save();render()}else verifyForm(v)}
+ if(a==='adpay'){S.scouts[+v].owed=0;save();render();toast(t('Recorded','已记录'))}
+ if(a==='home')homeDetail(v);
+ if(a==='job')jobDetail(v);
+ if(a==='fav'){const k=b.dataset.k,i=S.saved[k].indexOf(v);i>-1?S.saved[k].splice(i,1):S.saved[k].push(v);save();render();if(b.dataset.re==='home')homeDetail(v);if(b.dataset.re==='job')jobDetail(v);toast(i>-1?t('Removed','已取消'):t('Saved','已收藏'))}
+ if(a==='done'){const i=S.done.indexOf(v);i>-1?S.done.splice(i,1):S.done.push(v);save();render()}
+ if(a==='newhome')homeForm();
+ if(a==='newjob')jobForm();
+ if(a==='createhome'){const by=S.me||val('h_by'),title=val('h_title'),rent=+val('h_rent');if(!by||!title||!rent||!val('h_contact'))return toast(t('Name, title, rent and contact are required','名字、标题、租金、联系方式必填'));const hb=Math.max(0,+val('h_bond')||0),adv=Math.max(0,+val('h_adv')||0),agr=val('h_agr'),role=val('h_role'),ck=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};
+  if(hb>rent*RULES.bondWeeks)return toast(t('Bond cannot be more than 4 weeks of rent','押金不能超过 4 周房租'));
+  if(adv>(agr==='fixed'?RULES.advFixedWeeks:RULES.advRoom))return toast(t('That is more rent in advance than Queensland allows','预付房租超过昆州上限'));
+  if(!ck('h_c1')||!ck('h_c2')||!ck('h_c4')||(role==='head'&&!ck('h_c3')))return toast(t('Please tick the declarations','请勾选声明'));S.me=by;
+  const n={id:'h'+Date.now(),type:val('h_type'),title,area:val('h_area')||'Brisbane',near:val('h_near'),rent,bond:Math.max(0,+val('h_bond')||0),bills:val('h_bills')==='1',furn:val('h_furn')==='1',verified:false,zh:S.lang==='zh',reward:0,ago:0,by,contact:val('h_contact'),note:val('h_note'),agr,adv,role,consent:role==='head'};S.homes.push(n);save();tab='homes';render();homeDetail(n.id)}
+ if(a==='createjob'){const by=S.me||val('j_by'),title=val('j_title'),pay=+val('j_pay');if(!by||!title||!pay||!val('j_contact'))return toast(t('Name, role, pay and contact are required','名字、职位、时薪、联系方式必填'));S.me=by;
+  const n={id:'j'+Date.now(),title,area:val('j_area')||'Brisbane',pay,casual:val('j_cas')==='1',hrs:val('j_hrs')||'–',student:true,zh:/中文|mandarin|chinese/i.test(val('j_lang')),cash:false,reward:0,ago:0,lang:val('j_lang')||'English',by,contact:val('j_contact'),note:val('j_note')};S.jobs.push(n);save();tab='jobs';render();jobDetail(n.id)}
+ if(a==='open')detail(v);
+ if(a==='close')closeSheet();
+ if(a==='new')squadForm();
+ if(a==='newtask')taskForm();
+ if(a==='join'){if(!S.me){const n=val('joinName');if(!n)return toast(t('Add your name first','先填名字'));S.me=n}
+  if(inSquad(q)||inWait(q))return;if(left(q)>0){q.players.push({n:S.me,paid:!q.price});toast(t("You're in!",'上车成功！'))}else{q.wait.push(S.me);toast(t('On the waitlist','已排候补'))}save();render();detail(v)}
+ if(a==='leave'){const i=q.players.findIndex(p=>p.n===S.me);if(i>-1){q.players.splice(i,1);if(q.wait.length){const up=q.wait.shift();q.players.push({n:up,paid:!q.price});toast(up+t(' moved up from waitlist',' 已从候补顶上'))}}else q.wait=q.wait.filter(n=>n!==S.me);save();render();detail(v)}
+ if(a==='paid'){const p=q.players.find(p=>p.n===S.me);p.paid=!p.paid;save();detail(v)}
+ if(a==='hostpaid'){const p=q.players.find(p=>p.n===b.dataset.n);p.paid=!p.paid;save();detail(v)}
+ if(a==='copy')copy(v,t('Copied','已复制'));
+ if(a==='invite')copy(inviteText(q),t('Invite copied','文案已复制'));
+ if(a==='poster')poster(v);
+ if(a==='theme'){posterTheme=v;poster(b.dataset.id)}
+ if(a==='create'){const host=S.me||val('f_host'),title=val('f_title'),st=val('f_start');if(!host||!title||!st)return toast(t('Name, title and time are required','名字、标题、时间必填'));S.me=host;
+  const price=Math.max(0,+val('f_price')||0),nq={id:'s'+Date.now(),sport:val('f_sport'),title,area:val('f_area')||'Brisbane',venue:val('f_venue')||t('TBC','待定'),start:new Date(st).toISOString(),mins:+val('f_mins')||60,level:val('f_level'),price,cap:Math.max(2,+val('f_cap')||2),host,payid:val('f_payid'),note:val('f_note'),players:[{n:host,paid:true}],wait:[]};
+  S.squads.push(nq);save();tab='play';render();poster(nq.id)}
+ if(a==='createtask'){const by=S.me||val('k_by'),title=val('k_title');if(!by||!title)return toast(t('Name and task are required','名字和任务必填'));S.me=by;S.tasks.unshift({id:'t'+Date.now(),title,area:val('k_area')||'Brisbane',reward:Math.max(0,+val('k_reward')||0),by,helpers:[]});save();closeSheet();render()}
+ if(a==='offer'){if(!S.me){tab='me';render();return toast(t('Set your name first','先设置名字'))}const k=S.tasks.find(x=>x.id===v);const i=k.helpers.indexOf(S.me);i>-1?k.helpers.splice(i,1):k.helpers.push(S.me);save();render()}
+ if(a==='saveme'){const n=val('meName');if(!n)return;S.me=n;save();render();toast(t('Saved','已保存'))}
+ if(a==='reset'){const l=S.lang;S=seed();S.qa=seedQA();S.lang=l;save();render();toast(t('Reset','已重置'))}
+});
+render();
+if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
