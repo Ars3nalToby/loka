@@ -13,8 +13,14 @@ First milestone: 20 real room matches before the February university intake.
 
 ## Current state (be honest about this)
 
-- **Renamed from Hopper to Loka.** The domain in `BRAND.url` (`hopper.com.au`) is still the old
-  one until a Loka domain is chosen. The localStorage key stays `hopper-demo-v5` so demo data is kept.
+- **Live at https://tobyloka.vercel.app** (Vercel, auto-deploys every push to `main`).
+  `BRAND.url` now follows whatever domain the site is served from.
+  The localStorage key stays `hopper-demo-v5` so demo data is kept.
+- **Read `AGENTS.md` before any change, then `docs/ROADMAP.md` for the ordered task list.**
+  Copy-paste prompts for each model are in `docs/PROMPTS.md`.
+- Coverage target: Brisbane inner city + south side, 54 suburbs in `data/suburbs.json`
+  (not yet wired into the app; that is task S1).
+- Icons in `icons/` still show the old "H" mark (task S3).
 
 - One static file, `index.html`: HTML, CSS and vanilla JS, no build step, no framework.
 - **All data is localStorage on each visitor's own device.** Nothing is shared between users.
@@ -23,7 +29,9 @@ First milestone: 20 real room matches before the February university intake.
 - PWA shell is in place: `manifest.webmanifest`, `sw.js`, icons. It installs to a home screen
   once served over HTTPS.
 
-## What must be built next, in order
+## What must be built next
+
+The ordered, detailed list now lives in `docs/ROADMAP.md`. Summary of the backend part:
 
 1. **Shared database.** Tables: `homes`, `jobs`, `questions`, `answers`, `reports`,
    `squads`, `tasks`. Supabase (Postgres plus row-level security) fits the current data shapes;
@@ -62,6 +70,8 @@ features without the owner first getting legal advice.
 - Whether a flat advertising fee to listers is allowed without a licence.
 - Privacy Act obligations once real user data is stored.
 - Job-board rules (the jobs side has had no legal review).
+- Whether a room lister may state a gender or similar preference (Queensland
+  anti-discrimination law). No such field until checked.
 - Wage figures in `RULES` (`minWage`, `minCasual`, `studentHrs`) should be re-checked
   against Fair Work and Home Affairs before launch.
 
@@ -87,3 +97,12 @@ features without the owner first getting legal advice.
 
 Static site. Any static host works (Vercel, Netlify, Cloudflare Pages): no build command,
 output directory is the repo root. Bump `VERSION` in `sw.js` on each deploy.
+
+## Log
+
+One line per session: date, model, what changed, what the next assistant must know.
+
+- 13 Nov 2026 · Claude · First static app (as Hopper), then renamed to Loka.
+- 17 Nov 2026 · Claude Fable 5.2 · Vercel prep (`vercel.json`, share links use live domain).
+  Wrote `AGENTS.md`, `docs/ROADMAP.md`, `docs/PROMPTS.md`, `data/suburbs.json`. No app code
+  changed in this handover. Next task: O1.
