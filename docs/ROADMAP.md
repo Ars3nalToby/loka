@@ -18,7 +18,7 @@ money tools stay in the app but get no new work until Rooms has real listings.
    (`localStorage`). A person who opens the link today sees a demo. Until tasks O2 to O4 are
    done, Loka cannot hold one real room. This is the single biggest gap.
 2. **"All the rooms in south side and inner city" means coverage, not copying.** Loka can
-   cover every suburb (see `data/suburbs.json`, 54 suburbs in 4 zones). It cannot fill them by
+   cover every suburb (see `data/suburbs.json`, 53 suburbs in 4 zones). It cannot fill them by
    copying listings from Flatmates, Domain, realestate.com.au, WeChat groups or 小红书: that
    breaks those sites' terms and the listers never agreed to it. Rooms arrive only when a
    lister posts, or the owner posts for a lister who said yes. See "Supply plan" at the end.
@@ -78,7 +78,7 @@ listers the owner approaches.
 
 Source of truth: `data/suburbs.json`. Replace the hard-coded `ZONE`, `ZN` and `MAP`.
 
-- **Suburb picker** in `homeForm` and `jobForm`: type-ahead over the 54 suburbs, matching
+- **Suburb picker** in `homeForm` and `jobForm`: type-ahead over the 53 suburbs, matching
   English name, `zh` name or postcode. Free text is no longer accepted for suburb.
 - **Zone chips** on the Rooms list: All / Inner city / West · UQ / Inner south / South.
   Then a second row of suburb chips for the chosen zone, each with its live count.

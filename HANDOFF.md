@@ -18,7 +18,7 @@ First milestone: 20 real room matches before the February university intake.
   The localStorage key stays `hopper-demo-v5` so demo data is kept.
 - **Read `AGENTS.md` before any change, then `docs/ROADMAP.md` for the ordered task list.**
   Copy-paste prompts for each model are in `docs/PROMPTS.md`.
-- Coverage target: Brisbane inner city + south side, 54 suburbs in `data/suburbs.json`
+- Coverage target: Brisbane inner city + south side, 53 suburbs in `data/suburbs.json`
   (not yet wired into the app; that is task S1).
 - Icons in `icons/` still show the old "H" mark (task S3).
 
