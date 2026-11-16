@@ -155,7 +155,7 @@ a{color:var(--lime)}
 <div class="toast" id="toast"></div>
 <script>
 // ───────── config ─────────
-const BRAND={en:'Loka',zh:'布村生活站',url:'hopper.com.au'};
+const BRAND={en:'Loka',zh:'布村生活站',url:(location.host&&!/^(localhost|127\.)/.test(location.host))?location.host:'loka.vercel.app'};
 // Rules the app checks listings against. Sources: Qld Government rental law pages (bond, rent in advance), Fair Work Ombudsman (wages from 1 July 2026), Home Affairs condition 8105 (student hours).
 const RULES={bondWeeks:4,advRoom:2,advFixedWeeks:4,minWage:26.44,minCasual:33.05,studentHrs:48};
 
