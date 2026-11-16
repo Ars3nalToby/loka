@@ -1,6 +1,7 @@
 # Loka: handoff brief
 
-Paste this file, plus `index.html`, into any coding assistant to continue the build.
+Read `AGENTS.md` first. Then this file, then `docs/ROADMAP.md`. The "File map" below says
+which file to open for each part of the app.
 
 ## What Loka is
 
@@ -22,7 +23,8 @@ First milestone: 20 real room matches before the February university intake.
   (not yet wired into the app; that is task S1).
 - Icons in `icons/` still show the old "H" mark (task S3).
 
-- One static file, `index.html`: HTML, CSS and vanilla JS, no build step, no framework.
+- Static site, no build step, no framework: `index.html` shell, `css/app.css`, and the
+  scripts in `js/` (see "File map" below).
 - **All data is localStorage on each visitor's own device.** Nothing is shared between users.
   Every listing shown is sample data from `seed()`.
 - No login. The admin desk is open to anyone.
@@ -35,7 +37,7 @@ The ordered, detailed list now lives in `docs/ROADMAP.md`. Summary of the backen
 
 1. **Shared database.** Tables: `homes`, `jobs`, `questions`, `answers`, `reports`,
    `squads`, `tasks`. Supabase (Postgres plus row-level security) fits the current data shapes;
-   see `seed()` in `index.html` for every field.
+   see `seed()` in `js/seed.js` for every field.
 2. **Auth.** Email or phone sign-in. Listers must be signed in to post.
 3. **Admin gate.** Only the owner account can verify, remove, or see reports.
 4. **Moderation.** New listings start unpublished or flagged until rule checks pass.
@@ -43,16 +45,47 @@ The ordered, detailed list now lives in `docs/ROADMAP.md`. Summary of the backen
 5. **Photos.** Real listing photos in storage. The current pictures are generated SVG art.
 6. **Hash routes** per listing so a room can be shared as a link or QR code.
 
+## File map
+
+Read only the file a task touches. The scripts in `js/` are **classic scripts, not ES
+modules**: they share one global scope and run in this order (set in `index.html`). A file
+may use anything from a file above it at load time, and anything from any file inside a
+function. Top-level `let`/`const` names must stay unique across all files.
+
+| File | What lives there |
+| --- | --- |
+| `index.html` | Shell only: head, fonts, the script list, empty `#app`, `#nav`, `#sheet`, `#toast` |
+| `css/app.css` | All styles |
+| `js/config.js` | `BRAND` |
+| `js/rules.js` | `RULES`, `homeFlags`, `jobFlags`, `publishBlock`. Pure logic, no DOM. |
+| `js/store.js` | `KEY`, `store` (localStorage today; Supabase in task O2) |
+| `js/seed.js` | `nextDay`, `seed`, `seedQA`: sample data |
+| `js/state.js` | `S` (all data), `tab`, filters `hf` `jf` `mq`, `save()` |
+| `js/ui.js` | `t`, `esc`, dates, `art`, `HT`, `ZONE`/`ZN`/`zone`, `ROLE`, `IC`, `openSheet`, `toast`, `copy`, `val` |
+| `js/map.js` | `MAP`, `mapSvg` (home-screen map) |
+| `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
+| `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
+| `js/ask.js` | `askHtml`, `askForm`, `askDetail` |
+| `js/more.js` | `GUIDE`, `calc`, `adminHtml`, `aboutHtml`, squads `detail`/`squadForm`, `taskForm`, posters, `inviteText` |
+| `js/app.js` | `render()` for every tab, the input/change/click handlers (every `data-a` action, including `createhome`), start-up, service worker |
+| `data/suburbs.json` | 53 suburbs in 4 zones (not wired in yet: task S1) |
+| `tests/rules.test.mjs` | Queensland limit tests. Run `node --test` from the repo root. |
+
+Why classic scripts: the app reassigns shared state (`S`, `tab`, filters) from many places.
+ES modules cannot reassign an imported variable, so converting would have meant rewriting
+logic. Classic scripts let O1 move the code with no behaviour change. If a later task wants
+ES modules, it should first move shared state into one object.
+
 ## Rules that must survive any rewrite
 
 These came from Queensland rental law research (RTA, Property Occupations Act 2014).
-They are product requirements, not suggestions. Constants live in `RULES` in `index.html`.
+They are product requirements, not suggestions. Constants live in `RULES` in `js/rules.js`, tested by `tests/rules.test.mjs`.
 
 | Rule | Where it lives now |
 | --- | --- |
 | Rent is one fixed weekly number. No ranges, no "offers". | `homeForm`, `createhome` |
-| Bond above 4 weeks of rent is refused at publish. | `createhome`, `homeFlags` |
-| Rent in advance: max 2 weeks (room / periodic), 4 weeks (fixed term). | `createhome`, `homeFlags` |
+| Bond above 4 weeks of rent is refused at publish. | `publishBlock`, `homeFlags` (js/rules.js) |
+| Rent in advance: max 2 weeks (room / periodic), 4 weeks (fixed term). | `publishBlock`, `homeFlags` (js/rules.js) |
 | A tenant sub-letting must declare the owner's written permission. | `homeForm` declarations |
 | Lister declares any bond goes to the RTA within 10 days. | `homeForm` declarations |
 | "Verified" needs all four checks ticked and stores a date. | `verifyForm`, `adverok` |
@@ -106,3 +139,10 @@ One line per session: date, model, what changed, what the next assistant must kn
 - 17 Nov 2026 · Claude Fable 5.2 · Vercel prep (`vercel.json`, share links use live domain).
   Wrote `AGENTS.md`, `docs/ROADMAP.md`, `docs/PROMPTS.md`, `data/suburbs.json`. No app code
   changed in this handover. Next task: O1.
+- 17 Nov 2026 · Claude Opus 5.5 · **O1 done.** Split the 100 KB `index.html` into
+  `css/app.css` and 12 classic scripts in `js/` (see "File map"). Code moved line for line;
+  the one logic change is that the bond / advance-rent publish check now calls
+  `publishBlock()` in `js/rules.js` (same results, same messages). Added 12 rule tests.
+  Checked old vs new in Chromium at 390px: 12 tabs x EN/中文, 13 sheets, search, filters and
+  publish attempts gave identical output. `sw.js` is `loka-v3` and caches the new files.
+  Next task: S1.

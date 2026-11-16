@@ -1,0 +1,35 @@
+// Loka · seed.js: Sample data shown in the demo.
+// Classic script: shares global scope with the other js/ files. Load order is set in index.html.
+function nextDay(dow,h,m){const d=new Date();d.setHours(h,m||0,0,0);let add=(dow-d.getDay()+7)%7;if(add===0&&d<new Date())add=7;d.setDate(d.getDate()+add);return d.toISOString()}
+function seed(){return{me:'',lang:'en',saved:{homes:[],jobs:[]},done:[],
+homes:[
+ {id:'h1',type:'room',title:'Sunny room near UQ, own bathroom · 近UQ带独卫',area:'St Lucia',rent:320,bond:1280,bills:true,furn:true,near:'UQ',verified:true,zh:true,reward:40,ago:3,by:'Mei',contact:'WeChat: mei_demo',note:'5 min walk to the UQ Lakes bus stop. Two quiet housemates. 两位安静室友。'},
+ {id:'h2',type:'room',title:'Double room, big kitchen · 双人间大厨房',area:'Sunnybank Hills',rent:230,bond:920,bills:false,furn:true,near:'Griffith Nathan',verified:true,zh:true,reward:30,ago:8,by:'Kelvin',contact:'0400 000 001',note:'10 min bus to Griffith Nathan. Bills split 4 ways.'},
+ {id:'h3',type:'unit',title:'2 bed unit, whole place · 整租两房',area:'Toowong',rent:640,bond:2560,bills:false,furn:false,near:'UQ',verified:false,zh:false,reward:60,role:'head',ago:20,by:'Priya',contact:'priya@example.com',note:'Lease takeover from January. Train and CityCat nearby.'},
+ {id:'h4',type:'room',title:'Master room, "6 weeks bond" · 主卧',area:'Rochedale',rent:260,bond:1560,adv:4,bills:true,furn:true,near:'',verified:false,zh:true,reward:30,ago:26,by:'Sam',contact:'WeChat: sam_demo',note:'Lister asked for 6 weeks bond and cash only.'},
+ {id:'h5',type:'student',title:'Studio in student building · 学生公寓单间',area:'South Brisbane',rent:495,bond:1980,bills:true,furn:true,near:'QUT / Griffith South Bank',verified:true,zh:false,reward:50,ago:30,by:'Loka',contact:'via Loka',note:'Gym and study rooms. 6 or 12 month terms.'},
+ {id:'h6',type:'room',title:'Single room, girls only house · 女生合租',area:'Calamvale',rent:195,bond:0,zh:true,reward:30,ago:5,bills:true,furn:true,near:'',verified:false,by:'Wendy',contact:'WeChat: wendy_demo',note:'Near the shops and bus. Mandarin and English spoken.'}
+],
+jobs:[
+ {id:'j1',hpw:16,zh:true,cash:false,reward:40,ago:2,title:'Bubble tea shop all-rounder · 奶茶店店员',area:'Sunnybank',pay:33.5,casual:true,hrs:'12–20 h/wk',student:true,lang:'中文 + English',by:'Lily',contact:'WeChat: lily_demo',note:'Evenings and weekends. Training provided.'},
+ {id:'j2',hpw:20,zh:true,cash:true,reward:30,ago:6,title:'Kitchen hand · 厨房帮工',area:'Sunnybank Hills',pay:20,casual:true,hrs:'20 h/wk',student:true,lang:'中文',by:'Anon',contact:'0400 000 002',note:'Cash in hand. 现金。'},
+ {id:'j3',hpw:20,zh:false,cash:false,reward:50,ago:12,title:'Warehouse picker, mornings · 仓库拣货',area:'Rochedale',pay:34.8,casual:true,hrs:'15–25 h/wk',student:true,lang:'English',by:'Marcus',contact:'jobs@example.com',note:'5am starts. Forklift ticket a plus.'},
+ {id:'j4',hpw:24,zh:true,cash:false,reward:50,ago:18,title:'Pharmacy assistant, part time · 药房助理',area:'Calamvale',pay:28.1,casual:false,hrs:'24 h/wk',student:true,lang:'中文 + English',by:'Jun',contact:'jun@example.com',note:'Retail experience preferred.'},
+ {id:'j5',hpw:6,zh:false,cash:false,reward:40,ago:40,title:'Maths tutor Yr 7–10 · 数学家教',area:'Indooroopilly',pay:45,casual:true,hrs:'4–8 h/wk',student:true,lang:'English',by:'Hannah',contact:'hannah@example.com',note:'Blue Card needed.'}
+],
+squads:[
+ {id:'s1',sport:'bad',title:'Thursday doubles · 周四双打',area:'Coopers Plains',venue:'Coopers Plains courts (3 courts)',start:nextDay(4,20),mins:120,level:'mid',price:15,cap:12,host:'Kelvin',payid:'0400 000 000',note:'Feather shuttles provided. 提供羽毛球。',players:['Kelvin','Mei','Jason L','Amy','Tom','小林','Priya','Daniel','Yuki','Ben','Sarah'].map((n,i)=>({n,paid:i<8})),wait:[]},
+ {id:'s2',sport:'run',title:'River loop easy 5K · 河滨养生跑',area:'South Bank',venue:'Meet at the Wheel of Brisbane',start:nextDay(3,18,30),mins:45,level:'easy',price:0,cap:15,host:'Hannah',payid:'',note:"Pace about 6'00\"/km. Coffee after. 跑完喝咖啡。",players:['Hannah','Leo','Zhang Wei','Chloe','Marcus','Ivy'].map(n=>({n,paid:true})),wait:[]},
+ {id:'s3',sport:'ride',title:'Sunday Mt Coot-tha climb · 周日爬坡',area:'Toowong',venue:'Meet at the bottom of the front side',start:nextDay(0,6),mins:120,level:'hard',price:0,cap:10,host:'Raj',payid:'',note:'Road bikes, lights needed.',players:['Raj','Simon','阿杰','Olivia'].map(n=>({n,paid:true})),wait:[]},
+ {id:'s4',sport:'bad',title:'Beginner social · 新手养生局',area:'Calamvale',venue:'Calamvale courts (2 courts)',start:nextDay(6,10),mins:120,level:'easy',price:12,cap:8,host:'Wendy',payid:'wendy@example.com',note:'Total beginners welcome. 完全新手友好。',players:['Wendy','Kai','Jess','Bo','Nina','Chris','Anh','Fiona'].map(n=>({n,paid:true})),wait:['Derek']},
+ {id:'s5',sport:'social',title:'Hotpot table, 2 seats left · 火锅拼桌',area:'Sunnybank',venue:'Sunnybank, restaurant TBC by host',start:nextDay(5,19),mins:120,level:'easy',price:0,cap:6,host:'Lily',payid:'',note:'Split the bill at the table. 现场AA。',players:['Lily','Sam','Vivian','Jun'].map(n=>({n,paid:true})),wait:[]}
+],reports:[{k:'homes',id:'h4',why:'Asked for 6 weeks bond'},{k:'jobs',id:'j2',why:'Pay under minimum'}],scouts:[{n:'Mei',leads:14,won:6,earned:240,owed:80},{n:'Kelvin',leads:11,won:4,earned:150,owed:30},{n:'阿杰',leads:9,won:3,earned:120,owed:60},{n:'Priya',leads:6,won:2,earned:80,owed:0},{n:'Wendy',leads:4,won:1,earned:30,owed:30}],tasks:[
+ {id:'t1',title:'Carry a parcel Sunnybank → St Lucia · 顺路捎东西',area:'Sunnybank',reward:25,by:'Mei',helpers:[]},
+ {id:'t2',title:'1 hr badminton coaching, beginner · 陪练一小时',area:'Coopers Plains',reward:60,by:'Tom',helpers:['Kelvin']},
+ {id:'t3',title:'Bilingual help at a rental inspection · 看房陪同翻译',area:'Rochedale',reward:50,by:'Jun',helpers:[]},
+ {id:'t4',title:'Airport pickup, 2 suitcases · 接机',area:'Brisbane Airport',reward:45,by:'Anh',helpers:[]}
+]}}
+function seedQA(){return[
+ {id:'q1',q:'Landlord wants the bond in cash with no receipt. What do I do? · 房东要现金押金又不给收据，怎么办？',area:'Sunnybank',by:'Amy',ago:5,a:[{by:'Loka',text:'Ask for a receipt and the RTA bond number. In Queensland a bond has to be lodged with the RTA within 10 days. 要收据和 RTA 押金编号；昆州押金须在 10 天内存入 RTA。'}]},
+ {id:'q2',q:'Single room in Sunnybank Hills: what should I check before I say yes? · Sunnybank Hills 单间，答应之前要确认什么？',area:'Sunnybank Hills',by:'小林',ago:20,a:[{by:'Kelvin',text:'Ask if bills are included, how many people share the bathroom, and the minimum stay. 先问包不包水电网、几个人共用卫生间、最短租期。'}]},
+ {id:'q3',q:'Sunnybank to UQ without a car: what works for you? · 没车从 Sunnybank 去 UQ，大家怎么走？',area:'Sunnybank',by:'Jun',ago:30,a:[]}]}

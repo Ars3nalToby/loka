@@ -22,7 +22,7 @@ money tools stay in the app but get no new work until Rooms has real listings.
    copying listings from Flatmates, Domain, realestate.com.au, WeChat groups or 小红书: that
    breaks those sites' terms and the listers never agreed to it. Rooms arrive only when a
    lister posts, or the owner posts for a lister who said yes. See "Supply plan" at the end.
-3. **One 100 KB file blocks teamwork.** `index.html` holds all HTML, CSS and JS. Two
+3. **(Fixed by O1 on 17 Nov 2026.) One 100 KB file blocked teamwork.** `index.html` holds all HTML, CSS and JS. Two
    assistants cannot touch it without conflicts, and every session pays to read all of it.
    Task O1 fixes that before anything else is built.
 
@@ -38,7 +38,11 @@ money tools stay in the app but get no new work until Rooms has real listings.
 
 ## Phase 0: make the code workable
 
-### [ ] O1. Split `index.html` into modules (Opus)
+### [x] O1. Split `index.html` into modules (Opus)
+
+> Done 17 Nov 2026. Built as classic scripts rather than ES modules, to keep behaviour
+> identical; the reasons and the real file list are in `HANDOFF.md` "File map".
+> Run tests with `node --test` from the repo root.
 
 No behaviour change. No visual change. Same `localStorage` key (`hopper-demo-v5`).
 
@@ -62,7 +66,7 @@ tests/rules.test.mjs  node --test: bond and rent-in-advance limits
 
 Done when:
 - The live site looks and behaves the same in English and 中文 at 390px wide.
-- `node --test tests/` passes, with cases for: bond exactly 4 weeks (allowed), bond above
+- `node --test` passes, with cases for: bond exactly 4 weeks (allowed), bond above
   4 weeks (refused), advance 2 vs 3 weeks on a room agreement, advance 4 vs 5 on a fixed term.
 - `sw.js` `SHELL` lists every new file and `VERSION` is bumped.
 - `HANDOFF.md` gets a "File map" section so later assistants read one module, not all.
@@ -78,6 +82,8 @@ listers the owner approaches.
 
 Source of truth: `data/suburbs.json`. Replace the hard-coded `ZONE`, `ZN` and `MAP`.
 
+- Create `js/suburbs.js` (add it to the script list in `index.html` after `js/ui.js`, and to
+  `SHELL` in `sw.js`). Today `ZONE`/`ZN` live in `js/ui.js` and `MAP` in `js/map.js`.
 - **Suburb picker** in `homeForm` and `jobForm`: type-ahead over the 53 suburbs, matching
   English name, `zh` name or postcode. Free text is no longer accepted for suburb.
 - **Zone chips** on the Rooms list: All / Inner city / West · UQ / Inner south / South.

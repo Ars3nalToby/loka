@@ -15,7 +15,9 @@ Antigravity). Only one works at a time. These rules keep the relay from breaking
 - Work on `main` only. No feature branches, no pull requests. The owner wants changes live at once.
 - Never force-push. If a push is rejected, pull, resolve, and push again.
 - Keep the app working after every commit. Vercel deploys every push to `main`.
-- No build step, no framework, no paid services. Plain HTML, CSS and JavaScript modules.
+- No build step, no framework, no paid services. Plain HTML, CSS and JavaScript files in `js/`.
+  They are classic scripts sharing one global scope, loaded in the order set in `index.html`
+  (see "File map" in `HANDOFF.md`). A new file goes in that list at the right place.
 - Every user-facing string goes through `t(en, zh)`. Both languages, every time.
 - Keep the design system in `HANDOFF.md`: cream background, Rooms and Jobs front and centre.
   Never ship a dark default theme.
@@ -28,7 +30,8 @@ Antigravity). Only one works at a time. These rules keep the relay from breaking
 
 ## When you finish
 
-1. Test in a browser at 390px wide, in English and in 中文.
+1. Run `node --test` from the repo root; all tests must pass.
+   Then test in a browser at 390px wide, in English and in 中文.
 2. Bump `VERSION` in `sw.js` and update its `SHELL` list if files were added or renamed.
 3. Tick the task in `docs/ROADMAP.md` and add one line under "Log" in `HANDOFF.md`:
    date, who (model name), what changed, anything the next assistant must know.
