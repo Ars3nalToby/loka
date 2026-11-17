@@ -19,7 +19,7 @@ First milestone: 20 real room matches before the February university intake.
   The localStorage key stays `hopper-demo-v5` so demo data is kept.
 - **Read `AGENTS.md` before any change, then `docs/ROADMAP.md` for the ordered task list.**
   Copy-paste prompts for each model are in `docs/PROMPTS.md`.
-- Coverage target: Brisbane inner city + south side, 53 suburbs in `data/suburbs.json`
+- Coverage target: Brisbane inner city + south side, 53 suburbs in `js/suburbs.js`
   (not yet wired into the app; that is task S1).
 - Icons: green italic "L." mark (`icons/`), link preview `og.png`. Source compositions are
   described in the S3 log line; regenerate them rather than editing the PNGs by hand.
@@ -64,13 +64,14 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/state.js` | `S` (all data), `tab`, filters `hf` `jf` `mq`, `save()` |
 | `js/ui.js` | `t`, `esc`, dates, `HT`, line icons `LI`/`ico()`, `HERO_ART`, `ZONE`/`ZN`/`zone`, `ROLE`, `IC`, `openSheet`, `toast`, `copy`, `val` |
 | `js/art.js` | `art(listing)`: illustrated room scenes (perspective room, window view by zone, day/dusk/night). Stand-in until real photos (O4). |
-| `js/map.js` | `MAP`, `mapSvg` (home-screen map) |
+| `js/suburbs.js` | `SUBURB_DATA` (53 suburbs, 4 zones, 5 campuses, approx. lat/lng), `ZONE`, `ZN`, `SUB()`. Single source of truth for suburbs. |
+| `js/check.js` | Loka Check: `lokaCode` (daily code), `CHECKS`, `checkState`, `checkBadge`, `ladderHtml`, renter steps `RSTEPS`/`renterHtml`, `inspHtml`, `priceMeter` |
+| `js/map.js` | Drawn Brisbane map: `mapSvg` (zones as hulls, river, M1, campuses, room pins), `mapLegend`, `ZCOL` zone colours |
 | `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
 | `js/ask.js` | `askHtml`, `askForm`, `askDetail` |
 | `js/more.js` | `GUIDE`, `calc`, `adminHtml`, `aboutHtml`, squads `detail`/`squadForm`, `taskForm`, posters, `inviteText` |
 | `js/app.js` | `render()` for every tab, the input/change/click handlers (every `data-a` action, including `createhome`), start-up, service worker |
-| `data/suburbs.json` | 53 suburbs in 4 zones (not wired in yet: task S1) |
 | `tests/rules.test.mjs` | Queensland limit tests. Run `node --test` from the repo root. |
 
 Why classic scripts: the app reassigns shared state (`S`, `tab`, filters) from many places.
@@ -81,7 +82,7 @@ ES modules, it should first move shared state into one object.
 ## Rules that must survive any rewrite
 
 These came from Queensland rental law research (RTA, Property Occupations Act 2014).
-They are product requirements, not suggestions. Constants live in `RULES` in `js/rules.js`, tested by `tests/rules.test.mjs`.
+They are product requirements, not suggestions. Constants live in `RULES` in `js/rules.js`, tested by `tests/rules.test.mjs`; Loka Check by `tests/check.test.mjs`.
 
 | Rule | Where it lives now |
 | --- | --- |
@@ -90,8 +91,8 @@ They are product requirements, not suggestions. Constants live in `RULES` in `js
 | Rent in advance: max 2 weeks (room / periodic), 4 weeks (fixed term). | `publishBlock`, `homeFlags` (js/rules.js) |
 | A tenant sub-letting must declare the owner's written permission. | `homeForm` declarations |
 | Lister declares any bond goes to the RTA within 10 days. | `homeForm` declarations |
-| "Verified" needs all four checks ticked and stores a date. | `verifyForm`, `adverok` |
-| "Verified" always links to what was and was not checked. | `verifiedSheet` |
+| "Verified" needs all four Loka Check steps (ID sighted, room seen live with today's code, right to let, fair terms) and each stores its date. | `checkState` (js/check.js), `verifyForm`, `adverok` |
+| "Verified" always links to what was and was not checked. | `verifiedSheet`, `ladderHtml` |
 | ID documents are sighted only. **Never store ID images or numbers.** | policy, `aboutHtml` |
 | Loka never negotiates, collects rent or bond, or takes a fee per move-in. | policy, `aboutHtml` |
 | Scouts earn points only, never cash per letting. | `earn` tab |
@@ -143,7 +144,7 @@ One line per session: date, model, what changed, what the next assistant must kn
 
 - 13 Nov 2026 · Claude · First static app (as Hopper), then renamed to Loka.
 - 17 Nov 2026 · Claude Fable 5.2 · Vercel prep (`vercel.json`, share links use live domain).
-  Wrote `AGENTS.md`, `docs/ROADMAP.md`, `docs/PROMPTS.md`, `data/suburbs.json`. No app code
+  Wrote `AGENTS.md`, `docs/ROADMAP.md`, `docs/PROMPTS.md`, `js/suburbs.js`. No app code
   changed in this handover. Next task: O1.
 - 17 Nov 2026 · Claude Opus 5.5 · **O1 done.** Split the 100 KB `index.html` into
   `css/app.css` and 12 classic scripts in `js/` (see "File map"). Code moved line for line;
@@ -173,3 +174,18 @@ One line per session: date, model, what changed, what the next assistant must kn
   transparent over it (`header.onposter`) and hides its small wordmark until you scroll.
   Class `.poster` is the squads share image; the home poster is `.hposter`. Icons, maskable,
   favicon and `og.png` redrawn in the Bagel style. SW `loka-v6`.
+- 17 Nov 2026 · Claude Opus 5.5 · **Loka Check + new map + price check.**
+  Verification is now 4 visible steps per listing (`js/check.js`): lister ID sighted (no copy),
+  room seen live holding **today's Loka code** (`lokaCode`, changes daily so copied photos fail),
+  right to let, fair terms (automatic from rules.js). Partial progress shows as dots on cards
+  ("2/4"); "Verified" only at 4/4. Renters get 5 self-checks per listing (saved in `S.mine`),
+  a copyable video-call request with the code, and the RTA step (Acknowledgement of rental
+  bond, RTA 1300 366 311, sourced from rta.qld.gov.au and Tenants Qld on 17 Nov 2026).
+  "Inspected it?" feedback (`x.insp`, a "did not match" also files a report). Price check
+  compares rent with same-type listings in the same zone (falls back to all Brisbane).
+  Map redrawn from `js/suburbs.js` (data/suburbs.json was folded into it); zone chips on
+  Rooms (`hf.z`), legend on Home (`mz`). Suburb datalist on the listing form. State
+  migration in `js/state.js` adds sample checks to old saved demo data. Confirmed 17 Nov 2026:
+  Qld max bond is 4 weeks for all tenancies since 30 Sep 2024 (RTA). SW `loka-v7`. 19 tests.
+  Map labels use English suburb names in both languages (Chinese names in suburbs.js are
+  unverified transliterations).

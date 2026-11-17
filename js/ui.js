@@ -20,8 +20,6 @@ let LC='';
 const HT={room:['🛏','Room','单间'],unit:['🏢','Whole place','整租'],student:['🎓','Student housing','学生公寓']};
 const GRAD=['hsl(158 38% 78%),hsl(165 34% 60%)','hsl(24 80% 84%),hsl(16 70% 70%)','hsl(42 70% 82%),hsl(36 62% 66%)','hsl(200 45% 84%),hsl(205 40% 68%)','hsl(340 50% 88%),hsl(350 45% 74%)','hsl(90 34% 82%),hsl(110 28% 66%)'];
 // art() now lives in js/art.js
-const ZONE={'St Lucia':'west','Toowong':'west','Indooroopilly':'west','South Brisbane':'inner','Sunnybank':'south','Sunnybank Hills':'south','Calamvale':'south','Coopers Plains':'south','Rochedale':'south'};
-const ZN={west:['West · UQ side','西区 · UQ 一带'],inner:['Inner city','市中心'],south:['South · Sunnybank side','南区 · Sunnybank 一带']};
 const zone=a=>ZONE[a]||'other';const wk=j=>Math.round(j.pay*(j.hpw||15));
 const ago=x=>x.ago==null?t('just now','刚刚'):x.ago<24?x.ago+t('h ago','小时前'):Math.round(x.ago/24)+t('d ago','天前');
 const grad=id=>GRAD[(id.charCodeAt(id.length-1))%GRAD.length];

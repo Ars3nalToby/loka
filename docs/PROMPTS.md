@@ -64,7 +64,7 @@ What good looks like:
 - The look is warm and editorial: cream background, Bodoni Moda for display and prices,
   generous spacing, calm. I was unhappy when an earlier version turned dark and buried
   Rooms and Jobs. Keep the colours in HANDOFF.md, and keep Rooms and Jobs first.
-- Suburbs come from data/suburbs.json. Do not hard-code suburb lists anywhere else.
+- Suburbs come from js/suburbs.js. Do not hard-code suburb lists anywhere else.
 - Every piece of text needs English and 中文 through t(en, zh). Write natural Chinese, the
   way people post in a Brisbane WeChat group, not a word-for-word translation.
 

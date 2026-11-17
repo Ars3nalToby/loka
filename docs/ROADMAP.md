@@ -18,7 +18,7 @@ money tools stay in the app but get no new work until Rooms has real listings.
    (`localStorage`). A person who opens the link today sees a demo. Until tasks O2 to O4 are
    done, Loka cannot hold one real room. This is the single biggest gap.
 2. **"All the rooms in south side and inner city" means coverage, not copying.** Loka can
-   cover every suburb (see `data/suburbs.json`, 53 suburbs in 4 zones). It cannot fill them by
+   cover every suburb (see `js/suburbs.js`, 53 suburbs in 4 zones). It cannot fill them by
    copying listings from Flatmates, Domain, realestate.com.au, WeChat groups or 小红书: that
    breaks those sites' terms and the listers never agreed to it. Rooms arrive only when a
    lister posts, or the owner posts for a lister who said yes. See "Supply plan" at the end.
@@ -60,7 +60,7 @@ js/rooms.js           listHomes, homeDetail, homeForm, createhome, verify, compa
 js/jobs.js            listJobs, jobDetail, jobForm
 js/ask.js             Ask board
 js/more.js            squads, tasks, posters, calculator, guide, about, admin
-js/suburbs.js         loads data/suburbs.json, exports zone(), suburb lookup
+js/suburbs.js         loads js/suburbs.js, exports zone(), suburb lookup
 tests/rules.test.mjs  node --test: bond and rent-in-advance limits
 ```
 
@@ -80,7 +80,11 @@ listers the owner approaches.
 
 ### [ ] S1. Suburb coverage: inner city + south side (Sonnet)
 
-Source of truth: `data/suburbs.json`. Replace the hard-coded `ZONE`, `ZN` and `MAP`.
+> Partly done 17 Nov 2026 (Opus): `js/suburbs.js` is wired in, zone chips on Rooms, new
+> map with legend, suburb datalist on the listing form. **Still to do:** strict suburb picker
+> (no free text), postcode search, "Near my campus" filter, 10 more sample rooms.
+
+Source of truth: `js/suburbs.js`. Replace the hard-coded `ZONE`, `ZN` and `MAP`.
 
 - Create `js/suburbs.js` (add it to the script list in `index.html` after `js/ui.js`, and to
   `SHELL` in `sw.js`). Today `ZONE`/`ZN` live in `js/ui.js` and `MAP` in `js/map.js`.
@@ -166,7 +170,7 @@ The owner wants 美术感: editorial, warm, calm. Not a dashboard. Not dark.
 - **Put the Queensland rules in the database as CHECK constraints**, so no client can skip
   them: `bond <= rent * 4`; `adv_weeks <= 2` for room/periodic and `<= 4` for fixed term;
   `rent > 0`; the four declarations all true. Suburb must exist in a `suburbs` table loaded
-  from `data/suburbs.json`.
+  from `js/suburbs.js`.
 - Row-level security on every table. Anyone may read `published` rows. A signed-in user may
   insert and edit their own rows but may never set `status`, `verified` or `verified_at`.
   Only an admin may. **Contact details are readable only by signed-in users.**
