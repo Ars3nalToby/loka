@@ -132,3 +132,47 @@ nav button.on svg{opacity:1;stroke:var(--lime)}
 .li::before{position:absolute;left:0;font-weight:700}.li.y::before{content:'✓';color:var(--lime)}.li.n::before{content:'–';color:var(--mut)}
 button.vf,button.ok,button.tag{cursor:pointer}
 a{color:var(--lime)}
+
+/* ───────── S3 design pass (17 Nov 2026) ───────── */
+/* Paper grain: a very light noise so the cream reads as paper, not flat screen colour */
+body{background-color:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+html[lang=zh] body{line-height:1.7}
+html[lang=zh] h1{letter-spacing:0;line-height:1.18}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:10px}
+.chip{min-height:36px}
+.lang,.pic .heart{min-width:44px;min-height:36px}
+
+/* Line icons */
+.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em;flex:none}
+.meta .ic{color:var(--hot);width:13px;height:13px;margin-right:1px}
+.tile .e{width:38px;height:38px;border-radius:12px;background:var(--soft);color:var(--lime);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:6px}
+.tiles .tile:nth-child(2) .e,.tiles .tile:nth-child(4) .e{background:rgba(226,104,60,.12);color:var(--hot)}
+.tiles .tile:nth-child(5) .e{background:rgba(201,154,43,.16);color:#8a6a14}
+.xhs a span{font-size:22px;color:var(--hot);width:36px;height:36px;border-radius:11px;background:rgba(226,104,60,.1);display:flex;align-items:center;justify-content:center}
+
+/* Hero tiles: drawn art instead of emoji, softer light */
+.hero .e{top:12px;right:10px;width:92px;opacity:1}
+.hero .e svg{display:block;width:100%;height:auto}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 90% 0%,rgba(255,255,255,.18),transparent 55%);pointer-events:none}
+.hero .n{font-size:30px;font-style:italic}
+
+/* Section header with a link on the right */
+.sec.row2{display:flex;align-items:baseline;justify-content:space-between}
+.link.sm{font-family:'DM Sans','Noto Sans SC',sans-serif;font-style:normal;font-size:13px;font-weight:600;color:var(--lime);text-decoration:none}
+
+/* New rooms strip */
+.strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:2px 18px 12px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.mini-room{flex:none;width:208px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;text-align:left;box-shadow:0 10px 26px -18px rgba(25,21,18,.35)}
+.mini-room .pic{height:112px}
+.mr-b{display:flex;align-items:baseline;justify-content:space-between;gap:6px;padding:9px 12px 11px}
+.mr-b .price{font-size:20px}
+.mr-a{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mr-a .ic{color:var(--hot);width:12px;height:12px}
+
+/* Room pictures: a touch taller, framed like prints */
+.card.photo .pic{height:172px}
+.sheet .in>.pic{height:200px}
+.pic .pp{backdrop-filter:blur(6px);box-shadow:0 6px 16px -10px rgba(25,21,18,.5)}
+.link.sm{display:inline;margin:0}
+html[lang=zh] .hero .n,html[lang=zh] .sec,html[lang=zh] .match b{font-style:normal}

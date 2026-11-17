@@ -5,7 +5,7 @@ function listHomes(){let l=S.homes.filter(h=>(hf.type==='all'||h.type===hf.type)
  return l.map(h=>{const fl=homeFlags(h);return `<div class="card photo"><div class="pic">${art(h)}
   ${h.verified?`<button class="vf" data-a="vinfo">✓ ${t('Verified','已核实')} ⓘ</button>`:''}<button class="heart ${isSaved('homes',h.id)?'on':''}" data-a="fav" data-k="homes" data-v="${h.id}">♥</button>
   <div class="pp"><span class="price">$${h.rent}<small>/${t('wk','周')}</small></span></div></div>
-  <div class="body"><button data-a="home" data-v="${h.id}" style="text-align:left;width:100%"><div class="tt">${esc(h.title)}</div><div class="meta">📍 ${esc(h.area)}${h.near?' · '+t('near ','近 ')+esc(h.near):''} · ${ago(h)}</div></button>
+  <div class="body"><button data-a="home" data-v="${h.id}" style="text-align:left;width:100%"><div class="tt">${esc(h.title)}</div><div class="meta">${ico('pin')} ${esc(h.area)}${h.near?' · '+t('near ','近 ')+esc(h.near):''} · ${ago(h)}</div></button>
   ${h.zh?`<span class="tag b">${t('中文 OK','中文沟通')}</span>`:''}${!h.bond?`<span class="tag g">${t('No bond','免押金')}</span>`:''}<span class="tag">${h.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>
   ${fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join('')}</div></div>`}).join('')||`<div class="note">${t('No rooms match. Loosen a filter.','没有符合的房源，放宽筛选试试。')}</div>`}
 function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl=homeFlags(x),room=x.type!=='unit';

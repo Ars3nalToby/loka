@@ -21,7 +21,8 @@ First milestone: 20 real room matches before the February university intake.
   Copy-paste prompts for each model are in `docs/PROMPTS.md`.
 - Coverage target: Brisbane inner city + south side, 53 suburbs in `data/suburbs.json`
   (not yet wired into the app; that is task S1).
-- Icons in `icons/` still show the old "H" mark (task S3).
+- Icons: green italic "L." mark (`icons/`), link preview `og.png`. Source compositions are
+  described in the S3 log line; regenerate them rather than editing the PNGs by hand.
 
 - Static site, no build step, no framework: `index.html` shell, `css/app.css`, and the
   scripts in `js/` (see "File map" below).
@@ -61,7 +62,8 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/store.js` | `KEY`, `store` (localStorage today; Supabase in task O2) |
 | `js/seed.js` | `nextDay`, `seed`, `seedQA`: sample data |
 | `js/state.js` | `S` (all data), `tab`, filters `hf` `jf` `mq`, `save()` |
-| `js/ui.js` | `t`, `esc`, dates, `art`, `HT`, `ZONE`/`ZN`/`zone`, `ROLE`, `IC`, `openSheet`, `toast`, `copy`, `val` |
+| `js/ui.js` | `t`, `esc`, dates, `HT`, line icons `LI`/`ico()`, `HERO_ART`, `ZONE`/`ZN`/`zone`, `ROLE`, `IC`, `openSheet`, `toast`, `copy`, `val` |
+| `js/art.js` | `art(listing)`: illustrated room scenes (perspective room, window view by zone, day/dusk/night). Stand-in until real photos (O4). |
 | `js/map.js` | `MAP`, `mapSvg` (home-screen map) |
 | `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
@@ -146,3 +148,13 @@ One line per session: date, model, what changed, what the next assistant must kn
   Checked old vs new in Chromium at 390px: 12 tabs x EN/中文, 13 sheets, search, filters and
   publish attempts gave identical output. `sw.js` is `loka-v3` and caches the new files.
   Next task: S1.
+- 17 Nov 2026 · Claude Opus 5.5 · **S3 design pass** (owner asked for visible design work
+  before S1). New `js/art.js` replaces the flat room drawings: one-point perspective room,
+  window view that follows the suburb's zone (CBD + bridge, river, Queenslander + jacaranda
+  or palm), day / dusk / night, light pool, rug, pendant; stable per listing id. New icon:
+  cream italic Bodoni "L" with coral dot on the green gradient (512, 192, 180, maskable,
+  favicon 32). `og.png` 1200x630 + Open Graph tags (absolute URL uses tobyloka.vercel.app;
+  change it if the domain changes). Emoji replaced by drawn icons on Home, Rooms chips and
+  card pins. CSS additions are at the end of `css/app.css` under "S3 design pass".
+  Watch out: `.li` is the verified-sheet list class; the icon class is `.ic`.
+  SW `loka-v4`. Next task: S1.

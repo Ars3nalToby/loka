@@ -1,2 +1,2 @@
 {"name":"Loka · 布村生活站","short_name":"Loka","description":"Brisbane rooms and jobs checked against Queensland rules.","start_url":"./","scope":"./","display":"standalone","background_color":"#F4F0E7","theme_color":"#F4F0E7","lang":"en-AU",
-"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
+"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}

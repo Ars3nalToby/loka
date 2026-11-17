@@ -2,7 +2,7 @@
 // Classic script: shares global scope with the other js/ files. Load order is set in index.html.
 function listJobs(){let l=S.jobs.filter(j=>(!jf.fair||!jobFlags(j).length)&&(!jf.zh||j.zh)&&(!jf.cash||j.cash)&&(!jf.q||(j.area+' '+j.title).toLowerCase().includes(jf.q.toLowerCase()))).sort((a,b)=>b.pay-a.pay);
  LC=l.length+' '+t(l.length===1?'job':'jobs','个工作');
- return l.map(j=>{const fl=jobFlags(j);return `<div class="card"><div class="row"><button data-a="job" data-v="${j.id}" style="text-align:left;flex:1"><div class="tt">${esc(j.title)}</div><div class="meta">📍 ${esc(j.area)} · ${esc(j.hrs)} · ${ago(j)}</div></button>
+ return l.map(j=>{const fl=jobFlags(j);return `<div class="card"><div class="row"><button data-a="job" data-v="${j.id}" style="text-align:left;flex:1"><div class="tt">${esc(j.title)}</div><div class="meta">${ico('pin')} ${esc(j.area)} · ${esc(j.hrs)} · ${ago(j)}</div></button>
   <div style="text-align:right"><div class="price">$${j.pay}<small>/${t('hr','时')}</small></div><button class="heart ${isSaved('jobs',j.id)?'on':''}" data-a="fav" data-k="jobs" data-v="${j.id}" style="font-size:18px;color:${isSaved('jobs',j.id)?'var(--hot)':'rgba(25,21,18,.25)'}">♥</button></div></div>
   ${j.zh?`<span class="tag b">${t('Mandarin a plus','会中文优先')}</span>`:''}${j.cash?`<span class="tag g">${t('Cash','现金')}</span>`:''}<span class="tag">${j.casual?t('Casual','临时'):t('Part time','兼职')}</span>
   ${fl.length?fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join(''):`<span class="ok">✓ ${t('Legal pay','时薪合法')}</span>`}</div>`}).join('')||`<div class="note">${t('No jobs match.','没有符合的工作。')}</div>`}

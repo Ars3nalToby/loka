@@ -125,7 +125,14 @@ checked. It is listed under "Not yet checked" in `HANDOFF.md`.
 
 Filters to add: available by date, own bathroom, couples OK, lister does not live there.
 
-### [ ] S3. Identity and design polish (Sonnet)
+### [x] S3. Identity and design polish (Sonnet)
+
+> Done 17 Nov 2026 by Opus 5.5, ahead of S1/S2 at the owner's request. Shipped: new room
+> illustrations (`js/art.js`), green italic "L." icon set incl. maskable + favicon, `og.png`
+> link preview, drawn hero art, line icon set `ico()`, "New rooms" strip on Home, paper
+> grain, Chinese line-height, focus rings. **Not done from this list:** moving squads /
+> tasks / tools / guide into a "More" tab, skeleton loading cards, and the per-room trust
+> strip. Pick those up inside S2 or S4.
 
 - **Icons still show the old green "H".** Draw a new mark for Loka and regenerate
   `icons/icon-180.png`, `icon-192.png`, `icon-512.png` and a maskable version with safe
