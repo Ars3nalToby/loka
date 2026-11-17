@@ -20,7 +20,7 @@ function render(){
   <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
   <div class="sec row2"><span>${t('New rooms','新上房源')}</span><button class="link sm" data-a="tab" data-v="homes">${t('See all','查看全部')} →</button></div>
   <div class="strip">${[...S.homes].sort((a,b)=>(a.ago||0)-(b.ago||0)).slice(0,4).map(x=>`<button class="mini-room" data-a="home" data-v="${x.id}"><div class="pic">${art(x)}</div><div class="mr-b"><span class="price">$${x.rent}<small>/${t('wk','周')}</small></span><span class="mr-a">${ico('pin')} ${esc(x.area)}</span></div></button>`).join('')}</div>
-  <div class="sec">${t('Where things are','都在哪儿')}</div><div class="map">${mapSvg()}</div>${mapLegend()}<div class="note">${t('Tap a pin or a zone to see its rooms. Squares are campuses.','点地图上的数字或区域，看那里的房源。黑色方块是大学校区。')}</div>
+  <div class="sec">${t('Where things are','都在哪儿')}</div><div class="map">${mapSvg()}</div>${mapLegend()}<div class="note">${t('Tap a pin or a zone to open the room map there. Squares are campuses.','点地图上的数字或区域，直接打开那一区的房源地图。黑色方块是大学校区。')}</div>
   <div class="sec">${t('More on Loka','Loka 还能做什么')}</div>
   <div class="tiles">
    <button class="tile" data-a="tab" data-v="earn"><div class="e">${ico('scout')}</div><div class="n">${t('Be a scout','做探房员')}</div><div class="d">${t('Visit, photograph, verify','实地看房、拍照、核实')}</div></button>
@@ -34,12 +34,16 @@ function render(){
   if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
  }
  if(tab==='homes'){
-  h+=`<h1>${t('Rooms, <em>without the traps.</em>','招租，<em>不踩坑。</em>')}</h1><div class="sub">${t('Sorted cheapest first. Red flags are worked out from Queensland rental rules.','按价格从低到高。红色警示根据昆州租房规定自动计算。')}</div>
+  h+=`<h1>${t('Rooms, <em>without the traps.</em>','招租，<em>不踩坑。</em>')}</h1><div class="sub${rview==='map'?' hide':''}">${t('Sorted cheapest first. Red flags are worked out from Queensland rental rules.','按价格从低到高。红色警示根据昆州租房规定自动计算。')}</div>
   <input class="search" id="hq" placeholder="${t('Suburb or uni, e.g. Sunnybank, UQ','区或学校，如 Sunnybank、UQ')}" value="${esc(hf.q)}">
   <div class="chips zc">${[['',t('All areas','全部区域')],...Object.keys(ZN).map(z=>[z,t(ZN[z][0],ZN[z][1])])].map(c=>`<button class="chip ${(hf.z||'')===c[0]?'on':''}" data-a="hz" data-v="${c[0]}">${c[0]?`<i style="background:${ZCOL[c[0]].ink}"></i>`:''}${c[1]}</button>`).join('')}</div>
+  <details class="moref" ${hfOpen?'open':''}><summary>${ico('sliders')} ${t('Filters','筛选')}${hfCount()?` <b>${hfCount()}</b>`:''}</summary>
   <div class="chips">${[['all',t('All','全部')],...Object.keys(HT).map(k=>[k,t(HT[k][1],HT[k][2])])].map(c=>`<button class="chip ${hf.type===c[0]?'on':''}" data-a="hf" data-k="type" data-v="${c[0]}">${c[1]}</button>`).join('')}</div>
   <div class="chips">${[[0,t('Any price','不限价')],[250,'≤ $250'],[350,'≤ $350'],[500,'≤ $500']].map(c=>`<button class="chip ${hf.max===c[0]?'on':''}" data-a="hf" data-k="max" data-v="${c[0]}">${c[1]}</button>`).join('')}<button class="chip ${hf.zh?'on':''}" data-a="hf" data-k="zh">${t('中文 OK','中文沟通')}</button><button class="chip ${hf.nobond?'on':''}" data-a="hf" data-k="nobond">${t('No bond','免押金')}</button><button class="chip ${hf.bills?'on':''}" data-a="hf" data-k="bills">${t('Bills included','包水电')}</button><button class="chip ${hf.clean?'on':''}" data-a="hf" data-k="clean">${t('No red flags','无警示')}</button></div>
-  <div class="bar2"><span id="cnt"></span><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div><div id="list">${listHomes()}</div>`;
+  </details>
+  <div class="chips cc"><span class="cl">${ico('cap')} ${t('Near','靠近')}</span>${SUBURB_DATA.campuses.filter(c=>['uq','qut-gp','gu-nathan','gu-sb'].includes(c.id)).map(c=>`<button class="chip ${hf.c===c.id?'on':''}" data-a="hc" data-v="${c.id}">${CAMPUS_SHORT[c.id]}</button>`).join('')}</div>
+  <div class="bar2"><div class="vt" role="group" aria-label="${t('View','视图')}"><button class="${rview==='list'?'on':''}" data-a="rv" data-v="list">${ico('list')} ${t('List','列表')}</button><button class="${rview==='map'?'on':''}" data-a="rv" data-v="map">${ico('map')} ${t('Map','地图')}</button></div><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div>
+  ${rview==='map'?`<div class="rmap">${mapSvg({rooms:true})}${hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:''}</div><div id="mprev">${mapPreview()}</div><div class="maplegend"><span><i class="g"></i>${t('Verified','已核实')}</span><span><i class="k"></i>${t('Not yet verified','尚未全部核实')}</span><span><i class="sq"></i>${t('Campus','校区')}</span></div>`:`<div id="cnt" class="cntl"></div><div id="list">${listHomes()}</div>`}`;
  }
  if(tab==='jobs'){
   h+=`<h1>${t('Jobs that <em>pay legally.</em>','找工，<em>时薪合法。</em>')}</h1><div class="sub">${t(`National minimum from 1 July 2026: $${RULES.minWage}/h, or $${RULES.minCasual}/h casual. Your award may be higher.`,`2026年7月1日起全国最低工资：$${RULES.minWage}/时，临时工 $${RULES.minCasual}/时。行业 award 可能更高。`)}</div>
@@ -114,18 +118,19 @@ function render(){
 
 // ───────── actions ─────────
 document.addEventListener('input',e=>{const id=e.target.id;const L=document.getElementById('list');
- if(id==='hq'){hf.q=e.target.value;L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}
+ if(id==='hq'){hf.q=e.target.value;if(rview==='map'){mapSel='';const m=document.querySelector('.rmap svg');if(m)m.outerHTML=mapSvg({rooms:true});const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}else{L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}}
  else if(id==='jq'){jf.q=e.target.value;L.innerHTML=listJobs();document.getElementById('cnt').textContent=LC}
  else if(tab==='tools')calc()});
 document.addEventListener('change',()=>{if(tab==='tools')calc()});
+document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('moref'))hfOpen=e.target.open},true);
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sheet')closeSheet();return}
  const a=b.dataset.a,v=b.dataset.v,q=S.squads.find(x=>x.id===v);
  if(a==='lang'){S.lang=S.lang==='zh'?'en':'zh';save();render()}
  if(a==='tab'){tab=v;closeSheet();render();scrollTo(0,0)}
  if(a==='filter'){filter=v;render()}
- if(a==='hf'){const k=b.dataset.k;if(k==='type')hf.type=v;else if(k==='max')hf.max=+v;else hf[k]=!hf[k];render()}
+ if(a==='hf'){hfOpen=true;const k=b.dataset.k;if(k==='type')hf.type=v;else if(k==='max')hf.max=+v;else hf[k]=!hf[k];render()}
  if(a==='jf'){const k=b.dataset.k;jf[k]=!jf[k];render()}
- if(a==='pin'){hf={type:'all',max:0,q:v,bills:false,clean:false,zh:false,nobond:false};jf.q=v;tab=S.homes.some(h=>h.area===v)||!S.jobs.some(j=>j.area===v)?'homes':'jobs';render();scrollTo(0,0)}
+ if(a==='pin'){const hs=S.homes.filter(h=>h.area===v);if(hs.length){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:zone(v)};rview='map';mapSel=hs[0].id;tab='homes'}else{jf.q=v;tab=S.jobs.some(j=>j.area===v)?'jobs':'homes';if(tab==='homes'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:zone(v)};rview='map'}}render();scrollTo(0,0)}
  if(a==='match')matchSheet();
  if(a==='vinfo')verifiedSheet();
  if(a==='enq'){const x=S.homes.find(h=>h.id===v);if(x)copy(enqText(x),t('Message copied','信息已复制'))}
@@ -135,8 +140,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='rcheck'){S.mine=S.mine||{};const m=S.mine[v]=S.mine[v]||[],k=b.dataset.k,i=m.indexOf(k);i>-1?m.splice(i,1):m.push(k);save();homeDetail(v)}
  if(a==='codemsg'){const x=S.homes.find(h=>h.id===v);copy(codeMsg(x),t('Copied. Paste it to the lister.','已复制，发给对方即可。'))}
  if(a==='insp'){const x=S.homes.find(h=>h.id===v);x.insp=x.insp||{ok:0,bad:0};x.insp[b.dataset.k]++;S.inspd=S.inspd||{};S.inspd[v]=b.dataset.k;if(b.dataset.k==='bad'&&!S.reports.some(r=>r.id===v))S.reports.push({k:'homes',id:v,why:t('Renter said it did not match the listing','租客反馈与描述不一致')});save();homeDetail(v);toast(t('Thanks. This helps the next renter.','谢谢，这会帮到下一位租客。'))}
- if(a==='mz'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:v};tab='homes';render();scrollTo(0,0)}
+ if(a==='mz'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:v};rview='map';mapSel='';tab='homes';render();scrollTo(0,0)}
  if(a==='hz'){hf.z=hf.z===v?'':v;render()}
+ if(a==='rv'){rview=v;mapSel='';render()}
+ if(a==='hc'){hf.c=hf.c===v?'':v;render()}
+ if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
+ if(a==='msub'){const z=zone(v);if(z!=='other'&&hf.z!==z){hf.z=z;const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}else{const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}}
  if(a==='asknew')askForm();
  if(a==='askopen')askDetail(v);
  if(a==='askcreate'){const by=S.me||val('q_by'),qq=val('q_text');if(!by||!qq)return toast(t('Name and question are required','名字和问题必填'));S.me=by;S.qa.unshift({id:'q'+Date.now(),q:qq,area:val('q_area'),by,ago:0,a:[]});save();closeSheet();render()}

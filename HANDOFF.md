@@ -189,3 +189,12 @@ One line per session: date, model, what changed, what the next assistant must kn
   Qld max bond is 4 weeks for all tenancies since 30 Sep 2024 (RTA). SW `loka-v7`. 19 tests.
   Map labels use English suburb names in both languages (Chinese names in suburbs.js are
   unverified transliterations).
+- 17 Nov 2026 · Claude Opus 5.5 · **Map-first Rooms.** Rooms page has a List / Map toggle
+  (`rview` in state.js). Map view = `mapSvg({rooms:true})`: one price pin per listing
+  (`pinPos` fans out rooms in the same suburb; green + gold dot = verified 4/4, coral =
+  selected), zooms its viewBox to the chosen zone (`hf.z`, all sizes scale by `k`), and a
+  preview card (`mapPreview`) under it. "Near" campus chips (`hf.c`) draw 2 km / 5 km rings,
+  sort the list nearest-first and show "≈ x km to UQ" (straight line via `kmBetween`, never
+  presented as travel time). Type / price / other filters fold into a `<details class="moref">`
+  drawer (`hfOpen`, `hfCount`). Home map pins and zone chips now open the Rooms map zoomed
+  in. `filtHomes()` in rooms.js is the one place the room filters live. SW `loka-v8`.

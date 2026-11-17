@@ -82,7 +82,8 @@ listers the owner approaches.
 
 > Partly done 17 Nov 2026 (Opus): `js/suburbs.js` is wired in, zone chips on Rooms, new
 > map with legend, suburb datalist on the listing form. **Still to do:** strict suburb picker
-> (no free text), postcode search, "Near my campus" filter, 10 more sample rooms.
+> (no free text), postcode search, 10 more sample rooms. ("Near my campus" and a
+> map view were added 17 Nov 2026.)
 
 Source of truth: `js/suburbs.js`. Replace the hard-coded `ZONE`, `ZN` and `MAP`.
 
