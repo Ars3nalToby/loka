@@ -158,3 +158,8 @@ One line per session: date, model, what changed, what the next assistant must kn
   card pins. CSS additions are at the end of `css/app.css` under "S3 design pass".
   Watch out: `.li` is the verified-sheet list class; the icon class is `.ic`.
   SW `loka-v4`. Next task: S1.
+- 17 Nov 2026 · Claude Opus 5.5 · Header redesign: green "L." mark (same as app icon) +
+  "Loka." wordmark + 布村生活站 · BRISBANE tagline; tapping it goes Home. EN / 中文 segmented
+  switch (only the inactive side has `data-a="lang"`). Header is transparent at the top and
+  gets class `stuck` (frosted, hairline) after 8px of scroll; listener at the end of
+  `js/app.js`. Chinese headline accents no longer use fake italic. SW `loka-v5`.

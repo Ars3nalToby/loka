@@ -3,7 +3,9 @@
 function render(){
  document.documentElement.lang=S.lang==='zh'?'zh':'en';
  const a=document.getElementById('app');const back=`<button class="back" data-a="tab" data-v="home">← ${t('Home','首页')}</button>`;
- let h=`<header><div class="logo">${esc(BRAND.en)}<b>.</b><small>${esc(BRAND.zh)}</small></div><button class="lang" data-a="lang">${S.lang==='zh'?'English':'中文'}</button></header>`;
+ const zh=S.lang==='zh';
+ let h=`<header id="top"><button class="brand" data-a="tab" data-v="home" aria-label="${t('Loka home','Loka 首页')}"><span class="mark" aria-hidden="true"><i>L</i><b></b></span><span class="wm"><span class="nm">${esc(BRAND.en)}<b>.</b></span><span class="tg"><em>${esc(BRAND.zh)}</em><s></s>Brisbane</span></span></button>
+ <div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></header>`;
  if(tab==='home'){
   const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
   h+=`<div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
@@ -171,3 +173,5 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
 });
 render();
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+// Header: transparent at the top, frosted once the page scrolls.
+addEventListener('scroll',()=>{const e=document.getElementById('top');if(e)e.classList.toggle('stuck',scrollY>8)},{passive:true});
