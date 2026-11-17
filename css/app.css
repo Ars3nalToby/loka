@@ -1,13 +1,13 @@
-:root{--ink:#F4F0E7;--bg2:#EBE4D6;--panel:#FFFFFF;--line:rgba(25,21,18,.1);--txt:#191512;--mut:#6B645A;--lime:#1F6F5C;--soft:#E3F0EB;--hot:#E2683C;--sky:#C99A2B;--serif:'Bodoni Moda','Noto Serif SC',serif}
+:root{--ink:#F4F0E7;--bg2:#EBE4D6;--panel:#FFFFFF;--line:rgba(25,21,18,.1);--txt:#191512;--mut:#6B645A;--lime:#1F6F5C;--soft:#E3F0EB;--hot:#E2683C;--sky:#C99A2B;--serif:'Nunito','Noto Sans SC',sans-serif;--display:'Bagel Fat One','Noto Sans SC',sans-serif}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--ink);overflow-x:hidden;color:var(--txt);font-family:'DM Sans','Noto Sans SC',system-ui,sans-serif;font-weight:400;line-height:1.5;padding-bottom:92px}
+body{background:var(--ink);overflow-x:hidden;color:var(--txt);font-family:'Nunito','Noto Sans SC',system-ui,sans-serif;font-weight:400;line-height:1.5;padding-bottom:92px}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 .wrap{max-width:520px;margin:0 auto;padding:0 18px}
 header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 8px}
 .logo{font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:-.5px;font-style:italic}
 .logo b{color:var(--hot);font-style:normal}
-.logo small{font-family:'DM Sans','Noto Sans SC',sans-serif;font-style:normal;font-size:12px;color:var(--mut);margin-left:8px;letter-spacing:.5px;font-weight:500}
+.logo small{font-family:'Nunito','Noto Sans SC',sans-serif;font-style:normal;font-size:12px;color:var(--mut);margin-left:8px;letter-spacing:.5px;font-weight:500}
 .lang{border:1px solid rgba(25,21,18,.2);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:500;background:#fff}
 .demo{background:var(--bg2);color:var(--mut);font-size:12px;border-radius:12px;padding:9px 12px;margin:6px 0 14px}
 h1{font-family:var(--serif);font-size:38px;font-weight:500;letter-spacing:-.8px;line-height:1.05;margin:10px 0 8px}
@@ -30,7 +30,7 @@ h1 em{color:var(--lime);font-style:italic}
 .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .tt{font-weight:600;font-size:16.5px;line-height:1.25}
 .meta{color:var(--mut);font-size:13px;margin-top:4px}
-.price{font-family:var(--serif);font-weight:600;font-size:23px;color:var(--lime);white-space:nowrap}.price small{font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:11px;color:var(--mut);font-weight:400}
+.price{font-family:var(--serif);font-weight:600;font-size:23px;color:var(--lime);white-space:nowrap}.price small{font-family:'Nunito','Noto Sans SC',sans-serif;font-size:11px;color:var(--mut);font-weight:400}
 .badge{font-weight:600;font-size:12px;border-radius:99px;padding:5px 11px;white-space:nowrap}
 .b-need{background:var(--hot);color:#fff}.b-open{background:var(--soft);color:var(--lime)}.b-full{background:var(--bg2);color:var(--mut)}
 .bar{height:5px;background:var(--bg2);border-radius:9px;margin-top:14px;overflow:hidden}
@@ -107,7 +107,7 @@ input,select,textarea{width:100%;background:#fff;border:1px solid rgba(25,21,18,
 .match em{font-style:normal;flex:none;width:40px;height:40px;border-radius:50%;background:var(--hot);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
 .mini{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;background:#fff;border-radius:14px;padding:11px 14px;margin-bottom:8px}
 .mini span{min-width:0;flex:1}.mini b{display:block;font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini i{display:block;font-style:normal;font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mini em{font-style:normal;flex:none;text-align:right;font-family:var(--serif);font-weight:600;font-size:19px;line-height:1}.mini em small{display:block;font-family:'DM Sans','Noto Sans SC',sans-serif;font-size:10px;font-weight:500;color:var(--mut);margin-top:3px}
+.mini em{font-style:normal;flex:none;text-align:right;font-family:var(--serif);font-weight:600;font-size:19px;line-height:1}.mini em small{display:block;font-family:'Nunito','Noto Sans SC',sans-serif;font-size:10px;font-weight:500;color:var(--mut);margin-top:3px}
 .mini em.gd{color:var(--lime)}.mini em.bd{color:var(--hot)}
 .link{display:block;margin:14px auto 0;font-size:13px;color:var(--mut);text-decoration:underline;text-underline-offset:3px}
 .cmp{overflow-x:auto;background:#fff;border-radius:16px;padding:6px 4px}.cmp table{border-collapse:collapse;width:100%;font-size:13px}
@@ -158,7 +158,7 @@ html[lang=zh] h1{letter-spacing:0;line-height:1.18}
 
 /* Section header with a link on the right */
 .sec.row2{display:flex;align-items:baseline;justify-content:space-between}
-.link.sm{font-family:'DM Sans','Noto Sans SC',sans-serif;font-style:normal;font-size:13px;font-weight:600;color:var(--lime);text-decoration:none}
+.link.sm{font-family:'Nunito','Noto Sans SC',sans-serif;font-style:normal;font-size:13px;font-weight:600;color:var(--lime);text-decoration:none}
 
 /* New rooms strip */
 .strip{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:2px 18px 12px;scrollbar-width:none}
@@ -194,3 +194,47 @@ header.stuck{background:rgba(244,240,231,.86);backdrop-filter:blur(16px) saturat
 .seg button.on{background:#fff;color:var(--txt);box-shadow:0 2px 6px -2px rgba(25,21,18,.25);cursor:default}
 .wm .tg em{font-style:normal;letter-spacing:.06em;font-size:11px;font-weight:600}
 html[lang=zh] h1 em{font-style:normal}
+
+
+/* ───────── Type system B (17 Nov 2026): Bagel Fat One wordmark, Nunito, 思源黑体 Black ───────── */
+body{font-family:'Nunito','Noto Sans SC',system-ui,sans-serif;font-weight:500}
+h1{font-weight:900;letter-spacing:-.6px;line-height:1.08}
+h1 em{font-style:normal}
+.sec{font-style:normal;font-weight:900;font-size:20px;letter-spacing:-.2px}
+.price{font-weight:900;letter-spacing:-.3px}
+.stat b,.res b,.mini em{font-weight:900}
+.lb .rk,.step b{font-style:normal;font-weight:900}
+.match b{font-style:normal;font-weight:900;font-size:21px}
+.hero .n{font-style:normal;font-weight:900;font-size:28px;letter-spacing:-.4px;text-shadow:1px 1px 0 rgba(0,0,0,.14),2px 2px 0 rgba(0,0,0,.14),3px 3px 0 rgba(0,0,0,.14),4px 4px 0 rgba(0,0,0,.14),5px 5px 0 rgba(0,0,0,.14),6px 6px 0 rgba(0,0,0,.14)}
+.chip,.tag,.btn,.post{font-weight:700}
+html[lang=zh] h1,html[lang=zh] .sec{letter-spacing:0}
+
+/* Header wordmark */
+.wm .nm{font-family:var(--display);font-style:normal;font-weight:400;font-size:28px;letter-spacing:-.5px;line-height:1.05;text-shadow:1px 1px 0 #DCD2BF,2px 2px 0 #DCD2BF,3px 3px 0 #DCD2BF,4px 4px 0 #DCD2BF,5px 5px 0 #DCD2BF}
+.mark i{font-family:var(--display);font-style:normal;font-weight:400;font-size:27px;left:10px;top:5px;text-shadow:1px 1px 0 #185a4a,2px 2px 0 #185a4a,3px 3px 0 #185a4a,4px 4px 0 #185a4a,5px 5px 0 #185a4a,6px 6px 0 #185a4a,7px 7px 0 #185a4a,8px 8px 0 #185a4a,9px 9px 0 #185a4a,10px 10px 0 #185a4a}
+.mark b{left:27px;top:25px}
+
+/* Home poster: green, long shadow */
+.hposter{position:relative;margin:0 -18px 14px;padding:4px 22px 26px;background:linear-gradient(170deg,#25806a 0,#1F6F5C 55%,#185a4a 100%);color:#F4F0E7;overflow:hidden;border-radius:0 0 30px 30px}
+.hposter::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 90% 0%,rgba(255,255,255,.12),transparent 60%);pointer-events:none}
+.pbig{font-family:var(--display);font-size:76px;line-height:1.08;letter-spacing:-1px;text-shadow:1px 1px 0 #185a4a,2px 2px 0 #185a4a,3px 3px 0 #185a4a,4px 4px 0 #185a4a,5px 5px 0 #185a4a,6px 6px 0 #185a4a,7px 7px 0 #185a4a,8px 8px 0 #185a4a,9px 9px 0 #185a4a,10px 10px 0 #185a4a,11px 11px 0 #185a4a,12px 12px 0 #185a4a,13px 13px 0 #185a4a,14px 14px 0 #185a4a,15px 15px 0 #185a4a,16px 16px 0 #185a4a,17px 17px 0 #185a4a,18px 18px 0 #185a4a,19px 19px 0 #185a4a,20px 20px 0 #185a4a,21px 21px 0 #185a4a,22px 22px 0 #185a4a,23px 23px 0 #185a4a,24px 24px 0 #185a4a,25px 25px 0 #185a4a,26px 26px 0 #185a4a,27px 27px 0 #185a4a,28px 28px 0 #185a4a,29px 29px 0 #185a4a,30px 30px 0 #185a4a,31px 31px 0 #185a4a,32px 32px 0 #185a4a,33px 33px 0 #185a4a,34px 34px 0 #185a4a,35px 35px 0 #185a4a,36px 36px 0 #185a4a,37px 37px 0 #185a4a,38px 38px 0 #185a4a,39px 39px 0 #185a4a,40px 40px 0 #185a4a}
+.pbig b{color:var(--hot);font-weight:400}
+.ptg{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:800;letter-spacing:.24em;color:#cfe3da;margin:0 0 18px}
+.ptg em{font-style:normal;letter-spacing:.08em;font-size:11.5px}
+.ptg s{width:4px;height:4px;border-radius:50%;background:var(--hot)}
+.hposter h1{position:relative;z-index:1;margin:0;font-size:38px;color:#F4F0E7;text-shadow:1px 1px 0 #185a4a,2px 2px 0 #185a4a,3px 3px 0 #185a4a,4px 4px 0 #185a4a,5px 5px 0 #185a4a,6px 6px 0 #185a4a,7px 7px 0 #185a4a,8px 8px 0 #185a4a,9px 9px 0 #185a4a,10px 10px 0 #185a4a,11px 11px 0 #185a4a,12px 12px 0 #185a4a,13px 13px 0 #185a4a,14px 14px 0 #185a4a,15px 15px 0 #185a4a,16px 16px 0 #185a4a,17px 17px 0 #185a4a,18px 18px 0 #185a4a,19px 19px 0 #185a4a,20px 20px 0 #185a4a,21px 21px 0 #185a4a,22px 22px 0 #185a4a}
+.hposter h1 em{color:#F4C766}
+.p2{position:relative;z-index:1;font-weight:900;font-size:21px;margin-top:10px;color:#F4F0E7;text-shadow:1px 1px 0 #185a4a,2px 2px 0 #185a4a,3px 3px 0 #185a4a,4px 4px 0 #185a4a,5px 5px 0 #185a4a,6px 6px 0 #185a4a,7px 7px 0 #185a4a,8px 8px 0 #185a4a,9px 9px 0 #185a4a,10px 10px 0 #185a4a,11px 11px 0 #185a4a,12px 12px 0 #185a4a,13px 13px 0 #185a4a,14px 14px 0 #185a4a}
+.p2 em{font-style:normal;color:#F4C766}
+.psub{position:relative;z-index:1;margin-top:14px;font-size:13.5px;line-height:1.6;color:#d6e8e0;max-width:32em}
+/* Header sitting on the poster (home, not scrolled) */
+header.onposter:not(.stuck){background:#25806a}
+header.onposter:not(.stuck) .brand{opacity:0;pointer-events:none}
+header.onposter:not(.stuck) .seg{background:rgba(255,255,255,.14);box-shadow:none}
+header.onposter:not(.stuck) .seg button{color:#d6e8e0}
+header.onposter:not(.stuck) .seg button.on{color:var(--lime);background:#F4F0E7}
+.brand{transition:opacity .25s}
+@media (min-width:560px){.hposter{border-radius:0 0 30px 30px}}
+/* Poster runs up under the transparent header so the green is one piece */
+header.onposter:not(.stuck){background:transparent}
+.hposter{margin-top:-74px;padding-top:78px}

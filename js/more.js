@@ -75,7 +75,7 @@ const THEMES={neon:{bg:['#F4F0E7','#EBE4D6'],ac:'#1F6F5C',tx:'#191512',mu:'#6B64
 function drawPoster(q){const T=THEMES[posterTheme],c=document.createElement('canvas');c.width=1080;c.height=1440;const x=c.getContext('2d');
  const g=x.createLinearGradient(0,0,1080,1440);g.addColorStop(0,T.bg[0]);g.addColorStop(1,T.bg[1]);x.fillStyle=g;x.fillRect(0,0,1080,1440);
  x.globalAlpha=.10;x.fillStyle=T.ac;x.beginPath();x.arc(1010,250,330,0,7);x.fill();x.globalAlpha=.08;x.beginPath();x.arc(60,1400,260,0,7);x.fill();x.globalAlpha=1;x.fillStyle=T.ac;x.fillRect(80,160,120,8);
- const F=(w,s)=>x.font=`${w} ${s}px "Bodoni Moda","Noto Serif SC",serif`;
+ const F=(w,s)=>x.font=`${w} ${s}px "Nunito","Noto Sans SC",sans-serif`;
  x.fillStyle=T.ac;F(900,54);x.fillText(BRAND.en+'. '+BRAND.zh,80,120);
  x.fillStyle=T.mu;F(500,34);x.textAlign='right';x.fillText('BRISBANE',1000,120);x.textAlign='left';
  const l=left(q);x.fillStyle=T.ac;F(900,l>0&&l<=9?300:190);

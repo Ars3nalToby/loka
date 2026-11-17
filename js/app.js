@@ -4,12 +4,15 @@ function render(){
  document.documentElement.lang=S.lang==='zh'?'zh':'en';
  const a=document.getElementById('app');const back=`<button class="back" data-a="tab" data-v="home">← ${t('Home','首页')}</button>`;
  const zh=S.lang==='zh';
- let h=`<header id="top"><button class="brand" data-a="tab" data-v="home" aria-label="${t('Loka home','Loka 首页')}"><span class="mark" aria-hidden="true"><i>L</i><b></b></span><span class="wm"><span class="nm">${esc(BRAND.en)}<b>.</b></span><span class="tg"><em>${esc(BRAND.zh)}</em><s></s>Brisbane</span></span></button>
+ let h=`<header id="top" class="${tab==='home'?'onposter':''}${scrollY>8?' stuck':''}"><button class="brand" data-a="tab" data-v="home" aria-label="${t('Loka home','Loka 首页')}"><span class="mark" aria-hidden="true"><i>L</i><b></b></span><span class="wm"><span class="nm">${esc(BRAND.en)}<b>.</b></span><span class="tg"><em>${esc(BRAND.zh)}</em><s></s>Brisbane</span></span></button>
  <div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></header>`;
  if(tab==='home'){
   const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
-  h+=`<div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
-  <h1>${t('Find a room. Find a job. <em>In your language.</em>','招租，找工。<em>用你的语言。</em>')}</h1><div class="sub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div>
+  h+=`<section class="hposter"><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
+  <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
+  <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
+  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div></section>
+  <div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
   <div class="duo">
    <button class="hero r" data-a="tab" data-v="homes"><span class="e">${HERO_ART.rooms}</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
    <button class="hero j" data-a="tab" data-v="jobs"><span class="e">${HERO_ART.jobs}</span><div class="n">${t('Jobs','找工')}</div><div class="d">${S.jobs.length} ${t('listed','条')} · ${t('up to','最高')} $${Math.max(...S.jobs.map(x=>x.pay))}/${t('hr','时')}</div></button>

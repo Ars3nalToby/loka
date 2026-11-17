@@ -113,7 +113,11 @@ features without the owner first getting legal advice.
 ## Design system (keep it)
 
 - Cream background `#F4F0E7`, ink `#191512`, green `#1F6F5C`, coral `#E2683C`, gold `#C99A2B`.
-- Bodoni Moda (display, italic accents), DM Sans and Noto Sans SC (body).
+- Type (chosen by the owner 17 Nov 2026, "option B"): **Bagel Fat One** for the "Loka." wordmark
+  only; **Nunito** 900 for headlines, 400-800 for body; **Noto Sans SC** (900 for Chinese headlines).
+  No italics on Chinese. Bodoni and DM Sans are retired.
+- Signature effect: **long shadow** (`text-shadow` stacked 1px steps in `#185a4a`) on the green
+  home poster (`.hposter`). Use it on green only, never on body text.
 - Rooms and Jobs are the two hero tiles and stay front and centre.
 - Mobile first, max width 520px, bottom nav, bottom sheets for detail.
 - Every string goes through `t(en, zh)`. Any new text needs both languages.
@@ -163,3 +167,9 @@ One line per session: date, model, what changed, what the next assistant must kn
   switch (only the inactive side has `data-a="lang"`). Header is transparent at the top and
   gets class `stuck` (frosted, hairline) after 8px of scroll; listener at the end of
   `js/app.js`. Chinese headline accents no longer use fake italic. SW `loka-v5`.
+- 17 Nov 2026 · Claude Opus 5.5 · **Type system B + green poster.** Owner picked Bagel Fat One
+  for "Loka." and pairing B (Nunito + Noto Sans SC Black). Home now opens on a green
+  long-shadow poster (`.hposter` in `js/app.js` / end of `css/app.css`); the header is
+  transparent over it (`header.onposter`) and hides its small wordmark until you scroll.
+  Class `.poster` is the squads share image; the home poster is `.hposter`. Icons, maskable,
+  favicon and `og.png` redrawn in the Bagel style. SW `loka-v6`.
