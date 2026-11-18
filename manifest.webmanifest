@@ -1,2 +1,12 @@
-{"name":"Loka · 布村生活站","short_name":"Loka","description":"Brisbane rooms and jobs checked against Queensland rules.","start_url":"./","scope":"./","display":"standalone","background_color":"#F4F0E7","theme_color":"#F4F0E7","lang":"en-AU",
-"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}]}
+{"id":"/","name":"Loka · 布村生活站","short_name":"Loka","description":"Brisbane rooms, jobs and today's city life, checked against Queensland rules. 布里斯班租房、找工、今日布村。",
+"start_url":"/","scope":"/","display":"standalone","orientation":"portrait","background_color":"#F4F0E7","theme_color":"#1F6F5C","lang":"en-AU","dir":"ltr",
+"categories":["lifestyle","travel","education"],
+"icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"},{"src":"icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}],
+"shortcuts":[
+ {"name":"Today in Brisbane · 今日布村","short_name":"Today","url":"/#/go/today","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]},
+ {"name":"Rooms · 招租","short_name":"Rooms","url":"/#/go/homes","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]},
+ {"name":"Just landed · 刚落地","short_name":"Landed","url":"/#/go/landed","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]},
+ {"name":"Brisbane guides · 布村怎么玩","short_name":"Guides","url":"/#/go/guides","icons":[{"src":"icons/icon-192.png","sizes":"192x192"}]}],
+"screenshots":[
+ {"src":"icons/shot-home.png","sizes":"780x1688","type":"image/png","form_factor":"narrow","label":"Loka home: rooms, jobs and today in Brisbane"},
+ {"src":"icons/shot-today.png","sizes":"780x1688","type":"image/png","form_factor":"narrow","label":"Today in Brisbane: live council events, transport and weather"}]}

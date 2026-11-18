@@ -85,7 +85,10 @@ async function shareInstagram(id){const x=S.homes.find(h=>h.id===id);if(!x||!sha
  toast(t('Image saved. Open Instagram → Story → pick it. Link copied for the sticker.','图片已保存。打开 Instagram → 快拍 → 选这张图。链接已复制，可贴进贴纸。'))}
 
 // ---------- Shared links: #/room/<id> opens that room ----------
-function openFromHash(){const m=location.hash.match(/^#\/room\/([\w-]+)/);if(!m)return;const id=m[1];
+// Home-screen shortcuts open #/go/<tab>. Only tabs in this list are allowed.
+const GO_TABS=['homes','jobs','today','landed','play','rights','guides'];
+function openFromHash(){const g=location.hash.match(/^#\/go\/([a-z]+)$/);if(g&&GO_TABS.includes(g[1])){tab=g[1];render();scrollTo(0,0);history.replaceState(null,'',location.pathname+location.search);return}
+ const m=location.hash.match(/^#\/room\/([\w-]+)/);if(!m)return;const id=m[1];
  if(S.homes.some(h=>h.id===id)){tab='homes';render();homeDetail(id)}
  else{tab='homes';render();toast(t('That room is not on Loka yet, or it was taken down.','这间房还没上 Loka，或已下架。'))}
  history.replaceState(null,'',location.pathname+location.search)}

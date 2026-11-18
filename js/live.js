@@ -15,11 +15,16 @@ async function liveLoad(force){if(liveLoading)return;liveLoading=true;
  await Promise.all(['events','transit','weather'].map(async k=>{
   if(!force&&LIVE[k]&&Date.now()-LIVE_AT[k]<5*6e4)return;
   try{const r=await fetch('/api/live?k='+k,{signal:AbortSignal.timeout?AbortSignal.timeout(12000):undefined});const j=await r.json();
-   if(!r.ok||!Array.isArray(j.items))throw new Error(j.error||'error');LIVE[k]={at:j.at,items:j.items};LIVE_AT[k]=Date.now();delete LIVE_ERR[k]}
-  catch(e){LIVE_ERR[k]=true}}));
+   if(!r.ok||!Array.isArray(j.items))throw new Error(j.error||'error');LIVE[k]={at:j.at,items:j.items};LIVE_AT[k]=Date.now();delete LIVE_ERR[k];liveSave()}
+  catch(e){const c=liveSaved()[k];if(c&&!LIVE[k]){LIVE[k]={at:c.at,items:c.items,saved:true};LIVE_AT[k]=0}else LIVE_ERR[k]=true}}));
  liveLoading=false;if(tab==='today'||tab==='home')liveRepaint()}
+// Last good copy of each feed, so Loka still shows something at an airport with no signal.
+// Public data only (events, notices, warnings); nothing personal is stored here.
+const LIVE_KEY='loka-live-v1';
+function liveSaved(){try{return JSON.parse(localStorage.getItem(LIVE_KEY))||{}}catch(e){return {}}}
+function liveSave(){try{const o={};for(const k of ['events','transit','weather'])if(LIVE[k]&&!LIVE[k].saved)o[k]={at:LIVE[k].at,items:LIVE[k].items};localStorage.setItem(LIVE_KEY,JSON.stringify(o))}catch(e){}}
 // Repaint just the live parts so the page does not jump.
-function liveRepaint(){const a=document.getElementById('livebox');if(a)a.innerHTML=todayBody();const h=document.getElementById('livestrip');if(h)h.outerHTML=liveStrip()}
+function liveRepaint(){const g=document.getElementById('glive'),gp=document.querySelector('[data-a="gcopy"]');if(g&&gp)g.innerHTML=playLive(play(gp.dataset.v));const a=document.getElementById('livebox');if(a)a.innerHTML=todayBody();const h=document.getElementById('livestrip');if(h)h.outerHTML=liveStrip()}
 
 // Brisbane-relevant transport notices: train lines and busways people here use, or our suburbs.
 const LINES=['Beenleigh','Cleveland','Shorncliffe','Ferny Grove','Caboolture','Redcliffe','Kippa-Ring','Ipswich','Rosewood','Springfield','Doomben','Airport','Gold Coast','Varsity Lakes','Roma Street','Central station','Fortitude Valley','Brisbane Metro','CityCat','ferry','busway','South Bank','Park Road','Boggo Road','Cultural Centre','King George Square','Queen Street','Garden City','Eight Mile Plains'];
@@ -63,7 +68,7 @@ function todayBody(){const ev=LIVE.events&&LIVE.events.items,today=bneDay(new Da
  if(LIVE.transit){const tr=transitBne(LIVE.transit.items);h+=`<div class="sec row2"><span>${t('Getting around','出行通知')}</span><span class="cnt">${tr.length}</span></div>`+(tr.length?tr.slice(0,8).map(i=>`<a class="tr ${sev(i)===2?'maj':sev(i)===1?'min':''}" href="${esc(safeUrl(i.u,'https://translink.com.au/service-updates'))}" target="_blank" rel="noopener"><b>${esc(i.t)}</b><i>${esc(i.d)}</i></a>`).join('')+`<a class="link sm" href="https://translink.com.au/service-updates" target="_blank" rel="noopener">${t('All notices on Translink','查看 Translink 全部通知')} ↗</a>`:`<div class="note">${t('No Brisbane notices right now.','布里斯班目前没有出行通知。')}</div>`)}
  else if(LIVE_ERR.transit)h+=`<div class="note">${t('Transport notices did not load.','交通通知暂时载入失败。')} <a href="https://translink.com.au/service-updates" target="_blank" rel="noopener">translink.com.au ↗</a></div>`;
  const at=['events','transit','weather'].map(k=>LIVE[k]&&LIVE[k].at).filter(Boolean).sort()[0];
- h+=`<div class="note src">${at?t('Updated ','更新于 ')+agoT(at)+' · ':''}${t('Events: Brisbane City Council open data (CC BY 4.0). Transport: Translink. Warnings: Bureau of Meteorology. Loka shows them as published and links to the original; check the source before you travel.','活动：布里斯班市政府开放数据（CC BY 4.0）。交通：Translink。警报：澳洲气象局。Loka 按原样显示并附原文链接，出门前请以原网站为准。')}</div>`;
+ h+=`<div class="note src">${['events','transit','weather'].some(k=>LIVE[k]&&LIVE[k].saved)?`<b class="offl">${t('Offline: showing the last saved copy.','离线中：显示上次保存的资料。')}</b> `:''}${at?t('Updated ','更新于 ')+agoT(at)+' · ':''}${t('Events: Brisbane City Council open data (CC BY 4.0). Transport: Translink. Warnings: Bureau of Meteorology. Loka shows them as published and links to the original; check the source before you travel.','活动：布里斯班市政府开放数据（CC BY 4.0）。交通：Translink。警报：澳洲气象局。Loka 按原样显示并附原文链接，出门前请以原网站为准。')}</div>`;
  return h}
 
 function todayHtml(){liveLoad();return `<section class="thero"><div><span class="kick"><i class="live-dot"></i>${t('Live from official sources','官方来源 · 实时')}</span><h1>${t('Today in<br><em>Brisbane.</em>','今日<br><em>布村。</em>')}</h1><div class="td">${esc(new Intl.DateTimeFormat(S.lang==='zh'?'zh-CN':'en-AU',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(new Date()))}</div></div><button class="refresh" data-a="liver" aria-label="${t('Refresh','刷新')}">↻</button></section><div id="livebox">${todayBody()}</div>`}

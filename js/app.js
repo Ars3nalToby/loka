@@ -33,6 +33,7 @@ function render(){
   </div>
   <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
   <button class="rcta" data-a="tab" data-v="rights"><span class="rc-b">${ibis(58,'walk')}</span><span><b>${t('Renter rights, one page','租客权益，一页看懂')}</b><i>${t('What the RTA can do, free advice lines, QCAT, and who to call first.','RTA 能做什么、免费咨询热线、QCAT，以及遇事先找谁。')}</i></span><em>→</em></button>
+  <button class="gcta" data-a="tab" data-v="guides"><span class="gc-i">📕</span><span><b>${t('How to play Brisbane','布村怎么玩')}</b><i>${t('Creator-style day plans, joined to today’s real events.','像博主那样的攻略，接上今天真实的活动。')}</i></span><em>→</em></button>
   ${landmarksHtml()}
   ${slangCard()}
   <div class="res">${t('Loka is flagging','Loka 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Loka works and the listing rules','Loka 怎么运作 · 发布规则')}</button>`;
@@ -85,6 +86,8 @@ function render(){
  if(tab==='rights')h+=back+rightsHtml();
  if(tab==='today')h+=back+todayHtml();
  if(tab==='landed')h+=back+landedHtml();
+ if(tab==='guides')h+=back+guidesHtml();
+ if(tab==='check')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+checkHtml();
  if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
@@ -116,12 +119,13 @@ function render(){
   <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Loka scout','成为 Loka 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
   <button class="btn ghost" data-a="tab" data-v="about">${t('How Loka works · listing rules','Loka 怎么运作 · 发布规则')}</button>
   <button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>
+  <button class="btn ghost" data-a="tab" data-v="check">${t('Loka check-up (offline, home screen)','Loka 体检（离线、主屏幕）')}</button>
   <button class="btn ghost" data-a="tab" data-v="privacy">${t('Privacy','隐私说明')}</button>
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
  a.innerHTML=h;motion();hdr();if(tab==='home')liveLoad();
- const main=['help','guide','tools','earn','play','about','rights','today','landed'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
+ const main=['help','guide','tools','earn','play','about','rights','today','landed','guides'].includes(tab)?'home':['admin','privacy','check'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
  const c=document.getElementById('cnt');if(c)c.textContent=LC;
@@ -143,6 +147,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='evf'){liveF=v;liveRepaint();return}
  if(a==='liver'){b.classList.add('spin1');liveLoad(true);return}
  if(a==='install')return doInstall();
+ if(a==='runcheck')return runCheck();
+ if(a==='guide1')return guideSheet(v);
+ if(a==='gcopy'){const p=play(v);if(!p)return;const txt=rednoteText(p);(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(t('Copied. Paste it into 小红书.','已复制，去小红书粘贴吧。')),()=>toast(t('Copy did not work on this browser.','这个浏览器无法复制。')));return}
+ if(a==='reload')return location.reload();
+ if(a==='persist'){if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().then(()=>runCheck());return}
  if(a==='slang'){slangOff++;b.classList.remove('flip');void b.offsetWidth;b.innerHTML=slangCard().replace(/^<button[^>]*>|<\/button>$/g,'');b.classList.add('flip');return}
  if(a==='lang'){S.lang=S.lang==='zh'?'en':'zh';save();render()}
  if(a==='tab'){tab=v;closeSheet();render();scrollTo(0,0)}
@@ -221,7 +230,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='reset'){const l=S.lang;S=seed();S.qa=seedQA();S.lang=l;save();render();toast(t('Reset','已重置'))}
 });
 render();openFromHash();authInit();
-if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+addEventListener('load',swRegister);
 // Header: transparent at the top, frosted once the page scrolls.
 // Header states. Phone home page: the header sits on the green poster ("onposter"); once you scroll it
 // turns solid green and shows the small logo ("green"), and turns cream only after the whole poster has

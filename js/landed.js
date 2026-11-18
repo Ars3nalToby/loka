@@ -43,3 +43,39 @@ function landedHtml(){const tel=n=>`<a class="mini-btn" href="tel:${n.replace(/\
  ${LANDED.map((s,i)=>`<div class="lstep" style="--i:${i}"><div class="ls-n">${i+1}</div><div class="ls-c"><b>${ico(s.ic)} ${t(s.en,s.zh)}</b><p>${t(s.p[0],s.p[1])}</p>${s.more?`<p class="more">${t(s.more[0],s.more[1])}</p>`:''}
   ${s.tels||s.links||s.act?`<div class="ct-a">${(s.tels||[]).map(tel).join('')}${(s.links||[]).map(l=>`<a class="mini-btn" href="${l[1]}" target="_blank" rel="noopener">${esc(l[0])} ↗</a>`).join('')}${s.act?`<button class="mini-btn hot" data-a="tab" data-v="${s.act[0]}">${t(s.act[1],s.act[2])} →</button>`:''}</div>`:''}</div></div>`).join('')}
  <div class="note">${t('Checked against the linked official pages on','已于')} ${t(LANDED_CHECKED[0],LANDED_CHECKED[1])}${t('. Fares and services change; the linked pages are the final word.',' 对照官方页面核对。票价和服务会变动，以链接页面为准。')}</div>`}
+
+// ───────── Service worker: register, tell people about updates, and the "Loka check-up" ─────────
+function swOK(){return 'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')}
+function swRegister(){if(!swOK())return;const had=!!navigator.serviceWorker.controller;
+ navigator.serviceWorker.register('sw.js').catch(()=>{});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!document.getElementById('upd')){const d=document.createElement('div');d.id='upd';d.className='upd';
+  d.innerHTML=`<span>${t('Loka was updated.','Loka 已更新。')}</span><button data-a="reload">${t('Refresh','刷新')}</button>`;document.body.appendChild(d)}})}
+function swAsk(msg){return new Promise(res=>{const c=navigator.serviceWorker&&navigator.serviceWorker.controller;if(!c)return res(null);const ch=new MessageChannel();
+ const to=setTimeout(()=>res(null),3000);ch.port1.onmessage=e=>{clearTimeout(to);res(e.data)};c.postMessage(msg,[ch.port2])})}
+
+let HC=null;
+async function runCheck(){HC={busy:true};repaintCheck();const r={};
+ r.online=navigator.onLine;r.installed=isStandalone();r.secure=window.isSecureContext;
+ r.sw=swOK()?!!(navigator.serviceWorker&&navigator.serviceWorker.controller):false;
+ const sw=r.sw?await swAsk('check'):null;r.ver=sw&&sw.v;r.offline=!!(sw&&sw.missing.length===0);r.missing=sw?sw.missing:[];
+ try{r.persisted=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():null}catch(e){r.persisted=null}
+ try{const est=navigator.storage&&navigator.storage.estimate?await navigator.storage.estimate():null;r.used=est?Math.round((est.usage||0)/1024):null}catch(e){}
+ r.saved=(()=>{try{return !!localStorage.getItem(KEY)}catch(e){return false}})();
+ r.feeds={};await Promise.all(['events','transit','weather'].map(async k=>{const t0=performance.now();try{const x=await fetch('/api/live?k='+k);const j=await x.json();r.feeds[k]={ok:x.ok&&Array.isArray(j.items),ms:Math.round(performance.now()-t0),n:j.items?j.items.length:0}}catch(e){r.feeds[k]={ok:false}}}));
+ r.online=r.online&&Object.values(r.feeds).some(x=>x.ok);HC=r;repaintCheck()}
+function repaintCheck(){const b=document.getElementById('hcbox');if(b)b.innerHTML=checkBody()}
+function checkBody(){if(!HC)return `<div class="note">${t('Tap the button to check this phone.','点上面的按钮检查这部手机。')}</div>`;if(HC.busy)return `<div class="ev-skel"></div><div class="ev-skel"></div><div class="ev-skel"></div>`;
+ const row=(ok,en,zh,ex,fix)=>`<div class="hc ${ok===true?'ok':ok===false?'no':'na'}"><span class="hc-i">${ok===true?'✓':ok===false?'!':'–'}</span><span><b>${t(en,zh)}</b>${ex?`<i>${ex}</i>`:''}${ok===false&&fix?`<em>${fix}</em>`:''}</span></div>`;
+ const f=HC.feeds,fl=k=>f[k]&&f[k].ok?`${f[k].n} · ${f[k].ms} ms`:t('no answer','没有回应');
+ return row(HC.secure,'Secure connection (https)','安全连接（https）','',t('Open Loka from https://tobyloka.vercel.app','请从 https://tobyloka.vercel.app 打开'))
+  +row(HC.sw,'Offline engine running','离线引擎已启动',HC.ver?esc(HC.ver):'',t('Close Loka fully and open it again. It starts on the second visit.','完全关掉 Loka 再打开一次，第二次打开时会启动。'))
+  +row(HC.offline,'Ready with no signal','没有信号也能打开',HC.missing&&HC.missing.length?t('Missing: ','缺少：')+esc(HC.missing.slice(0,3).join(', ')):'',t('Stay on Wi-Fi for a minute with Loka open, then check again.','连着 Wi-Fi、开着 Loka 等一分钟，再检查一次。'))
+  +row(HC.installed,'On the home screen','已添加到主屏幕','',t('See “Keep Loka on your phone” on the Just landed page.','看“刚落地”页面里的“把 Loka 放到手机主屏幕”。'))
+  +row(HC.saved||null,'Your saved rooms and settings are on this phone','你收藏的房源和设置已保存在这部手机','',t('Nothing saved yet. That is fine.','还没有保存任何东西，没关系。'))
+  +row(HC.persisted===null?null:HC.persisted,'Phone will keep Loka’s data','手机会保留 Loka 的资料',HC.used!=null?HC.used+' KB':'',`<button class="mini-btn" data-a="persist">${t('Ask the phone to keep it','请手机保留')}</button>`)
+  +(HC.online?'':'')+row(HC.online?f.events&&f.events.ok:null,'Today’s events (council)','今日活动（市政府）',fl('events'),t('The council feed did not answer. Try again later.','市政府资料暂时没回应，稍后再试。'))
+  +row(HC.online?f.transit&&f.transit.ok:null,'Transport notices (Translink)','交通通知（Translink）',fl('transit'),'')
+  +row(HC.online?f.weather&&f.weather.ok:null,'Weather warnings (BoM)','天气警报（气象局）',fl('weather'),'')
+  +row(HC.online,'Internet right now','目前有网络','',t('You are offline. Loka still opens; live sections show the last copy.','目前离线。Loka 仍能打开，实时内容显示上次的资料。'))}
+function checkHtml(){return `<h1>${t('Loka <em>check-up.</em>','Loka <em>体检。</em>')}</h1><div class="sub">${t('Checks this phone: offline, home screen, saved data and the live feeds. Nothing leaves your phone.','检查这部手机：离线、主屏幕、保存的资料和实时资料源。检查内容不会离开你的手机。')}</div>
+ <button class="btn" data-a="runcheck">${t('Run the check','开始检查')}</button><div id="hcbox">${checkBody()}</div>`}
