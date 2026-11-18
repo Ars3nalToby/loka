@@ -11,13 +11,13 @@ const A = '11111111-1111-1111-1111-111111111111', B = '22222222-2222-2222-2222-2
 let fails = 0;
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 async function as(who, sql, params) {
-  await db.exec('reset role; reset session authorization');
+  await db.exec('reset role; set session authorization postgres');
   await db.query(`select set_config('request.jwt.claim.sub', $1, false)`, [who === 'anon' ? '' : who]);
   // Like Supabase: the API logs in as "authenticator", which may only become anon or authenticated.
   await db.exec(`set session authorization authenticator; set role ${who === 'anon' ? 'anon' : 'authenticated'}`);
   try { const r = await db.query(sql, params); return { rows: r.rows, n: r.affectedRows ?? r.rows.length }; }
   catch (e) { return { err: e.message }; }
-  finally { await db.exec('reset role; reset session authorization'); }
+  finally { await db.exec('reset role; set session authorization postgres'); }
 }
 const home = (o = {}) => ({ type: 'room', agr: 'room', title: 'Sunny room near Griffith', area: 'Sunnybank', rent: 250, bond: 1000, adv_weeks: 2,
   decl_fixed_price: true, decl_bond_rta: true, decl_sublet_ok: true, decl_true: true, ...o });
@@ -25,7 +25,7 @@ const ins = h => { const k = Object.keys(h); return [`insert into public.homes($
 
 // Supabase stand-in
 await db.exec(`
-  create schema auth; create table auth.users(id uuid primary key);
+  create schema auth; create table auth.users(id uuid primary key, email text, email_confirmed_at timestamptz);
   create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
   create role anon nologin; create role authenticated nologin;
   create role authenticator noinherit login; grant anon, authenticated to authenticator;
@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -110,6 +110,16 @@ ok(!!r.err || r.n === 0, 'a reporter cannot close reports');
 // Jobs share the same guards
 r = await as(A, `insert into public.jobs(title,area,pay,decl_award_pay,decl_no_cash_only,decl_true,status) values ('Kitchen hand','Sunnybank',30,true,true,true,'published') returning status`);
 ok(r.rows?.[0]?.status === 'pending', 'a new job is forced to pending');
+
+// Admin by confirmed email (004)
+await db.exec(`reset role; set session authorization postgres; select current_user; insert into private.admin_emails values ('boss@example.com')`);
+const BOSS = '44444444-4444-4444-4444-444444444444';
+await db.exec(`insert into auth.users(id, email) values ('${BOSS}', 'Boss@Example.com')`);
+ok((await db.query(`select is_admin from public.profiles where id = $1`, [BOSS])).rows[0].is_admin === false, 'an admin email is NOT admin before it is confirmed');
+await db.exec(`update auth.users set email_confirmed_at = now() where id = '${BOSS}'`);
+ok((await db.query(`select is_admin from public.profiles where id = $1`, [BOSS])).rows[0].is_admin === true, 'it becomes admin once the email is confirmed');
+r = await as(A, `select * from private.admin_emails`);
+ok(!!r.err, 'nobody using the app can read the admin list');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);
