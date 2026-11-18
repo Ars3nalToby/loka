@@ -74,6 +74,7 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
 | `js/ask.js` | `askHtml`, `askForm`, `askDetail` |
 | `js/more.js` | `GUIDE`, `calc`, `adminHtml`, `aboutHtml`, squads `detail`/`squadForm`, `taskForm`, posters, `inviteText` |
+| `js/motion.js` | `motion()` after each render: page-entrance stagger on tab change only, scroll reveal (`.rv`/`.seen`). All keyframes are at the end of `css/app.css` under "Motion". Respects Reduce Motion. |
 | `js/app.js` | `render()` for every tab, the input/change/click handlers (every `data-a` action, including `createhome`), start-up, service worker |
 | `tests/rules.test.mjs` | Queensland limit tests. Run `node --test` from the repo root. |
 
@@ -222,3 +223,12 @@ One line per session: date, model, what changed, what the next assistant must kn
   suburb, Privacy back button returns to Me, Ask pin icon, `HF0` single filter reset, dead code.
   `docs/SECURITY.md`. 33 tests. SW `loka-v11`. Helper names are global: check for clashes
   (`num` already exists in more.js).
+- 18 Nov 2026 · Claude Opus 5.5 · **Motion + mobile pass.** `js/motion.js` + "Motion" CSS: poster
+  wordmark extrudes its long shadow, copy rises in order, drifting light; house window breathes,
+  coffee steams; river draws in, pins drop in sequence, selected price pin pulses; sheets spring
+  up; Loka Check rungs light in order, ring fills. Transform/opacity only. Map re-renders on pin tap
+  or search pass `still:true` so pins don't replay. Cards no longer re-animate on every filter tap.
+  Reduce Motion stops everything (tested: 0 looping animations). Mobile: viewport-fit=cover +
+  safe-area padding (notch, home bar), background scroll locked while a sheet is open (`html.lock`),
+  44pt touch areas (invisible `::after` where the visible size should stay), no overflow at
+  320/375/390/landscape, 320px header fix, no input under 16px. SW `loka-v12`.

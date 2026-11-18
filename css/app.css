@@ -364,3 +364,110 @@ header.onposter:not(.stuck){background:transparent}
 .mfa-qr{display:block;width:190px;height:190px;margin:8px auto;background:#fff;border-radius:12px;padding:8px}
 .mfa-set code{font-size:12px;word-break:break-all;background:var(--bg2);padding:2px 6px;border-radius:6px}
 .pv-s{background:#fff;border-radius:16px;padding:13px 15px;margin-top:10px}.pv-s b{font-weight:900}.pv-s p{margin:5px 0 0;font-size:13.5px;line-height:1.6;color:#4d463f}
+
+
+/* ───────── Motion (18 Nov 2026) ───────── */
+/* Entrances use fill-mode backwards so a finished animation never blocks :active press feedback. */
+.card{animation:none}
+.enter>*{animation:rise .55s cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(var(--i,0)*45ms)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.rv{opacity:0;transform:translateY(18px)}
+.rv.seen{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--j,0)*60ms)}
+
+/* Press feedback */
+.btn,.chip,.card,.mini-room,.mz,.tile,.hero,.match,.sh,.authb,.acct-card,.vt button,.seg button,.mprev,.tickb{transition:transform .18s cubic-bezier(.16,1,.3,1),background-color .2s,color .2s,box-shadow .2s}
+.btn:active,.chip:active,.card:active,.mini-room:active,.mz:active,.tile:active,.hero:active,.match:active,.sh:active,.authb:active,.acct-card:active,.mprev:active{transform:scale(.97)}
+.tickb:active{transform:scale(.88)}
+
+/* Home poster: the wordmark extrudes its long shadow, copy rises, light drifts */
+.hposter .pbig{animation:extrude 1.1s cubic-bezier(.16,1,.3,1) .1s backwards}
+@keyframes extrude{from{text-shadow:0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a,0px 0px 0 #185a4a;transform:translate(-6px,-6px);opacity:.2}to{text-shadow:1px 1px 0 #185a4a,2px 2px 0 #185a4a,3px 3px 0 #185a4a,4px 4px 0 #185a4a,5px 5px 0 #185a4a,6px 6px 0 #185a4a,7px 7px 0 #185a4a,8px 8px 0 #185a4a,9px 9px 0 #185a4a,10px 10px 0 #185a4a,11px 11px 0 #185a4a,12px 12px 0 #185a4a,13px 13px 0 #185a4a,14px 14px 0 #185a4a,15px 15px 0 #185a4a,16px 16px 0 #185a4a,17px 17px 0 #185a4a,18px 18px 0 #185a4a,19px 19px 0 #185a4a,20px 20px 0 #185a4a,21px 21px 0 #185a4a,22px 22px 0 #185a4a,23px 23px 0 #185a4a,24px 24px 0 #185a4a,25px 25px 0 #185a4a,26px 26px 0 #185a4a,27px 27px 0 #185a4a,28px 28px 0 #185a4a,29px 29px 0 #185a4a,30px 30px 0 #185a4a,31px 31px 0 #185a4a,32px 32px 0 #185a4a,33px 33px 0 #185a4a,34px 34px 0 #185a4a,35px 35px 0 #185a4a,36px 36px 0 #185a4a,37px 37px 0 #185a4a,38px 38px 0 #185a4a,39px 39px 0 #185a4a,40px 40px 0 #185a4a;transform:none;opacity:1}}
+.hposter .ptg,.hposter h1,.hposter .p2,.hposter .psub{animation:rise .7s cubic-bezier(.16,1,.3,1) backwards}
+.hposter .ptg{animation-delay:.35s}.hposter h1{animation-delay:.45s}.hposter .p2{animation-delay:.6s}.hposter .psub{animation-delay:.72s}
+.blob{position:absolute;border-radius:50%;filter:blur(28px);opacity:.5;pointer-events:none}
+.blob.b1{width:180px;height:180px;background:#2f9a7f;right:-40px;top:40px;animation:drift 14s ease-in-out infinite alternate}
+.blob.b2{width:120px;height:120px;background:#E2683C;opacity:.22;left:-30px;bottom:30px;animation:drift 18s ease-in-out -6s infinite alternate-reverse}
+.blob.b3{width:90px;height:90px;background:#F4C766;opacity:.2;right:30%;bottom:-20px;animation:drift 22s ease-in-out -3s infinite alternate}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-24px,18px) scale(1.12)}100%{transform:translate(16px,-14px) scale(.94)}}
+.orbit{position:absolute;right:-60px;top:-60px;width:230px;height:230px;pointer-events:none;opacity:.22}
+.orbit circle{fill:none;stroke:#F4C766;stroke-width:.5;stroke-dasharray:.02 .03;animation:spin 60s linear infinite;transform-origin:50% 50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hposter>*:not(.blob):not(.orbit){position:relative;z-index:1}
+
+/* Hero tiles: window light breathes, coffee steams */
+.hero .glow{animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.55}}
+.hero .steam path{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;animation:steam 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.hero .steam path:nth-child(2){animation-delay:.5s}.hero .steam path:nth-child(3){animation-delay:1s}
+@keyframes steam{0%{opacity:0;transform:translateY(4px) scaleY(.7)}40%{opacity:.9}100%{opacity:0;transform:translateY(-6px) scaleY(1.1)}}
+.hero .e{animation:bob 5s ease-in-out infinite}.hero.j .e{animation-delay:-2.5s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* Maps: river draws in, pins drop in one after another, the chosen price pin pulses */
+.river path{stroke-dasharray:1;animation:draw 1.6s cubic-bezier(.65,0,.35,1) .15s backwards}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.pin.bub,.pp .drop{transform-box:fill-box;transform-origin:50% 100%;animation:drop .55s cubic-bezier(.34,1.56,.64,1) backwards;animation-delay:calc(.35s + var(--d,0)*55ms)}
+@keyframes drop{from{opacity:0;transform:translateY(-14px) scale(.6)}to{opacity:1;transform:none}}
+.still .drop,.still .river path{animation:none}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.6s ease-out infinite;opacity:.35}
+@keyframes pulse{from{transform:scale(.8);opacity:.45}to{transform:scale(2.2);opacity:0}}
+
+/* Sheets: backdrop fades, panel springs up */
+.sheet.on{animation:dim .3s ease both}@keyframes dim{from{background:rgba(25,21,18,0)}}
+.sheet.on .in{animation:sheetUp .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+
+/* Loka Check: rungs light up in order, progress ring fills, price dot slides into place */
+.ladder .rung{animation:rise .45s cubic-bezier(.16,1,.3,1) backwards}
+.ladder .rung:nth-of-type(2){animation-delay:.08s}.ladder .rung:nth-of-type(3){animation-delay:.16s}.ladder .rung:nth-of-type(4){animation-delay:.24s}.ladder .rung:nth-of-type(5){animation-delay:.32s}
+.rung.on .n{animation:pop .5s cubic-bezier(.34,1.56,.64,1) backwards;animation-delay:inherit}
+@keyframes pop{from{transform:scale(.4)}to{transform:none}}
+@property --p{syntax:'<number>';inherits:false;initial-value:0}
+.ring{animation:ringFill 1s cubic-bezier(.16,1,.3,1) .2s backwards}
+@keyframes ringFill{from{--p:0}}
+.bar3 i{animation:slideDot .9s cubic-bezier(.16,1,.3,1) .2s backwards}
+@keyframes slideDot{from{left:50%;opacity:0}}
+.rs.on .tickb{animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+
+/* Nav: the active tab icon gives a small hop */
+nav button.on span{animation:hop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-4px)}100%{transform:none}}
+
+/* Story preview shimmer while the image is drawn */
+.sp-load{background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%) 0 0/250% 100%;animation:shimmer 1.4s linear infinite;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+@keyframes shimmer{to{background-position:-150% 0}}
+
+/* Everyone who asked their phone for less motion gets none */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+
+/* ───────── Mobile pass (18 Nov 2026) ───────── */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,input,select,textarea,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html.lock,html.lock body{overflow:hidden}
+.sheet .in{max-height:92vh;max-height:92dvh;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+header{padding-top:max(16px,env(safe-area-inset-top));padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+.hposter{margin-top:calc(-74px - env(safe-area-inset-top));padding-top:calc(78px + env(safe-area-inset-top))}
+nav{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+/* Fingertip-sized targets (44pt): visible size unchanged where a bigger button would look heavy */
+.back{min-height:44px;display:inline-flex;align-items:center}
+.pic .heart{position:absolute}.pic .heart::after{content:"";position:absolute;inset:-6px}
+.link{min-height:44px;display:flex;align-items:center;justify-content:center}
+.link.sm{min-height:40px;display:inline-flex}
+.foot button{min-height:40px;padding:0 6px}
+.seg button{min-height:38px}
+.vt button{min-height:40px}
+.mini-btn{min-height:40px;display:inline-flex;align-items:center}
+.lang{min-height:44px}
+.heart,.tickb,.vf{position:relative}
+.heart::after,.tickb::after,.vf::after{content:"";position:absolute;inset:-7px}
+.pic .heart,.pic .vf{position:absolute}
+.paid{min-height:36px}
+.report{min-height:44px}
+.seg button,.wm .tg,.wm .tg em{white-space:nowrap}
+@media (max-width:360px){
+ .seg button{min-width:38px;padding:0 9px;font-size:12px}
+ .wm .nm{font-size:24px}.mark{width:36px;height:36px;border-radius:11px}.mark i{font-size:24px;left:9px;top:4px}.mark b{left:24px;top:22px;width:5px;height:5px}
+ .wm .tg{font-size:9px;letter-spacing:.12em;gap:5px}.wm .tg em{font-size:10px}
+ .brand{gap:9px}
+ .pbig{font-size:64px}.hposter h1{font-size:33px}
+}

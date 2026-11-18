@@ -8,7 +8,7 @@ function render(){
  <div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></header>`;
  if(tab==='home'){
   const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
-  h+=`<section class="hposter"><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
+  h+=`<section class="hposter"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
   <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
   <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
   <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div></section>
@@ -110,7 +110,7 @@ function render(){
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
- a.innerHTML=h;
+ a.innerHTML=h;motion();
  const main=['help','guide','tools','earn','play','about'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
@@ -120,7 +120,7 @@ function render(){
 
 // ───────── actions ─────────
 document.addEventListener('input',e=>{const id=e.target.id;const L=document.getElementById('list');
- if(id==='hq'){hf.q=e.target.value;if(rview==='map'){mapSel='';const m=document.querySelector('.rmap svg');if(m)m.outerHTML=mapSvg({rooms:true});const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}else{L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}}
+ if(id==='hq'){hf.q=e.target.value;if(rview==='map'){mapSel='';const m=document.querySelector('.rmap svg');if(m)m.outerHTML=mapSvg({rooms:true,still:true});const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}else{L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}}
  else if(id==='jq'){jf.q=e.target.value;L.innerHTML=listJobs();document.getElementById('cnt').textContent=LC}
  else if(tab==='tools')calc()});
 document.addEventListener('change',()=>{if(tab==='tools')calc()});
@@ -154,7 +154,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='shtext'){const x=S.homes.find(h=>h.id===v);copy(shareText(x)+'\n'+roomUrl(v),t('Copied. Paste it into WeChat or 小红书.','已复制，粘贴到微信或小红书即可。'))}
  if(a==='shlink')copy(roomUrl(v),t('Link copied','链接已复制'))
  if(a==='hc'){hf.c=hf.c===v?'':v;render()}
- if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
+ if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true,still:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
  if(a==='msub'){const z=zone(v);if(z!=='other')hf.z=z;const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}
  if(a==='asknew')askForm();
  if(a==='askopen')askDetail(v);

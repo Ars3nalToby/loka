@@ -24,6 +24,11 @@ Reviewed 18 Nov 2026 (Claude Opus 5.5). Re-run the checks below after any big ch
   `tests/validate.test.mjs`).
 - **Lint:** ESLint over all scripts in load order (`no-undef`, `no-redeclare`, `no-unused-vars`).
 
+## Check the live headers
+
+Open https://securityheaders.com and enter the site address. It should show the CSP, HSTS,
+X-Frame-Options, X-Content-Type-Options, Referrer-Policy and Permissions-Policy headers.
+
 ## Still to do (needs the shared database, task O2 onwards)
 
 - Row-level security on every table; never trust the browser: repeat `cleanData`-style checks and the
