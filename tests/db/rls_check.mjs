@@ -33,12 +33,17 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-await db.exec(readFileSync(new URL('../../supabase/migrations/001_init.sql', import.meta.url), 'utf8'));
+for (const f of ['001_init.sql', '002_lock_functions.sql'])
+  await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
+let r = await as(A, `select public.guard_listing()`);
+ok(!!r.err, 'nobody can call the guard functions directly');
+r = await as(A, `select public.is_admin()`);
+ok(!!r.err, 'is_admin() is not reachable through the public API schema');
 
 // Posting
-let r = await as('anon', ...ins(home()));
+r = await as('anon', ...ins(home()));
 ok(!!r.err, 'signed-out visitor cannot post a room');
 r = await as(A, ...ins(home({ status: 'published', verified: true, verified_at: '2026-11-18' })));
 ok(!r.err && r.rows[0].status === 'pending' && r.rows[0].verified === false, 'a new room is forced to pending and unverified, whatever the client sends');

@@ -186,7 +186,8 @@ Write those two attempts as a script in `tests/` and record the result in `HANDO
 
 Progress (2026-11-18): **database half done.** `supabase/migrations/001_init.sql` written and
 tested offline in PGlite by `tests/db/rls_check.mjs` (27 attacks, all blocked, including both
-[O2] attacks). Still to do: owner says "可以" → create the project and apply the migration;
+[O2] attacks). 2026-11-19: project `loka` created in Sydney, 001 + 002 applied, the same attacks
+blocked on the real database, security advisor clean. Still to do:
 `home_photos` (needs Storage, separate migration); `js/store.js` Supabase layer; two-phone test.
 
 ### [ ] O3. Sign-in and admin gate (Opus)
