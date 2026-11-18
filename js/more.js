@@ -13,8 +13,8 @@ function calc(){const set=(id,html)=>{const e=document.getElementById(id);if(e)e
  const w=num('s_w1')+num('s_w2');
  set('s_out',w<=RULES.studentHrs?`<b>${w}</b> / ${RULES.studentHrs} ${t('hours this fortnight. Within the limit while your course is in session.','小时（本两周）。在上课期间的限额内。')}`:`<b style="color:var(--hot)">${w}</b> / ${RULES.studentHrs}: ${t('over by','超出')} ${w-RULES.studentHrs} ${t('hours. This can put a student visa at risk during term. Limits do not apply in official course breaks.','小时。学期内超时可能影响学生签证；官方假期不受此限。')}`)}
 
-function adminHtml(){const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map(x=>({k:'jobs',x}))],find=r=>S[r.k].find(q=>q.id===r.id);
- const owed=S.scouts.reduce((a,b)=>a+b.owed,0),q=S.reports.filter(find);
+function adminHtml(){const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map(x=>({k:'jobs',x}))],find=r=>(S[r.k]||[]).find(q=>q.id===r.id);
+ const q=S.reports.filter(find);
  return `<h1>${t('Admin <em>desk.</em>','管理<em>后台。</em>')}</h1><div class="sub">${t('Only you would see this. In this demo it is open; the real one sits behind your login.','正式版只有你登录后可见，演示版暂时开放。')}</div>
  <div style="display:flex;gap:10px"><div class="stat"><b>${all.length}</b><span>${t('listings','条信息')}</span></div><div class="stat"><b>${q.length}</b><span>${t('reported','被举报')}</span></div><div class="stat"><b>${S.homes.filter(x=>x.verified).length}</b><span>${t('verified','已核实')}</span></div></div>
  <div class="sec">${t('Review queue','待处理')}</div>${q.map(r=>{const x=find(r);return `<div class="card"><div class="tt">${esc(x.title)}</div><div class="meta">${esc(x.area)} · ${t('reported','举报原因')}: ${esc(r.why)}</div><div class="cta"><button class="btn ghost" data-a="adkeep" data-k="${r.k}" data-v="${r.id}">${t('Keep','保留')}</button><button class="btn hot" data-a="addel" data-k="${r.k}" data-v="${r.id}">${t('Remove','删除')}</button></div></div>`}).join('')||`<div class="note">${t('Queue is clear.','没有待处理的举报。')}</div>`}
@@ -54,7 +54,7 @@ function aboutHtml(){const r=(b,en,zh)=>`<div class="rule"><b>${b}</b> · ${t(en
 
 function detail(id){const q=S.squads.find(x=>x.id===id);if(!q)return;const isHost=S.me&&q.host===S.me,me=inSquad(q),w=inWait(q),l=left(q);
  let h=`<div class="tt" style="font-size:21px">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${q.mins} min<br>${esc(q.venue)}, ${esc(q.area)}</div>
- <span class="tag">${t(LEVEL[q.level][0],LEVEL[q.level][1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span> ${badge(q)}
+ <span class="tag">${t(lv(q.level)[0],lv(q.level)[1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span> ${badge(q)}
  ${q.note?`<div class="note">${esc(q.note)}</div>`:''}`;
  if(!S.me)h+=`<label>${t('Your name to join','填名字上车')}</label><input id="joinName" placeholder="${t('e.g. Jing','例如 阿良')}">`;
  if(me)h+=`<button class="btn ghost" data-a="leave" data-v="${id}">${t('Drop out (next on waitlist takes your spot)','退出（候补自动顶上）')}</button>`;
@@ -97,7 +97,7 @@ function drawPoster(q){const T=THEMES[posterTheme],c=document.createElement('can
  x.fillStyle=T.tx;F(700,62);wrap(x,sp(q.sport)[0]+' '+q.title,80,700,920,80,2);
  x.fillStyle=T.mu;F(500,44);x.fillText(when(q.start)+' · '+q.mins+' min',80,900);
  x.fillStyle=T.tx;F(500,44);wrap(x,'📍 '+q.venue+', '+q.area,80,972,920,58,2);
- const pills=[t(LEVEL[q.level][0],LEVEL[q.level][1]),q.price?'$'+q.price+t(' each','/人'):t('Free','免费'),q.players.length+'/'+q.cap+t(' in',' 人')];let px=80;F(700,38);
+ const pills=[t(lv(q.level)[0],lv(q.level)[1]),q.price?'$'+q.price+t(' each','/人'):t('Free','免费'),q.players.length+'/'+q.cap+t(' in',' 人')];let px=80;F(700,38);
  pills.forEach(p=>{const w=x.measureText(p).width+48;x.strokeStyle=T.ac;x.lineWidth=3;rr(x,px,1108,w,70,35);x.stroke();x.fillStyle=T.ac;x.fillText(p,px+24,1157);px+=w+18});
  x.fillStyle=T.ac;rr(x,80,1236,920,130,34);x.fill();x.fillStyle=T.on;F(900,50);x.textAlign='center';x.fillText(t('Tap in before it fills','名额有限，先到先得'),540,1298);F(500,34);x.fillText(BRAND.url+' · '+t('hosted by ','局主 ')+q.host,540,1344);x.textAlign='left';
  return c.toDataURL('image/png')}
@@ -107,4 +107,4 @@ function poster(id){const q=S.squads.find(x=>x.id===id);const go=()=>openSheet(`
  <div class="themes">${[['neon',t('Cream','奶白')],['gold',t('Black gold','黑金')],['day',t('Coral','珊瑚橙')]].map(m=>`<button class="${posterTheme===m[0]?'on':''}" data-a="theme" data-v="${m[0]}" data-id="${id}">${m[1]}</button>`).join('')}</div>
  <img class="poster" alt="${esc(q.title)} poster" src="${drawPoster(q)}"><button class="btn ghost" data-a="open" data-v="${id}">${t('Back','返回')}</button>`);
  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(go,go)}
-function inviteText(q){const l=left(q);return S.lang==='zh'?`${sp(q.sport)[0]} ${q.title}\n${when(q.start)}｜${q.venue}, ${q.area}\n${LEVEL[q.level][1]}｜${q.price?'$'+q.price+'/人':'免费'}\n${l>0?`还差 ${l} 人`:'已满，可排候补'} → ${BRAND.url}`:`${sp(q.sport)[0]} ${q.title}\n${when(q.start)} | ${q.venue}, ${q.area}\n${LEVEL[q.level][0]} | ${q.price?'$'+q.price+' each':'Free'}\n${l>0?`${l} spot${l>1?'s':''} left`:'Full, waitlist open'} → ${BRAND.url}`}
+function inviteText(q){const l=left(q);return S.lang==='zh'?`${sp(q.sport)[0]} ${q.title}\n${when(q.start)}｜${q.venue}, ${q.area}\n${lv(q.level)[1]}｜${q.price?'$'+q.price+'/人':'免费'}\n${l>0?`还差 ${l} 人`:'已满，可排候补'} → ${BRAND.url}`:`${sp(q.sport)[0]} ${q.title}\n${when(q.start)} | ${q.venue}, ${q.area}\n${lv(q.level)[0]} | ${q.price?'$'+q.price+' each':'Free'}\n${l>0?`${l} spot${l>1?'s':''} left`:'Full, waitlist open'} → ${BRAND.url}`}

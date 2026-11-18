@@ -12,7 +12,7 @@ function listHomes(){let l=filtHomes();
   ${h.zh?`<span class="tag b">${t('中文 OK','中文沟通')}</span>`:''}${!h.bond?`<span class="tag g">${t('No bond','免押金')}</span>`:''}<span class="tag">${h.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>
   ${fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join('')}</div></div>`}).join('')||`<div class="note">${t('No rooms match. Loosen a filter.','没有符合的房源，放宽筛选试试。')}</div>`}
 function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl=homeFlags(x),room=x.type!=='unit';
- openSheet(`<div class="pic" style="border-radius:18px;overflow:hidden">${art(x)}</div><div class="price" style="margin-top:10px">$${x.rent}<small>/${t('wk','周')} · ${t(HT[x.type][1],HT[x.type][2])}</small></div>
+ openSheet(`<div class="pic" style="border-radius:18px;overflow:hidden">${art(x)}</div><div class="price" style="margin-top:10px">$${x.rent}<small>/${t('wk','周')} · ${t(ht(x.type)[1],ht(x.type)[2])}</small></div>
  <div class="tt" style="font-size:19px">${esc(x.title)}</div><div class="meta">${esc(x.area)}${x.near?' · '+t('near ','近 ')+esc(x.near):''}</div>
  <span class="tag">${x.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>${x.furn?`<span class="tag">${t('Furnished','带家具')}</span>`:''}
  ${fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join('')}<div class="note">${esc(x.note)}</div>

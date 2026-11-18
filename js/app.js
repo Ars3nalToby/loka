@@ -57,7 +57,7 @@ function render(){
   <div class="chips">${[['all','✨',t('All','全部')],...Object.keys(SPORT).map(k=>[k,SPORT[k][0],t(SPORT[k][1],SPORT[k][2])])].map(c=>`<button class="chip ${filter===c[0]?'on':''}" data-a="filter" data-v="${c[0]}">${c[1]} ${c[2]}</button>`).join('')}</div>`;
   h+=list.map(q=>{const pct=Math.min(100,q.players.length/q.cap*100);return `<button class="card" data-a="open" data-v="${q.id}">
    <div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div>
-   <span class="tag">${t(LEVEL[q.level][0],LEVEL[q.level][1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span>${inSquad(q)?`<span class="tag b">${t("You're in",'已上车')}</span>`:''}
+   <span class="tag">${t(lv(q.level)[0],lv(q.level)[1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span>${inSquad(q)?`<span class="tag b">${t("You're in",'已上车')}</span>`:''}
    <div class="bar"><i style="width:${pct}%"></i></div><div class="foot"><span>${q.players.length}/${q.cap} ${t('in','人')}</span><span>${t('Host','局主')}: ${esc(q.host)}</span></div></button>`}).join('');
   h+=`<button class="btn" data-a="new">+ ${t('Start a squad','发起一局')}</button>`;
  }
@@ -76,7 +76,7 @@ function render(){
  }
  if(tab==='ask')h+=askHtml();
  if(tab==='about')h+=back+aboutHtml()+followHtml();
- if(tab==='privacy')h+=back+privacyHtml();
+ if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
   h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
@@ -132,7 +132,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='filter'){filter=v;render()}
  if(a==='hf'){hfOpen=true;const k=b.dataset.k;if(k==='type')hf.type=v;else if(k==='max')hf.max=+v;else hf[k]=!hf[k];render()}
  if(a==='jf'){const k=b.dataset.k;jf[k]=!jf[k];render()}
- if(a==='pin'){const hs=S.homes.filter(h=>h.area===v);if(hs.length){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:zone(v)};rview='map';mapSel=hs[0].id;tab='homes'}else{jf.q=v;tab=S.jobs.some(j=>j.area===v)?'jobs':'homes';if(tab==='homes'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:zone(v)};rview='map'}}render();scrollTo(0,0)}
+ if(a==='pin'){const hs=S.homes.filter(h=>h.area===v);if(hs.length){hf={...HF0,z:zone(v)};rview='map';mapSel=hs[0].id;tab='homes'}else{jf.q=v;tab=S.jobs.some(j=>j.area===v)?'jobs':'homes';if(tab==='homes'){hf={...HF0,z:zone(v)};rview='map'}}render();scrollTo(0,0)}
  if(a==='match')matchSheet();
  if(a==='vinfo')verifiedSheet();
  if(a==='enq'){const x=S.homes.find(h=>h.id===v);if(x)copy(enqText(x),t('Message copied','信息已复制'))}
@@ -142,7 +142,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='rcheck'){S.mine=S.mine||{};const m=S.mine[v]=S.mine[v]||[],k=b.dataset.k,i=m.indexOf(k);i>-1?m.splice(i,1):m.push(k);save();homeDetail(v)}
  if(a==='codemsg'){const x=S.homes.find(h=>h.id===v);copy(codeMsg(x),t('Copied. Paste it to the lister.','已复制，发给对方即可。'))}
  if(a==='insp'){const x=S.homes.find(h=>h.id===v);x.insp=x.insp||{ok:0,bad:0};x.insp[b.dataset.k]++;S.inspd=S.inspd||{};S.inspd[v]=b.dataset.k;if(b.dataset.k==='bad'&&!S.reports.some(r=>r.id===v))S.reports.push({k:'homes',id:v,why:t('Renter said it did not match the listing','租客反馈与描述不一致')});save();homeDetail(v);toast(t('Thanks. This helps the next renter.','谢谢，这会帮到下一位租客。'))}
- if(a==='mz'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:v};rview='map';mapSel='';tab='homes';render();scrollTo(0,0)}
+ if(a==='mz'){hf={...HF0,z:v};rview='map';mapSel='';tab='homes';render();scrollTo(0,0)}
  if(a==='hz'){hf.z=hf.z===v?'':v;render()}
  if(a==='rv'){rview=v;mapSel='';render()}
  if(a==='signin')authSheet()
@@ -155,7 +155,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='shlink')copy(roomUrl(v),t('Link copied','链接已复制'))
  if(a==='hc'){hf.c=hf.c===v?'':v;render()}
  if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
- if(a==='msub'){const z=zone(v);if(z!=='other'&&hf.z!==z){hf.z=z;const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}else{const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}}
+ if(a==='msub'){const z=zone(v);if(z!=='other')hf.z=z;const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}
  if(a==='asknew')askForm();
  if(a==='askopen')askDetail(v);
  if(a==='askcreate'){const by=S.me||val('q_by'),qq=val('q_text');if(!by||!qq)return toast(t('Name and question are required','名字和问题必填'));S.me=by;S.qa.unshift({id:'q'+Date.now(),q:qq,area:val('q_area'),by,ago:0,a:[]});save();closeSheet();render()}
@@ -172,7 +172,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='done'){const i=S.done.indexOf(v);i>-1?S.done.splice(i,1):S.done.push(v);save();render()}
  if(a==='newhome')homeForm();
  if(a==='newjob')jobForm();
- if(a==='createhome'){const by=S.me||val('h_by'),title=val('h_title'),rent=+val('h_rent');if(!by||!title||!rent||!val('h_contact'))return toast(t('Name, title, rent and contact are required','名字、标题、租金、联系方式必填'));const hb=Math.max(0,+val('h_bond')||0),adv=Math.max(0,+val('h_adv')||0),agr=val('h_agr'),role=val('h_role'),ck=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};
+ if(a==='createhome'){const by=S.me||val('h_by'),title=val('h_title'),rent=+val('h_rent');if(!by||!title||!rent||!val('h_contact'))return toast(t('Name, title, rent and contact are required','名字、标题、租金、联系方式必填'));if(!SUB(val('h_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));const hb=Math.max(0,+val('h_bond')||0),adv=Math.max(0,+val('h_adv')||0),agr=val('h_agr'),role=val('h_role'),ck=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};
   const pb=publishBlock(rent,hb,adv,agr);
   if(pb==='bond')return toast(t('Bond cannot be more than 4 weeks of rent','押金不能超过 4 周房租'));
   if(pb==='advance')return toast(t('That is more rent in advance than Queensland allows','预付房租超过昆州上限'));

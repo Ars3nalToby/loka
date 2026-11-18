@@ -63,6 +63,7 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/seed.js` | `nextDay`, `seed`, `seedQA`: sample data |
 | `js/state.js` | `S` (all data), `tab`, filters `hf` `jf` `mq`, `save()` |
 | `js/ui.js` | `t`, `esc`, dates, `HT`, line icons `LI`/`ico()`, `HERO_ART`, `ZONE`/`ZN`/`zone`, `ROLE`, `IC`, `openSheet`, `toast`, `copy`, `val` |
+| `js/validate.js` | `cleanData(S)`: validates every record on load (ids, enums, numbers, lengths). Run it on anything from a server too. See `docs/SECURITY.md`. |
 | `js/art.js` | `art(listing)`: illustrated room scenes (perspective room, window view by zone, day/dusk/night). Stand-in until real photos (O4). |
 | `js/suburbs.js` | `SUBURB_DATA` (53 suburbs, 4 zones, 5 campuses, approx. lat/lng), `ZONE`, `ZN`, `SUB()`. Single source of truth for suburbs. |
 | `js/check.js` | Loka Check: `lokaCode` (daily code), `CHECKS`, `checkState`, `checkBadge`, `ladderHtml`, renter steps `RSTEPS`/`renterHtml`, `inspHtml`, `priceMeter` |
@@ -212,3 +213,12 @@ One line per session: date, model, what changed, what the next assistant must kn
   URI-encoded: raw SVG from Supabase contains quotes), phone OTP as +614…, Google PKCE redirect.
   Needs Loka's own Supabase project + Google OAuth client to go live (`docs/AUTH.md`). Phone stays
   off until an SMS provider is paid for. 26 tests. SW `loka-v10`.
+- 18 Nov 2026 · Claude Opus 5.5 · **Security + code review.** `vercel.json` now sends a strict CSP
+  (`script-src 'self'`) and HSTS / nosniff / DENY / referrer / permissions / COOP headers. New
+  `js/validate.js` (`cleanData`) after a fuzz test showed bad enum values crashed the page. Service
+  worker only handles same-origin requests. Injection fuzz: 0/6 payloads ran. CSP run: 0
+  violations. ESLint clean except a harmless `when` global name. Fixed: sample listing h6 no longer
+  says "girls only" (contradicted our own no-gender-field rule), new rooms must use a covered
+  suburb, Privacy back button returns to Me, Ask pin icon, `HF0` single filter reset, dead code.
+  `docs/SECURITY.md`. 33 tests. SW `loka-v11`. Helper names are global: check for clashes
+  (`num` already exists in more.js).

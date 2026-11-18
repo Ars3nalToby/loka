@@ -5,6 +5,7 @@ const t=(en,zh)=>S.lang==='zh'?zh:en;
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SPORT={bad:['🏸','Badminton','羽毛球'],run:['🏃','Run','跑步'],ride:['🚴','Ride','骑行'],social:['🍲','Social','饭局/社交']};
 const LEVEL={easy:['Easy / social','养生'],mid:['Intermediate','中级'],hard:['Hard / fast','拉练']};
+const lv=k=>LEVEL[k]||LEVEL.easy;
 const sp=k=>SPORT[k]||SPORT.social;
 function when(iso){const d=new Date(iso);const days=S.lang==='zh'?['周日','周一','周二','周三','周四','周五','周六']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
  let h=d.getHours(),m=d.getMinutes(),ap=h>=12?'pm':'am';h=h%12||12;return `${days[d.getDay()]} ${d.getDate()}/${d.getMonth()+1} · ${h}${m?':'+String(m).padStart(2,'0'):''}${ap}`}
@@ -18,11 +19,11 @@ const inWait=q=>S.me&&q.wait.includes(S.me);
 
 let LC='';
 const HT={room:['🛏','Room','单间'],unit:['🏢','Whole place','整租'],student:['🎓','Student housing','学生公寓']};
-const GRAD=['hsl(158 38% 78%),hsl(165 34% 60%)','hsl(24 80% 84%),hsl(16 70% 70%)','hsl(42 70% 82%),hsl(36 62% 66%)','hsl(200 45% 84%),hsl(205 40% 68%)','hsl(340 50% 88%),hsl(350 45% 74%)','hsl(90 34% 82%),hsl(110 28% 66%)'];
+const ht=k=>HT[k]||HT.room;
 // art() now lives in js/art.js
 const zone=a=>ZONE[a]||'other';const wk=j=>Math.round(j.pay*(j.hpw||15));
 const ago=x=>x.ago==null?t('just now','刚刚'):x.ago<24?x.ago+t('h ago','小时前'):Math.round(x.ago/24)+t('d ago','天前');
-const grad=id=>GRAD[(id.charCodeAt(id.length-1))%GRAD.length];
+
 const isSaved=(k,id)=>S.saved[k].includes(id);
 // ───────── trust, rules, community ─────────
 const ROLE={owner:['Owner','业主'],head:['Tenant sub-letting','二房东（转租）'],agent:['Licensed agent','持牌中介']};
