@@ -25,7 +25,7 @@ function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl
  <button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>
  <button class="btn" data-a="fav" data-k="homes" data-v="${x.id}" data-re="home">${isSaved('homes',x.id)?t('Saved ♥','已收藏 ♥'):t('Save this home','收藏')}</button>
  ${renterHtml(x)}${inspHtml(x)}
- <div class="note">${t('Loka is a notice board, not an agent. It does not hold money or sign agreements.','Loka 是信息板，不是中介，不经手资金，也不代签协议。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div><button class="report" data-a="report" data-k="homes" data-v="${x.id}">${ico('flag')} ${t('Report this listing','举报这条房源')}</button>`)}
+ <button class="link" data-a="tab" data-v="rights">${ico('shield')} ${t('Problem with a rental? Who can help','租房出问题？谁能帮你')} →</button><div class="note">${t('Loka is a notice board, not an agent. It does not hold money or sign agreements.','Loka 是信息板，不是中介，不经手资金，也不代签协议。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div><button class="report" data-a="report" data-k="homes" data-v="${x.id}">${ico('flag')} ${t('Report this listing','举报这条房源')}</button>`)}
 function matchSheet(){const ch=(k,v,l)=>`<button class="chip ${mq[k]===v?'on':''}" data-a="mq" data-k="${k}" data-v="${v}">${l}</button>`;
  const rooms=S.homes.filter(h=>!homeFlags(h).length&&h.rent<=mq.b&&zone(h.area)===mq.z&&(!mq.zh||h.zh)).sort((a,b)=>(b.verified-a.verified)||a.rent-b.rent);
  const jobs=S.jobs.filter(j=>!jobFlags(j).length&&zone(j.area)===mq.z&&(!mq.zh||j.zh)).sort((a,b)=>wk(b)-wk(a));const best=jobs[0];

@@ -49,7 +49,7 @@ function mapSvg(o){o=o||{};const W=MAPBOX.w,H=MAPBOX.h,subs=SUBURB_DATA.suburbs,
   s+=[5,2].map(km=>`<circle cx="${X}" cy="${Y}" r="${(km*PXKM).toFixed(1)}" fill="${km===2?'rgba(31,111,92,.08)':'none'}" stroke="#1F6F5C" stroke-width="${fz(1.4)}" stroke-dasharray="${fz(4)} ${fz(4)}"/><text x="${X}" y="${(Y-km*PXKM-4*k).toFixed(1)}" text-anchor="middle" font-size="${fz(9)}" font-weight="900" fill="#1F6F5C" paint-order="stroke" stroke="#F8F4EB" stroke-width="${fz(3)}">${km} km</text>`).join('')}
  // River + M1
  const rv=smoothPath(RIVER),m1=smoothPath(M1);
- s+=`<g class="river"><path d="${rv}" pathLength="1" fill="none" stroke="#BCD9E6" stroke-width="13" stroke-linecap="round"/><path d="${rv}" pathLength="1" fill="none" stroke="#E4F1F6" stroke-width="5" stroke-linecap="round"/></g>`;
+ const rid='rvp'+(o.rooms?'r':'h');s+=`<g class="river"><path id="${rid}" d="${rv}" pathLength="1" fill="none" stroke="#BCD9E6" stroke-width="13" stroke-linecap="round"/><path d="${rv}" pathLength="1" fill="none" stroke="#E4F1F6" stroke-width="5" stroke-linecap="round"/></g>`+mapBoat(rid);
  s+=`<path d="${m1}" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path d="${m1}" fill="none" stroke="#C9BFAD" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 5"/>`;
  const ml=M1[4];s+=`<g transform="translate(${mx(ml[1])+10*k},${my(ml[0])}) scale(${k})"><rect x="-1" y="-8" width="22" height="13" rx="3" fill="#1F6F5C"/><text x="10" y="2" text-anchor="middle" font-size="9" font-weight="900" fill="#fff">M1</text></g>`;
  if(!zoomed)s+=`<text x="${mx(152.962)}" y="${my(-27.527)}" font-size="10" font-weight="800" fill="#7FA7B8" font-style="italic">${t('Brisbane River','布里斯班河')}</text>`;

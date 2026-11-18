@@ -73,6 +73,8 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
 | `js/ask.js` | `askHtml`, `askForm`, `askDetail` |
+| `js/brisbane.js` | Brisbane art: `season()` (jacaranda/poinciana/frangipani by month), `petals()`, `ibis()` mascot Bin Bin 宾宾, `skyline()` poster strip, `mapBoat()` CityCat on the map river |
+| `js/rights.js` | Renter rights page `rightsHtml()`: `HELP` (RTA, QSTARS, QCAT, CLCs, Scamwatch, TIS), `RTA_CAN`/`RTA_CANT`, `DOORS`, `NEWRULES`. Facts checked on `RIGHTS_CHECKED`; re-check official sites before editing |
 | `js/more.js` | `GUIDE`, `calc`, `adminHtml`, `aboutHtml`, squads `detail`/`squadForm`, `taskForm`, posters, `inviteText` |
 | `js/motion.js` | `motion()` after each render: page-entrance stagger on tab change only, scroll reveal (`.rv`/`.seen`). All keyframes are at the end of `css/app.css` under "Motion". Respects Reduce Motion. |
 | `js/app.js` | `render()` for every tab, the input/change/click handlers (every `data-a` action, including `createhome`), start-up, service worker |
@@ -232,3 +234,4 @@ One line per session: date, model, what changed, what the next assistant must kn
   safe-area padding (notch, home bar), background scroll locked while a sheet is open (`html.lock`),
   44pt touch areas (invisible `::after` where the visible size should stay), no overflow at
   320/375/390/landscape, 320px header fix, no input under 16px. SW `loka-v12`.
+- 2026-11-18 · Claude Opus 5.5 · Renter rights page (tab `rights`, linked from Home, About, Me and every room sheet): what the RTA can and cannot do, QSTARS 1300 744 263, QCAT, CLCs, Scamwatch, TIS 131 450, which door first for 7 common problems; every fact checked against official sites 18 Nov 2026. Brisbane art: seasonal petals, skyline with Story Bridge lights, big wheel, Queenslander, CityCat; ibis mascot Bin Bin; CityCat sails the map river (SMIL, skipped under Reduce Motion). New line icons incl. `flag` (report button icon was missing). sw `loka-v13`. Fees and phone hours change yearly: re-check `js/rights.js` each new financial year.

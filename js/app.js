@@ -8,10 +8,10 @@ function render(){
  <div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></header>`;
  if(tab==='home'){
   const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
-  h+=`<section class="hposter"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
+  h+=`<section class="hposter">${petals()}<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
   <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
   <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
-  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div></section>
+  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span>${skyline()}</section>
   <div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
   <div class="duo">
    <button class="hero r" data-a="tab" data-v="homes"><span class="e">${HERO_ART.rooms}</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
@@ -30,6 +30,7 @@ function render(){
    <button class="tile" data-a="tab" data-v="guide" style="grid-column:1/3"><div class="e">${ico('guide')}</div><div class="n">${t('First 30 days','落地 30 天')} · ${S.done.length}/${GUIDE.length}</div><div class="d">${t('The checklist and the rules that stop you getting ripped off','落地清单和防坑规则')}</div></button>
   </div>
   <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
+  <button class="rcta" data-a="tab" data-v="rights"><span class="rc-b">${ibis(58,'walk')}</span><span><b>${t('Renter rights, one page','租客权益，一页看懂')}</b><i>${t('What the RTA can do, free advice lines, QCAT, and who to call first.','RTA 能做什么、免费咨询热线、QCAT，以及遇事先找谁。')}</i></span><em>→</em></button>
   <div class="res">${t('Loka is flagging','Loka 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Loka works and the listing rules','Loka 怎么运作 · 发布规则')}</button>`;
   if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
  }
@@ -75,7 +76,8 @@ function render(){
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
  if(tab==='ask')h+=askHtml();
- if(tab==='about')h+=back+aboutHtml()+followHtml();
+ if(tab==='about')h+=back+aboutHtml()+`<button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>`+followHtml();
+ if(tab==='rights')h+=back+rightsHtml();
  if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
@@ -106,12 +108,13 @@ function render(){
   <div class="sec">${t('Your squads','我的局')}</div>${mine.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></button>`).join('')||`<div class="note">${t('None yet.','还没有。')}</div>`}
   <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Loka scout','成为 Loka 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
   <button class="btn ghost" data-a="tab" data-v="about">${t('How Loka works · listing rules','Loka 怎么运作 · 发布规则')}</button>
+  <button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>
   <button class="btn ghost" data-a="tab" data-v="privacy">${t('Privacy','隐私说明')}</button>
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
  a.innerHTML=h;motion();
- const main=['help','guide','tools','earn','play','about'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
+ const main=['help','guide','tools','earn','play','about','rights'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
  const c=document.getElementById('cnt');if(c)c.textContent=LC;
