@@ -113,7 +113,7 @@ function render(){
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
- a.innerHTML=h;motion();
+ a.innerHTML=h;motion();hdr();
  const main=['help','guide','tools','earn','play','about','rights'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
@@ -207,4 +207,18 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
 render();openFromHash();authInit();
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // Header: transparent at the top, frosted once the page scrolls.
-addEventListener('scroll',()=>{const e=document.getElementById('top');if(e)e.classList.toggle('stuck',scrollY>8)},{passive:true});
+// Header states. Phone home page: the header sits on the green poster ("onposter"); once you scroll it
+// turns solid green and shows the small logo ("green"), and turns cream only after the whole poster has
+// gone past ("stuck"). Poster text fades out before it reaches the header, so nothing is seen half cut.
+// Wide screens: the poster is a separate rounded card below an ordinary header.
+function hdr(){hdrRaf=0;const e=document.getElementById('top');if(!e)return;const p=tab==='home'?document.querySelector('.hposter'):null,on=!!p&&!WIDE.matches;
+ e.classList.toggle('onposter',on);const hb=e.getBoundingClientRect().bottom;
+ if(on){const past=p.getBoundingClientRect().bottom<=hb+2;e.classList.toggle('stuck',past);e.classList.toggle('green',!past&&scrollY>8)}
+ else{e.classList.remove('green');e.classList.toggle('stuck',scrollY>8)}
+ if(!p)return;
+ // Each line fades over the last stretch before the header edge (at most 56px), starting from where it rests.
+ for(const el of p.querySelectorAll(':scope>.pbig,:scope>.ptg,:scope>h1,:scope>.p2,:scope>.psub,:scope>.season')){
+  const d=el.getBoundingClientRect().top-hb,rest=d+scrollY,f=Math.min(56,rest);
+  const o=scrollY<=0?1:f>8?Math.max(0,Math.min(1,d/f)):Math.max(0,1-scrollY/40);el.style.opacity=o<1?o.toFixed(3):''}}
+addEventListener('scroll',()=>{if(!hdrRaf)hdrRaf=requestAnimationFrame(hdr)},{passive:true});
+WIDE.addEventListener('change',hdr);

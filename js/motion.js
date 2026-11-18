@@ -4,6 +4,7 @@
 // "Reduce Motion" setting is on.
 const REDUCED=matchMedia('(prefers-reduced-motion: reduce)');
 let motionTab=null,revealIO=null;
+const WIDE=matchMedia('(min-width:560px)');let hdrRaf=0; // used by hdr() in app.js
 function motion(){const app=document.getElementById('app');if(!app)return;
  const changed=tab!==motionTab;motionTab=tab;
  if(REDUCED.matches)return;
