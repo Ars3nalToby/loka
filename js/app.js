@@ -12,6 +12,8 @@ function render(){
   <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
   <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
   <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span>${skyline()}</section>
+  <button class="landed" data-a="tab" data-v="landed"><span class="lb-p" aria-hidden="true">✈︎</span><span><b>${t('Just landed in Brisbane?','刚落地布里斯班？')}</b><i>${t('Airport to city, 50c transport, SIM, safe numbers. Works offline.','机场进城、50 分车资、手机卡、紧急电话。离线也能看。')}</i></span><em>→</em></button>
+  ${liveStrip()}
   <div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
   <div class="duo">
    <button class="hero r" data-a="tab" data-v="homes"><span class="e">${HERO_ART.rooms}</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
@@ -80,6 +82,8 @@ function render(){
  if(tab==='ask')h+=askHtml();
  if(tab==='about')h+=back+aboutHtml()+`<button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>`+followHtml();
  if(tab==='rights')h+=back+rightsHtml();
+ if(tab==='today')h+=back+todayHtml();
+ if(tab==='landed')h+=back+landedHtml();
  if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
@@ -115,8 +119,8 @@ function render(){
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
- a.innerHTML=h;motion();hdr();
- const main=['help','guide','tools','earn','play','about','rights'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
+ a.innerHTML=h;motion();hdr();if(tab==='home')liveLoad();
+ const main=['help','guide','tools','earn','play','about','rights','today','landed'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
  const c=document.getElementById('cnt');if(c)c.textContent=LC;
@@ -134,6 +138,9 @@ document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sheet')closeSheet();return}
  const a=b.dataset.a,v=b.dataset.v,q=S.squads.find(x=>x.id===v);
  if(a==='theme')return setTheme(!isDark(),b);
+ if(a==='evf'){liveF=v;liveRepaint();return}
+ if(a==='liver'){b.classList.add('spin1');liveLoad(true);return}
+ if(a==='install')return doInstall();
  if(a==='slang'){slangOff++;b.classList.remove('flip');void b.offsetWidth;b.innerHTML=slangCard().replace(/^<button[^>]*>|<\/button>$/g,'');b.classList.add('flip');return}
  if(a==='lang'){S.lang=S.lang==='zh'?'en':'zh';save();render()}
  if(a==='tab'){tab=v;closeSheet();render();scrollTo(0,0)}

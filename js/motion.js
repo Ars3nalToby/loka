@@ -14,7 +14,7 @@ function motion(){const app=document.getElementById('app');if(!app)return;
  if(!('IntersectionObserver' in window))return;
  if(!revealIO)revealIO=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('seen');revealIO.unobserve(e.target)}},{rootMargin:'0px 0px -6% 0px'});
  const fold=innerHeight;
- app.querySelectorAll('.card,.mini-room,.mz,.tile,.pv-s,.xhs a,.hcard,.door,.hb,.rule').forEach((el,i)=>{if(el.dataset.rv)return;el.dataset.rv=1;
+ app.querySelectorAll('.card,.mini-room,.mz,.tile,.pv-s,.xhs a,.hcard,.door,.hb,.rule,.court,.lstep,.tr').forEach((el,i)=>{if(el.dataset.rv)return;el.dataset.rv=1;
   if(el.getBoundingClientRect().top>fold){el.classList.add('rv');el.style.setProperty('--j',i%4);revealIO.observe(el)}})}
 
 // ───────── Light / dark ─────────

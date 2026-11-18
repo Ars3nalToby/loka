@@ -43,3 +43,10 @@ X-Frame-Options, X-Content-Type-Options, Referrer-Policy and Permissions-Policy 
 node --test                       # 33 unit tests
 npx eslint@9 <scripts in index.html order>   # see HANDOFF.md for the one-liner
 ```
+
+## /api/live (added 18 Nov 2026)
+- Only three fixed upstream URLs; the request can choose a key (`events`, `transit`, `weather`) and nothing else. No user input reaches a URL (no SSRF). Unknown keys, `__proto__`, and non-GET methods are refused.
+- Upstream text is reduced to plain text and length-capped; links kept only if https and on the source's own domain. The browser re-checks links (`safeUrl`) and escapes all text (`esc`). Tested with script-injection fixtures: nothing executes, no `javascript:` links render.
+- 8 s timeout, 3 MB cap, edge cache (`s-maxage`) so upstreams see a handful of requests per hour; errors return 502 with `no-store`.
+- CSP unchanged: the browser only talks to its own origin for live data.
+
