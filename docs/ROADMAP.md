@@ -184,6 +184,11 @@ Done when: a room posted on one phone appears on another after admin approval, a
 API call that tries bond of 6 weeks, or tries to self-verify, is rejected by the database.
 Write those two attempts as a script in `tests/` and record the result in `HANDOFF.md`.
 
+Progress (2026-11-18): **database half done.** `supabase/migrations/001_init.sql` written and
+tested offline in PGlite by `tests/db/rls_check.mjs` (27 attacks, all blocked, including both
+[O2] attacks). Still to do: owner says "可以" → create the project and apply the migration;
+`home_photos` (needs Storage, separate migration); `js/store.js` Supabase layer; two-phone test.
+
 ### [ ] O3. Sign-in and admin gate (Opus)
 
 > Client side built 18 Nov 2026 (`js/auth.js`, `docs/AUTH.md`): Google, email code, AU mobile,
