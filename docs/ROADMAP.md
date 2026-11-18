@@ -186,6 +186,10 @@ Write those two attempts as a script in `tests/` and record the result in `HANDO
 
 ### [ ] O3. Sign-in and admin gate (Opus)
 
+> Client side built 18 Nov 2026 (`js/auth.js`, `docs/AUTH.md`): Google, email code, AU mobile,
+> authenticator-app two-step verification, 18+ gate, privacy notice. **Still to do:** connect
+> Loka's Supabase project, admin flag + RLS, gate posting/contact details behind sign-in.
+
 - Email sign-in with a **6-digit code**, not a magic link. Links opened inside WeChat's
   browser land in a different browser and lose the session. No SMS: it costs money.
 - Posting, saving and seeing contact details need sign-in. Browsing does not.

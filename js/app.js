@@ -76,6 +76,7 @@ function render(){
  }
  if(tab==='ask')h+=askHtml();
  if(tab==='about')h+=back+aboutHtml()+followHtml();
+ if(tab==='privacy')h+=back+privacyHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
   h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
@@ -98,18 +99,19 @@ function render(){
  }
  if(tab==='me'){
   const mine=S.squads.filter(inSquad),sh=S.homes.filter(x=>isSaved('homes',x.id)),sj=S.jobs.filter(x=>isSaved('jobs',x.id));
-  h+=`<h1>${S.me?esc(S.me):t('Who are you?','你是谁？')}</h1><label>${t('Display name','显示名字')}</label><input id="meName" value="${esc(S.me)}" placeholder="${t('e.g. Jing','例如 阿良')}"><button class="btn" data-a="saveme">${t('Save','保存')}</button>
+  h+=accountCard()+`<h1>${S.me?esc(S.me):t('Who are you?','你是谁？')}</h1><label>${t('Display name','显示名字')}</label><input id="meName" value="${esc(S.me)}" placeholder="${t('e.g. Jing','例如 阿良')}"><button class="btn" data-a="saveme">${t('Save','保存')}</button>
   <div class="sec">${t('Saved homes','收藏的房源')}</div>${sh.map(x=>`<button class="card" data-a="home" data-v="${x.id}"><div class="tt">$${x.rent}/${t('wk','周')} · ${esc(x.title)}</div><div class="meta">${esc(x.area)}</div></button>`).join('')||`<div class="note">${t('Tap ♥ on a home to keep it here.','点 ♥ 收藏房源。')}</div>`}
   ${compareHtml(sh)}
   <div class="sec">${t('Saved jobs','收藏的工作')}</div>${sj.map(x=>`<button class="card" data-a="job" data-v="${x.id}"><div class="tt">$${x.pay}/${t('h','时')} · ${esc(x.title)}</div><div class="meta">${esc(x.area)}</div></button>`).join('')||`<div class="note">${t('Tap ♥ on a job to keep it here.','点 ♥ 收藏工作。')}</div>`}
   <div class="sec">${t('Your squads','我的局')}</div>${mine.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></button>`).join('')||`<div class="note">${t('None yet.','还没有。')}</div>`}
   <div class="card" style="margin-top:16px"><div class="tt">🔎 ${t('Become a Loka scout','成为 Loka 探房员')}</div><div class="meta">${t('Visit a listing in your suburb, take real photos, confirm it exists. Verified listings get the green tick.','去你所在区实地看房、拍真实照片、确认房源存在。通过的房源获得绿色认证。')}</div></div>
   <button class="btn ghost" data-a="tab" data-v="about">${t('How Loka works · listing rules','Loka 怎么运作 · 发布规则')}</button>
+  <button class="btn ghost" data-a="tab" data-v="privacy">${t('Privacy','隐私说明')}</button>
   <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
  a.innerHTML=h;
- const main=['help','guide','tools','earn','play','about'].includes(tab)?'home':tab==='admin'?'me':tab;
+ const main=['help','guide','tools','earn','play','about'].includes(tab)?'home':['admin','privacy'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
  const c=document.getElementById('cnt');if(c)c.textContent=LC;
@@ -143,6 +145,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='mz'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:v};rview='map';mapSel='';tab='homes';render();scrollTo(0,0)}
  if(a==='hz'){hf.z=hf.z===v?'':v;render()}
  if(a==='rv'){rview=v;mapSel='';render()}
+ if(a==='signin')authSheet()
+ if(a==='au_start')authSheet()
+ if(a==='acct')accountSheet()
+ if(/^(au_|mfa_)/.test(a)&&a!=='au_start')authAct(a)
  if(a==='share')shareSheet(v)
  if(a==='shig')shareInstagram(v)
  if(a==='shtext'){const x=S.homes.find(h=>h.id===v);copy(shareText(x)+'\n'+roomUrl(v),t('Copied. Paste it into WeChat or 小红书.','已复制，粘贴到微信或小红书即可。'))}
@@ -195,7 +201,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='saveme'){const n=val('meName');if(!n)return;S.me=n;save();render();toast(t('Saved','已保存'))}
  if(a==='reset'){const l=S.lang;S=seed();S.qa=seedQA();S.lang=l;save();render();toast(t('Reset','已重置'))}
 });
-render();openFromHash();
+render();openFromHash();authInit();
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // Header: transparent at the top, frosted once the page scrolls.
 addEventListener('scroll',()=>{const e=document.getElementById('top');if(e)e.classList.toggle('stuck',scrollY>8)},{passive:true});

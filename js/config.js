@@ -3,4 +3,10 @@
 // ───────── config ─────────
 // instagram / threads: Loka's own account handles, without @. Leave empty until the accounts exist;
 // the Follow buttons only show when these are filled in.
-const BRAND={instagram:'',threads:'',en:'Loka',zh:'布村生活站',url:(location.host&&!/^(localhost|127\.)/.test(location.host))?location.host:'loka.vercel.app'};
+// contact: an email people can use for privacy requests and complaints. Must be set before launch.
+const BRAND={contact:'',instagram:'',threads:'',en:'Loka',zh:'布村生活站',url:(location.host&&!/^(localhost|127\.)/.test(location.host))?location.host:'loka.vercel.app'};
+// Accounts (js/auth.js, docs/AUTH.md). url + key come from Loka's own Supabase project:
+// Project Settings → API → Project URL and the publishable (anon) key. The publishable key is
+// meant to be public; never put a secret or service_role key here.
+// phone stays false until an SMS provider is set up in Supabase (it costs money per SMS).
+const AUTH={url:'',key:'',google:true,email:true,phone:false};

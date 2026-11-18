@@ -341,3 +341,26 @@ header.onposter:not(.stuck){background:transparent}
 .sh.wc .shi{background:#1AAD19}
 .sh.ln .shi{background:var(--bg2);color:var(--txt)}
 .note.warn{background:rgba(226,104,60,.1);color:#8a3a1d}
+
+/* ───────── Accounts + privacy (18 Nov 2026) ───────── */
+.acct-card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border-radius:18px;padding:14px 16px;margin:4px 0 16px;box-shadow:0 10px 26px -20px rgba(25,21,18,.5);font-size:20px;color:var(--mut)}
+.acct-card b{display:block;font-size:15.5px;font-weight:900;color:var(--txt)}.acct-card i{display:block;font-style:normal;font-size:12.5px;color:var(--mut)}
+.acct-card>span:nth-child(2){flex:1}
+.av{flex:none;width:42px;height:42px;border-radius:50%;background:var(--lime);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px}
+.av .ic{width:20px;height:20px}
+.acct{display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:12px 14px;margin-top:12px}
+.acct b{display:block;font-weight:900}.acct i{display:block;font-style:normal;font-size:12.5px;color:var(--mut)}
+.authb{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;border-radius:14px;background:var(--txt);color:var(--ink);font-weight:800;font-size:15px;margin-top:10px}
+.authb.g{background:#fff;color:#1f1f1f;box-shadow:inset 0 0 0 1px #dadce0}
+.authb[disabled],.agree input[disabled]+span{opacity:.5}
+.gl{width:20px;height:20px;display:inline-flex}.gl svg{width:100%;height:100%}
+.or{display:flex;align-items:center;gap:10px;margin:16px 0 4px;font-size:12px;font-weight:800;color:var(--mut)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.phone{display:flex;align-items:center;gap:8px}.phone span{font-weight:900;color:var(--mut);padding:0 4px}.phone input{flex:1}
+.fine{font-size:12px;color:var(--mut);margin-top:8px;line-height:1.5}
+.tick.agree{margin:14px 0 4px}.tick.agree a{color:var(--lime);font-weight:800}
+.otp{font-size:28px;letter-spacing:.5em;text-align:center;font-weight:900;font-family:ui-monospace,Menlo,monospace}
+.mfa-set ol{margin:10px 0;padding-left:20px;font-size:14px;line-height:1.6}
+.mfa-qr{display:block;width:190px;height:190px;margin:8px auto;background:#fff;border-radius:12px;padding:8px}
+.mfa-set code{font-size:12px;word-break:break-all;background:var(--bg2);padding:2px 6px;border-radius:6px}
+.pv-s{background:#fff;border-radius:16px;padding:13px 15px;margin-top:10px}.pv-s b{font-weight:900}.pv-s p{margin:5px 0 0;font-size:13.5px;line-height:1.6;color:#4d463f}

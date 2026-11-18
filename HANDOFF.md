@@ -67,6 +67,7 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/suburbs.js` | `SUBURB_DATA` (53 suburbs, 4 zones, 5 campuses, approx. lat/lng), `ZONE`, `ZN`, `SUB()`. Single source of truth for suburbs. |
 | `js/check.js` | Loka Check: `lokaCode` (daily code), `CHECKS`, `checkState`, `checkBadge`, `ladderHtml`, renter steps `RSTEPS`/`renterHtml`, `inspHtml`, `priceMeter` |
 | `js/share.js` | Share sheet: Threads Post Intent, Instagram story image (canvas 1080x1920 + QR via `js/vendor/qrcode.js`, MIT, kazuhikoarase) through the Web Share API, copy text/link; `#/room/<id>` deep links (`openFromHash`). See `docs/SOCIAL.md`. |
+| `js/auth.js` | Accounts via Supabase Auth (`js/vendor/supabase.js` 2.119.0, MIT, lazy-loaded only when `AUTH` is set): Google, email code, AU mobile code (`auMobile`), TOTP two-step verification, 18+ and privacy-notice gate, account sheet. Off by default = labelled preview. See `docs/AUTH.md`. |
 | `js/map.js` | Drawn Brisbane map: `mapSvg` (zones as hulls, river, M1, campuses, room pins), `mapLegend`, `ZCOL` zone colours |
 | `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
@@ -205,3 +206,9 @@ One line per session: date, model, what changed, what the next assistant must kn
   Instagram's top/bottom 250px safe zones; QR verified to decode to the room link. Room deep
   links `#/room/<id>`. Follow buttons need real handles in `BRAND.instagram` / `BRAND.threads`
   (empty = hidden). Auto-posting is documented, not built (needs O2). 22 tests. SW `loka-v9`.
+- 18 Nov 2026 · Claude Opus 5.5 · **Accounts built, switched off.** `js/auth.js` + `AUTH` in
+  config.js + Privacy tab (`privacyHtml`, draft for legal review) + account card on Me. Verified
+  against a stand-in server with real supabase-js: email OTP, verify, TOTP enrol (QR is
+  URI-encoded: raw SVG from Supabase contains quotes), phone OTP as +614…, Google PKCE redirect.
+  Needs Loka's own Supabase project + Google OAuth client to go live (`docs/AUTH.md`). Phone stays
+  off until an SMS provider is paid for. 26 tests. SW `loka-v10`.
