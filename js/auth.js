@@ -31,15 +31,16 @@ const showPhone=p=>p?p.replace(/^\+61(\d{3})(\d{3})(\d{3})$/,'0$1 $2 $3'):'';
 // ---------- Sign-in sheet ----------
 function authSheet(step){const live=authReady(),dis=live?'':' disabled';step=step||'start';
  const pre=live?'':`<div class="note warn"><b>${t('Preview only.','仅为预览。')}</b> ${t('Sign-in is built but not switched on yet: Loka’s own account database still has to be connected. Nothing you type here is sent anywhere.','登录功能已经做好，但还没启用：Loka 自己的账户数据库还没接上。这里输入的任何内容都不会被发送。')}</div>`;
- if(step==='code'){openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${t('Enter the 6-digit code','输入 6 位验证码')}</div>
-  <div class="sub">${t('Sent to','已发送到')} <b>${esc(otpTo.kind==='phone'?showPhone(otpTo.v):otpTo.v)}</b>. ${t('It expires soon, so use it now.','验证码很快过期，请尽快输入。')}</div>
+ if(step==='code'){const em=otpTo.kind==='email';openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${em?t('Check your email','请查看邮箱'):t('Enter the 6-digit code','输入 6 位验证码')}</div>
+  <div class="sub">${t('Sent to','已发送到')} <b>${esc(em?otpTo.v:showPhone(otpTo.v))}</b>. ${em?t('Tap the sign-in link in the email on this phone, in this same browser. If the email shows a 6-digit code instead, type it here.','在这部手机、这个浏览器里点开邮件中的登录链接即可。如果邮件里是 6 位验证码，就在这里输入。'):t('It expires soon, so use it now.','验证码很快过期，请尽快输入。')}</div>
+  ${em?`<div class="fine">${t('Using Loka from the home-screen icon? Open tobyloka.vercel.app in Safari or Chrome to sign in for now; the link cannot reach the home-screen app.','如果你是从主屏幕图标打开 Loka：目前请先用 Safari 或 Chrome 打开 tobyloka.vercel.app 登录，邮件链接进不去主屏幕 app。')}</div>`:''}
   <input id="au_code" data-enter="au_verify" enterkeyhint="go" inputmode="numeric" autocomplete="one-time-code" maxlength="6" class="otp" placeholder="••••••">
   <button class="btn" data-a="au_verify">${t('Sign in','登录')}</button><button class="btn ghost" data-a="au_start">${t('Use a different email or number','换一个邮箱或号码')}</button>`);return}
  openSheet(`<div class="tt" style="font-size:26px;font-weight:900">${t('Sign in to Loka','登录 Loka')}</div>
  <div class="sub">${t('Needed to post a room, see contact details, report a listing or save across devices. Browsing never needs an account.','发布房源、查看联系方式、举报或跨设备收藏才需要登录。浏览房源不需要账户。')}</div>${pre}
  <label class="tick agree"><input type="checkbox" id="au_ok"${dis}><span>${t('I am 18 or older, and I have read the','我已年满 18 岁，并已阅读')} <a href="#" data-a="tab" data-v="privacy">${t('privacy notice','隐私说明')}</a> ${t('and','和')} <a href="#" data-a="tab" data-v="about">${t('listing rules','发布规则')}</a>.</span></label>
  ${AUTH.google?`<button class="authb g" data-a="au_google"${dis}><span class="gl">${GLOGO}</span>${t('Continue with Google','使用 Google 继续')}</button>`:''}
- ${AUTH.email?`<div class="or"><span>${t('or with your email','或用邮箱')}</span></div><input id="au_email" data-enter="au_email" enterkeyhint="send" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com"${dis}><button class="authb" data-a="au_email"${dis}>${t('Email me a code','发验证码到邮箱')}</button>`:''}
+ ${AUTH.email?`<div class="or"><span>${t('or with your email','或用邮箱')}</span></div><input id="au_email" data-enter="au_email" enterkeyhint="send" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com"${dis}><button class="authb" data-a="au_email"${dis}>${t('Email me a sign-in link','发登录邮件')}</button>`:''}
  ${AUTH.phone?`<div class="or"><span>${t('or with an Australian mobile','或用澳洲手机号')}</span></div><div class="phone"><span>+61</span><input id="au_phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="0412 345 678"${dis}></div><button class="authb" data-a="au_phone"${dis}>${t('Text me a code','短信发验证码')}</button><div class="fine">${t('Your number is only used to send sign-in codes. Loka will never send marketing texts.','手机号只用来发送登录验证码，Loka 绝不会发广告短信。')}</div>`:''}
  <div class="fine">${t('Loka never asks for ID documents, ID numbers or your date of birth.','Loka 不会要求你提供证件、证件号码或出生日期。')}</div>`)}
 
@@ -48,7 +49,7 @@ async function authAct(a){if(!authReady()||authBusy)return;
  authBusy=true;try{
   if(a==='au_google'){if(!need18())return;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)throw error}
   if(a==='au_email'){if(!need18())return;const v=(document.getElementById('au_email').value||'').trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))return toast(t('Check the email address','请检查邮箱地址'));
-   const {error}=await sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true}});if(error)throw error;otpTo={kind:'email',v};authSheet('code')}
+   const {error}=await sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true,emailRedirectTo:location.origin+'/'}});if(error)throw error;otpTo={kind:'email',v};authSheet('code')}
   if(a==='au_phone'){if(!need18())return;const p=auMobile(document.getElementById('au_phone').value);if(!p)return toast(t('Enter an Australian mobile, e.g. 0412 345 678','请输入澳洲手机号，例如 0412 345 678'));
    const {error}=await sb.auth.signInWithOtp({phone:p});if(error)throw error;otpTo={kind:'phone',v:p};authSheet('code')}
   if(a==='au_verify'){const code=(document.getElementById('au_code').value||'').replace(/\D/g,'');if(code.length!==6)return toast(t('The code has 6 digits','验证码是 6 位数字'));
