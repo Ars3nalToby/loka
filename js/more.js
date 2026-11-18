@@ -71,7 +71,7 @@ function detail(id){const q=S.squads.find(x=>x.id===id);if(!q)return;const isHos
 function squadForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Start a squad','发起一局')}</div>
  <label>${t('Type','类型')}</label><select id="f_sport">${Object.keys(SPORT).map(k=>`<option value="${k}">${SPORT[k][0]} ${t(SPORT[k][1],SPORT[k][2])}</option>`).join('')}</select>
  <label>${t('Title','标题')}</label><input id="f_title" placeholder="${t('Thursday doubles','周四双打')}">
- <div class="g2"><div><label>${t('Suburb','区域')}</label><input id="f_area" placeholder="Sunnybank Hills"></div><div><label>${t('Venue / meeting point','场地/集合点')}</label><input id="f_venue"></div></div>
+ <div class="g2"><div><label>${t('Suburb','区域')}</label><input id="f_area" placeholder="Sunnybank Hills"></div><div><label>${t('Venue / meeting point','场地/集合点')}</label><input id="f_venue" list="courtlist" autocomplete="off"><datalist id="courtlist">${COURTS.map(c=>`<option value="${esc(c.name)}">${esc(c.area)}</option>`).join('')}</datalist></div></div>
  <div class="g2"><div><label>${t('Date & time','日期时间')}</label><input id="f_start" type="datetime-local"></div><div><label>${t('Minutes','时长(分钟)')}</label><input id="f_mins" type="number" value="120"></div></div>
  <div class="g2"><div><label>${t('Level','水平')}</label><select id="f_level">${Object.keys(LEVEL).map(k=>`<option value="${k}">${t(LEVEL[k][0],LEVEL[k][1])}</option>`).join('')}</select></div><div><label>${t('Spots','人数')}</label><input id="f_cap" type="number" value="8"></div></div>
  <div class="g2"><div><label>${t('$ per person (0 = free)','人均 $（0=免费）')}</label><input id="f_price" type="number" value="15"></div><div><label>${t('Your PayID (optional)','你的 PayID（可选）')}</label><input id="f_payid"></div></div>

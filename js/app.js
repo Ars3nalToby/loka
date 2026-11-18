@@ -5,7 +5,7 @@ function render(){
  const a=document.getElementById('app');const back=`<button class="back" data-a="tab" data-v="home">← ${t('Home','首页')}</button>`;
  const zh=S.lang==='zh';
  let h=`<header id="top" class="${tab==='home'?'onposter':''}${scrollY>8?' stuck':''}"><button class="brand" data-a="tab" data-v="home" aria-label="${t('Loka home','Loka 首页')}"><span class="mark" aria-hidden="true"><i>L</i><b></b></span><span class="wm"><span class="nm">${esc(BRAND.en)}<b>.</b></span><span class="tg"><em>${esc(BRAND.zh)}</em><s></s>Brisbane</span></span></button>
- <div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></header>`;
+ <div class="hr"><button class="thm" data-a="theme" aria-label="${isDark()?t('Switch to light mode','切换到浅色模式'):t('Switch to dark mode','切换到深色模式')}">${themeIcon()}</button><div class="seg" role="group" aria-label="${t('Language','语言')}"><button ${zh?'data-a="lang"':'class="on" aria-pressed="true"'}>EN</button><button ${zh?'class="on" aria-pressed="true"':'data-a="lang"'}>中文</button></div></div></header>`;
  if(tab==='home'){
   const need=S.squads.filter(q=>left(q)>0&&left(q)<=2);const bad=S.homes.filter(x=>homeFlags(x).length).length+S.jobs.filter(x=>jobFlags(x).length).length;
   h+=`<section class="hposter">${petals()}<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
@@ -31,6 +31,7 @@ function render(){
   </div>
   <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
   <button class="rcta" data-a="tab" data-v="rights"><span class="rc-b">${ibis(58,'walk')}</span><span><b>${t('Renter rights, one page','租客权益，一页看懂')}</b><i>${t('What the RTA can do, free advice lines, QCAT, and who to call first.','RTA 能做什么、免费咨询热线、QCAT，以及遇事先找谁。')}</i></span><em>→</em></button>
+  ${slangCard()}
   <div class="res">${t('Loka is flagging','Loka 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Loka works and the listing rules','Loka 怎么运作 · 发布规则')}</button>`;
   if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
  }
@@ -54,13 +55,14 @@ function render(){
  }
  if(tab==='play'){
   const list=S.squads.filter(q=>filter==='all'||q.sport===filter).sort((x,y)=>new Date(x.start)-new Date(y.start));
-  h+=back+`<h1>${t('One spot short? <em>Fill it in a tap.</em>','差一个人？<em>一键凑齐。</em>')}</h1><div class="sub">${t('Games, runs, rides and tables that need people this week.','本周正在缺人的球局、跑团、骑行和饭局。')}</div>
+  h+=back+`<div class="rally" aria-hidden="true"><svg viewBox="0 0 320 70"><path d="M160 30V66" stroke="currentColor" stroke-width="2"/><g class="net">${[0,1,2,3,4,5].map(i=>`<path d="M152 ${34+i*5}h16" stroke="currentColor" stroke-width=".7" opacity=".5"/>`).join('')}</g><path d="M10 66H310" stroke="currentColor" stroke-width="1.5" opacity=".3"/>${ibis(46,'idle').replace('<svg','<svg x="12" y="20"')}<g transform="translate(316 20) scale(-1 1)">${ibis(46,'idle')}</g><g class="sc"><g class="scy"><g class="scr"><g transform="translate(-11 -11)">${shuttle()}</g></g></g></g></svg></div><h1>${t('One spot short? <em>Fill it in a tap.</em>','差一个人？<em>一键凑齐。</em>')}</h1><div class="sub">${t('Games, runs, rides and tables that need people this week.','本周正在缺人的球局、跑团、骑行和饭局。')}</div>
   <div class="chips">${[['all','✨',t('All','全部')],...Object.keys(SPORT).map(k=>[k,SPORT[k][0],t(SPORT[k][1],SPORT[k][2])])].map(c=>`<button class="chip ${filter===c[0]?'on':''}" data-a="filter" data-v="${c[0]}">${c[1]} ${c[2]}</button>`).join('')}</div>`;
   h+=list.map(q=>{const pct=Math.min(100,q.players.length/q.cap*100);return `<button class="card" data-a="open" data-v="${q.id}">
    <div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div>
    <span class="tag">${t(lv(q.level)[0],lv(q.level)[1])}</span><span class="tag">${q.price?'$'+q.price+t(' each','/人'):t('Free','免费')}</span>${inSquad(q)?`<span class="tag b">${t("You're in",'已上车')}</span>`:''}
    <div class="bar"><i style="width:${pct}%"></i></div><div class="foot"><span>${q.players.length}/${q.cap} ${t('in','人')}</span><span>${t('Host','局主')}: ${esc(q.host)}</span></div></button>`}).join('');
   h+=`<button class="btn" data-a="new">+ ${t('Start a squad','发起一局')}</button>`;
+  if(filter==='all'||filter==='bad')h+=courtsHtml();
  }
  if(tab==='help'){
   h+=back+`<h1>${t('Need a hand? <em>Name the price.</em>','找人帮忙？<em>明码标价。</em>')}</h1><div class="sub">${t('Airport pickups, moving, translation at inspections, coaching.','接机、搬家、看房翻译、陪练。')}</div>`;
@@ -122,7 +124,8 @@ function render(){
 
 
 // ───────── actions ─────────
-document.addEventListener('input',e=>{const id=e.target.id;const L=document.getElementById('list');
+document.addEventListener('input',e=>{const id=e.target.id;
+ if(id==='f_venue'){const c=COURTS.find(x=>x.name===e.target.value),ar=document.getElementById('f_area');if(c&&ar){ar.value=c.area;const sp=document.getElementById('f_sport');if(sp)sp.value='bad'}return}const L=document.getElementById('list');
  if(id==='hq'){hf.q=e.target.value;if(rview==='map'){mapSel='';const m=document.querySelector('.rmap svg');if(m)m.outerHTML=mapSvg({rooms:true,still:true});const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}else{L.innerHTML=listHomes();document.getElementById('cnt').textContent=LC}}
  else if(id==='jq'){jf.q=e.target.value;L.innerHTML=listJobs();document.getElementById('cnt').textContent=LC}
  else if(tab==='tools')calc()});
@@ -130,6 +133,8 @@ document.addEventListener('change',()=>{if(tab==='tools')calc()});
 document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('moref'))hfOpen=e.target.open},true);
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sheet')closeSheet();return}
  const a=b.dataset.a,v=b.dataset.v,q=S.squads.find(x=>x.id===v);
+ if(a==='theme')return setTheme(!isDark(),b);
+ if(a==='slang'){slangOff++;b.classList.remove('flip');void b.offsetWidth;b.innerHTML=slangCard().replace(/^<button[^>]*>|<\/button>$/g,'');b.classList.add('flip');return}
  if(a==='lang'){S.lang=S.lang==='zh'?'en':'zh';save();render()}
  if(a==='tab'){tab=v;closeSheet();render();scrollTo(0,0)}
  if(a==='filter'){filter=v;render()}
@@ -186,6 +191,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='open')detail(v);
  if(a==='close')closeSheet();
  if(a==='new')squadForm();
+ if(a==='court')courtSheet(v);
+ if(a==='courtsq'){const c=court(v);if(!c)return;squadForm();const set=(id,x)=>{const e=document.getElementById(id);if(e)e.value=x};set('f_sport','bad');set('f_venue',c.name);set('f_area',c.area);set('f_title',t('Badminton at ','羽毛球 · ')+c.area)}
  if(a==='newtask')taskForm();
  if(a==='join'){if(!S.me){const n=val('joinName');if(!n)return toast(t('Add your name first','先填名字'));S.me=n}
   if(inSquad(q)||inWait(q))return;if(left(q)>0){q.players.push({n:S.me,paid:!q.price});toast(t("You're in!",'上车成功！'))}else{q.wait.push(S.me);toast(t('On the waitlist','已排候补'))}save();render();detail(v)}
