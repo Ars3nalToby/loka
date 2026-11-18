@@ -762,3 +762,25 @@ header.onposter:not(.stuck) .thm{background:rgba(255,255,255,.14);box-shadow:non
 .lm-b{padding:12px 14px 14px}.lm-b b{display:block;font-size:16px;font-weight:900}.lm-b p{font-size:13px;line-height:1.5;color:var(--mut);margin:4px 0 10px}
 .lm .pano .pv-boat{fill:#fff}
 @media (prefers-reduced-motion:reduce){.pano .cat{transform:translateX(150px)}}
+
+/* ───────── Horizontal rows never end in a hard cut (18 Nov 2026) ─────────
+   Phone: the row runs to the screen edge and fades where there is more to see (classes fl / fr are
+   set by edgeFade() in motion.js only while that side actually has hidden content).
+   Wider screens: chip rows wrap onto more lines and card rows become grids, so nothing is hidden. */
+.chips,.xhs{margin-left:-18px;margin-right:-18px;padding-left:18px;padding-right:18px;scroll-padding-inline:18px}
+.chips>*,.xhs>*{flex-shrink:0}
+.chips::after,.xhs::after,.strip::after,.lms::after{content:"";flex:0 0 2px}
+.chips.fr,.xhs.fr,.strip.fr,.lms.fr{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 46px),transparent)}
+.chips.fl,.xhs.fl,.strip.fl,.lms.fl{-webkit-mask-image:linear-gradient(90deg,transparent,#000 30px);mask-image:linear-gradient(90deg,transparent,#000 30px)}
+.chips.fl.fr,.xhs.fl.fr,.strip.fl.fr,.lms.fl.fr{-webkit-mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 46px),transparent);mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 46px),transparent)}
+@media (min-width:560px){
+ .chips{flex-wrap:wrap;overflow:visible;margin-left:0;margin-right:0;padding-left:0;padding-right:0;-webkit-mask-image:none!important;mask-image:none!important}
+ .chips::after{display:none}
+ .strip,.xhs{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+ .strip{grid-template-columns:1fr 1fr}
+ .strip,.xhs{overflow:visible;margin-left:0;margin-right:0;padding-left:0;padding-right:0;-webkit-mask-image:none!important;mask-image:none!important}
+ .strip .mini-room,.xhs a{width:auto;min-width:0}
+ .lms{display:grid;grid-template-columns:1fr 1fr;overflow:visible;margin:0;padding:2px 0 8px;-webkit-mask-image:none!important;mask-image:none!important}
+ .lm{max-width:none}
+ .strip::after,.xhs::after,.lms::after{display:none}
+}

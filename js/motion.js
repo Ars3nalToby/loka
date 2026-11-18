@@ -30,3 +30,11 @@ function setTheme(dark,btn){const apply=()=>{const h=document.documentElement;if
  const r=btn?btn.getBoundingClientRect():{left:innerWidth-40,top:30,width:0,height:0},x=r.left+r.width/2,y=r.top+r.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
  const vt=document.startViewTransition(apply);
  vt.ready.then(()=>document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${R}px at ${x}px ${y}px)`]},{duration:650,easing:'cubic-bezier(.16,1,.3,1)',pseudoElement:'::view-transition-new(root)'})).catch(()=>{})}
+
+// Horizontal rows: mark which ends still hide content, so CSS can fade just those ends.
+const HROWS='.chips,.xhs,.strip,.lms';
+function edgeFade(el){const max=el.scrollWidth-el.clientWidth;el.classList.toggle('fl',max>2&&el.scrollLeft>2);el.classList.toggle('fr',max>2&&el.scrollLeft<max-2)}
+function edgeAll(){document.querySelectorAll(HROWS).forEach(edgeFade)}
+addEventListener('scroll',e=>{const el=e.target;if(el&&el.matches&&el.matches(HROWS))edgeFade(el)},{capture:true,passive:true});
+addEventListener('resize',()=>requestAnimationFrame(edgeAll));
+new MutationObserver(()=>requestAnimationFrame(edgeAll)).observe(document.documentElement,{childList:true,subtree:true});
