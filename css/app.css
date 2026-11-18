@@ -817,3 +817,15 @@ header.onposter:not(.stuck) .thm{background:rgba(255,255,255,.14);box-shadow:non
 .g-steps b{display:block;font-size:15px;padding-top:5px}.g-steps p{font-size:14px;line-height:1.55;margin:4px 0 8px;color:var(--mut)}
 .g-steps .mini-btn{display:inline-flex;align-items:center;gap:5px;margin-right:6px;text-decoration:none;min-height:36px}
 .offl{color:var(--hot)}
+/* Live database tags (db.js liveTag) */
+.tt .tag{margin:0 6px 2px 0;vertical-align:2px;font-size:10.5px;padding:3px 8px}
+.tag.smp{background:var(--bg2);color:var(--mut);border:1px dashed currentColor}
+.tag.pend{background:rgba(201,90,43,.14);color:var(--hot)}
+/* Mobile tap targets (Apple HIG 44pt). Small visual controls get a larger invisible touch area. */
+.tick{min-height:44px;padding:10px 0;margin-top:2px;align-items:center;cursor:pointer}
+.tick input{margin-top:0}
+.tickb,.vf,.card .row .heart{position:relative}
+.tickb::after,.vf::after,.card .row .heart::after{content:'';position:absolute;inset:-8px}
+.card .row .heart{min-width:44px;min-height:44px}
+input,select,textarea{touch-action:manipulation}
+button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}

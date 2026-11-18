@@ -14,7 +14,7 @@ function render(){
   <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span><div class="sky">${panorama()}</div></section>
   <button class="landed" data-a="tab" data-v="landed"><span class="lb-p" aria-hidden="true">✈︎</span><span><b>${t('Just landed in Brisbane?','刚落地布里斯班？')}</b><i>${t('Airport to city, 50c transport, SIM, safe numbers. Works offline.','机场进城、50 分车资、手机卡、紧急电话。离线也能看。')}</i></span><em>→</em></button>
   ${liveStrip()}
-  <div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
+  <div class="demo">${DB.on?(S.homes.some(x=>x.db&&x.status==='published')?t('Live beta. Every listing is checked by a person before it appears.','公测版：每条信息上线前都由人工审核。'):t('Live beta. Listings tagged Sample are examples until the first real ones are approved.','公测版：标着"示例"的房源和工作仅作示范，等第一批真实信息审核通过后替换。')):t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
   <div class="duo">
    <button class="hero r" data-a="tab" data-v="homes"><span class="e">${HERO_ART.rooms}</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
    <button class="hero j" data-a="tab" data-v="jobs"><span class="e">${HERO_ART.jobs}</span><div class="n">${t('Jobs','找工')}</div><div class="d">${S.jobs.length} ${t('listed','条')} · ${t('up to','最高')} $${Math.max(...S.jobs.map(x=>x.pay))}/${t('hr','时')}</div></button>
@@ -104,10 +104,10 @@ function render(){
  }
  if(tab==='tools'){
   h+=back+`<h1>${t('Do the maths first.','先把账算清。')}</h1>
-  <div class="card"><div class="tt">🏠 ${t('Move-in cost','入住要准备多少钱')}</div><div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="m_rent" type="number" value="300"></div><div><label>${t('Agreement','租约类型')}</label><select id="m_type"><option value="room">${t('Shared room','合租房间')}</option><option value="fixed">${t('Fixed lease','固定期租约')}</option></select></div></div><div class="res" id="m_out"></div></div>
-  <div class="card"><div class="tt">🧾 ${t('Rent split','分摊房租')}</div><div class="g2"><div><label>${t('Total rent per week $','总周租 $')}</label><input id="r_total" type="number" value="640"></div><div><label>${t('Room sizes m², comma separated','各房间面积 m²，逗号分隔')}</label><input id="r_sizes" value="14,11"></div></div><div class="res" id="r_out"></div></div>
-  <div class="card"><div class="tt">💵 ${t('Is my pay legal?','我的时薪合法吗')}</div><div class="g2"><div><label>${t('Hourly rate $','时薪 $')}</label><input id="p_rate" type="number" value="22"></div><div><label>${t('Type','类型')}</label><select id="p_type"><option value="c">${t('Casual','临时工')}</option><option value="p">${t('Part / full time','兼职/全职')}</option></select></div></div><div><label>${t('Hours per week','每周工时')}</label><input id="p_hrs" type="number" value="20"></div><div class="res" id="p_out"></div></div>
-  <div class="card"><div class="tt">⏱ ${t('Student visa hours','学生签证工时')}</div><div class="g2"><div><label>${t('Week 1 hours','第 1 周工时')}</label><input id="s_w1" type="number" value="26"></div><div><label>${t('Week 2 hours','第 2 周工时')}</label><input id="s_w2" type="number" value="24"></div></div><div class="res" id="s_out"></div></div>`;
+  <div class="card"><div class="tt">🏠 ${t('Move-in cost','入住要准备多少钱')}</div><div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="m_rent" type="number" inputmode="decimal" value="300"></div><div><label>${t('Agreement','租约类型')}</label><select id="m_type"><option value="room">${t('Shared room','合租房间')}</option><option value="fixed">${t('Fixed lease','固定期租约')}</option></select></div></div><div class="res" id="m_out"></div></div>
+  <div class="card"><div class="tt">🧾 ${t('Rent split','分摊房租')}</div><div class="g2"><div><label>${t('Total rent per week $','总周租 $')}</label><input id="r_total" type="number" inputmode="decimal" value="640"></div><div><label>${t('Room sizes m², comma separated','各房间面积 m²，逗号分隔')}</label><input id="r_sizes" value="14,11"></div></div><div class="res" id="r_out"></div></div>
+  <div class="card"><div class="tt">💵 ${t('Is my pay legal?','我的时薪合法吗')}</div><div class="g2"><div><label>${t('Hourly rate $','时薪 $')}</label><input id="p_rate" type="number" inputmode="decimal" value="22"></div><div><label>${t('Type','类型')}</label><select id="p_type"><option value="c">${t('Casual','临时工')}</option><option value="p">${t('Part / full time','兼职/全职')}</option></select></div></div><div><label>${t('Hours per week','每周工时')}</label><input id="p_hrs" type="number" inputmode="decimal" value="20"></div><div class="res" id="p_out"></div></div>
+  <div class="card"><div class="tt">⏱ ${t('Student visa hours','学生签证工时')}</div><div class="g2"><div><label>${t('Week 1 hours','第 1 周工时')}</label><input id="s_w1" type="number" inputmode="decimal" value="26"></div><div><label>${t('Week 2 hours','第 2 周工时')}</label><input id="s_w2" type="number" inputmode="decimal" value="24"></div></div><div class="res" id="s_out"></div></div>`;
  }
  if(tab==='me'){
   const mine=S.squads.filter(inSquad),sh=S.homes.filter(x=>isSaved('homes',x.id)),sj=S.jobs.filter(x=>isSaved('jobs',x.id));
@@ -121,7 +121,7 @@ function render(){
   <button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>
   <button class="btn ghost" data-a="tab" data-v="check">${t('Loka check-up (offline, home screen)','Loka 体检（离线、主屏幕）')}</button>
   <button class="btn ghost" data-a="tab" data-v="privacy">${t('Privacy','隐私说明')}</button>
-  <button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>
+  ${!DB.on||DB.admin?`<button class="btn ghost" data-a="tab" data-v="admin">${t('Open admin desk','打开管理后台')}</button>`:''}
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
  a.innerHTML=h;motion();hdr();if(tab==='home')liveLoad();
@@ -164,7 +164,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='enq'){const x=S.homes.find(h=>h.id===v);if(x)copy(enqText(x),t('Message copied','信息已复制'))}
  if(a==='adverok'){const x=S.homes.find(h=>h.id===v);const d=new Date(),ds=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();x.checks=Object.assign({},checkState(x).c);delete x.checks.terms;
   for(const k of ['id','live','right']){const e=document.getElementById('vc_'+k);if(e&&e.checked){if(!x.checks[k])x.checks[k]=ds}else delete x.checks[k]}
-  const st=checkState(x);x.verified=st.all;if(st.all&&!x.vdate)x.vdate=ds;if(!st.all)delete x.vdate;save();closeSheet();render();toast(st.all?t('Verified: all four checks passed','已核实：四项全部通过'):t(`Saved: ${st.done}/4 checks`,`已保存：${st.done}/4 项`))}
+  const st=checkState(x);x.verified=st.all;if(st.all&&!x.vdate)x.vdate=ds;if(!st.all)delete x.vdate;
+  if(x.db){const iso=d.toISOString().slice(0,10);dbAdmin('homes',x.id,{verified:st.all,verified_at:st.all?iso:null,verified_checks:x.checks},st.all?t('Verified: all four checks passed','已核实：四项全部通过'):t(`Saved: ${st.done}/4 checks`,`已保存：${st.done}/4 项`));closeSheet();return}
+  save();closeSheet();render();toast(st.all?t('Verified: all four checks passed','已核实：四项全部通过'):t(`Saved: ${st.done}/4 checks`,`已保存：${st.done}/4 项`))}
  if(a==='rcheck'){S.mine=S.mine||{};const m=S.mine[v]=S.mine[v]||[],k=b.dataset.k,i=m.indexOf(k);i>-1?m.splice(i,1):m.push(k);save();homeDetail(v)}
  if(a==='codemsg'){const x=S.homes.find(h=>h.id===v);copy(codeMsg(x),t('Copied. Paste it to the lister.','已复制，发给对方即可。'))}
  if(a==='insp'){const x=S.homes.find(h=>h.id===v);x.insp=x.insp||{ok:0,bad:0};x.insp[b.dataset.k]++;S.inspd=S.inspd||{};S.inspd[v]=b.dataset.k;if(b.dataset.k==='bad'&&!S.reports.some(r=>r.id===v))S.reports.push({k:'homes',id:v,why:t('Renter said it did not match the listing','租客反馈与描述不一致')});save();homeDetail(v);toast(t('Thanks. This helps the next renter.','谢谢，这会帮到下一位租客。'))}
@@ -187,10 +189,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='askcreate'){const by=S.me||val('q_by'),qq=val('q_text');if(!by||!qq)return toast(t('Name and question are required','名字和问题必填'));S.me=by;S.qa.unshift({id:'q'+Date.now(),q:qq,area:val('q_area'),by,ago:0,a:[]});save();closeSheet();render()}
  if(a==='askreply'){const by=S.me||val('r_by'),tx=val('r_text'),k=S.qa.find(x=>x.id===v);if(!by||!tx||!k)return toast(t('Name and answer are required','名字和回答必填'));S.me=by;k.a.push({by,text:tx});save();render();askDetail(v)}
  if(a==='mq'){const k=b.dataset.k;mq[k]=k==='b'?+v:k==='zh'?v==='true':v;matchSheet()}
- if(a==='report'){if(!S.reports.some(r=>r.id===v))S.reports.push({k:b.dataset.k,id:v,why:t('Reported by a user','用户举报')});save();toast(t('Reported. Thank you.','已举报，谢谢。'))}
+ if(a==='report'){const rx=(S[b.dataset.k]||[]).find(q=>q.id===v);if(rx&&rx.db){dbReport(b.dataset.k,rx);return}if(!S.reports.some(r=>r.id===v))S.reports.push({k:b.dataset.k,id:v,why:t('Reported by a user','用户举报')});save();toast(t('Reported. Thank you.','已举报，谢谢。'))}
  if(a==='adkeep'){S.reports=S.reports.filter(r=>r.id!==v);save();render()}
  if(a==='addel'){const k=b.dataset.k;S[k]=S[k].filter(x=>x.id!==v);S.reports=S.reports.filter(r=>r.id!==v);S.saved[k]=S.saved[k].filter(i=>i!==v);save();render();toast(t('Removed','已删除'))}
- if(a==='adver'){const x=S.homes.find(q=>q.id===v);if(x.verified){x.verified=false;x.vdate='';save();render()}else verifyForm(v)}
+ if(a==='adpub'){ADREP=null;dbAdmin(b.dataset.k,v,{status:'published',hidden_by_reports:false},t('Published','已发布'))}
+ if(a==='adrem'){if(confirm(t('Take this listing down? The lister can post it again.','下架这条信息？发布人可以重新发布。')))dbAdmin(b.dataset.k,v,{status:'removed'},t('Taken down','已下架'))}
+ if(a==='adrep'){ADREP=null;sb.from('reports').update({open:false}).eq('id',v).then(r=>{toast(r.error?dbErr(r.error):t('Report closed','已处理举报'));render()})}
+ if(a==='adver'){const x=S.homes.find(q=>q.id===v);if(x.db&&x.verified){dbAdmin('homes',v,{verified:false,verified_at:null},t('Verification removed','已取消核实'));return}if(x.verified){x.verified=false;x.vdate='';save();render()}else verifyForm(v)}
  if(a==='adpay'){S.scouts[+v].owed=0;save();render();toast(t('Recorded','已记录'))}
  if(a==='home')homeDetail(v);
  if(a==='job')jobDetail(v);
@@ -203,9 +208,18 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
   if(pb==='bond')return toast(t('Bond cannot be more than 4 weeks of rent','押金不能超过 4 周房租'));
   if(pb==='advance')return toast(t('That is more rent in advance than Queensland allows','预付房租超过昆州上限'));
   if(!ck('h_c1')||!ck('h_c2')||!ck('h_c4')||(role==='head'&&!ck('h_c3')))return toast(t('Please tick the declarations','请勾选声明'));S.me=by;
-  const n={id:'h'+Date.now(),type:val('h_type'),title,area:val('h_area')||'Brisbane',near:val('h_near'),rent,bond:Math.max(0,+val('h_bond')||0),bills:val('h_bills')==='1',furn:val('h_furn')==='1',verified:false,zh:S.lang==='zh',reward:0,ago:0,by,contact:val('h_contact'),note:val('h_note'),agr,adv,role,consent:role==='head'};S.homes.push(n);save();tab='homes';render();homeDetail(n.id)}
- if(a==='createjob'){const by=S.me||val('j_by'),title=val('j_title'),pay=+val('j_pay');if(!by||!title||!pay||!val('j_contact'))return toast(t('Name, role, pay and contact are required','名字、职位、时薪、联系方式必填'));S.me=by;
-  const n={id:'j'+Date.now(),title,area:val('j_area')||'Brisbane',pay,casual:val('j_cas')==='1',hrs:val('j_hrs')||'–',student:true,zh:/中文|mandarin|chinese/i.test(val('j_lang')),cash:false,reward:0,ago:0,lang:val('j_lang')||'English',by,contact:val('j_contact'),note:val('j_note')};S.jobs.push(n);save();tab='jobs';render();jobDetail(n.id)}
+  const n={id:'h'+Date.now(),type:val('h_type'),title,area:val('h_area')||'Brisbane',near:val('h_near'),rent,bond:Math.max(0,+val('h_bond')||0),bills:val('h_bills')==='1',furn:val('h_furn')==='1',verified:false,zh:S.lang==='zh',reward:0,ago:0,by,contact:val('h_contact'),note:val('h_note'),agr,adv,role,consent:role==='head'};
+  if(dbLive()){const row={type:n.type,agr:agr==='fixed'?'fixed':'room',role:ROLE[role]?role:'owner',owner_consent:role==='head'&&ck('h_c3'),title:title.slice(0,140),area:n.area,near:(n.near||'').slice(0,140),rent,bond:hb,adv_weeks:adv,bills:n.bills,furnished:n.furn,chinese_ok:S.lang==='zh',note:(n.note||'').slice(0,1200),
+    decl_fixed_price:ck('h_c1'),decl_bond_rta:ck('h_c2'),decl_sublet_ok:role==='head'?ck('h_c3'):true,decl_true:ck('h_c4'),by_name:by.slice(0,40)};
+   b.disabled=true;dbCreateHome(row,n.contact.slice(0,140)).then(id=>{if(id){closeSheet();tab='homes';render();homeDetail(id);toast(t('Sent for review. It goes live once an admin checks it.','已提交审核，管理员核对后公开。'))}}).catch(e=>toast(dbErr(e))).finally(()=>{b.disabled=false});return}
+  S.homes.push(n);save();tab='homes';render();homeDetail(n.id)}
+ if(a==='createjob'){const by=S.me||val('j_by'),title=val('j_title'),pay=+val('j_pay');if(!by||!title||!pay||!val('j_contact'))return toast(t('Name, role, pay and contact are required','名字、职位、时薪、联系方式必填'));
+  if(!SUB(val('j_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));
+  const jk=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};if(!jk('j_c1')||!jk('j_c2')||!jk('j_c3'))return toast(t('Please tick the declarations','请勾选声明'));S.me=by;
+  const n={id:'j'+Date.now(),title,area:val('j_area')||'Brisbane',pay,casual:val('j_cas')==='1',hrs:val('j_hrs')||'–',student:true,zh:/中文|mandarin|chinese/i.test(val('j_lang')),cash:false,reward:0,ago:0,lang:val('j_lang')||'English',by,contact:val('j_contact'),note:val('j_note')};
+  if(dbLive()){const row={title:title.slice(0,140),area:n.area,pay,casual:n.casual,hours:(val('j_hrs')||'').slice(0,60),languages:(n.lang||'').slice(0,60),note:(n.note||'').slice(0,1200),decl_award_pay:true,decl_no_cash_only:true,decl_true:true,by_name:by.slice(0,40)};
+   b.disabled=true;dbCreateJob(row,n.contact.slice(0,140)).then(id=>{if(id){closeSheet();tab='jobs';render();jobDetail(id);toast(t('Sent for review. It goes live once an admin checks it.','已提交审核，管理员核对后公开。'))}}).catch(e=>toast(dbErr(e))).finally(()=>{b.disabled=false});return}
+  S.jobs.push(n);save();tab='jobs';render();jobDetail(n.id)}
  if(a==='open')detail(v);
  if(a==='close')closeSheet();
  if(a==='new')squadForm();

@@ -9,4 +9,6 @@ const BRAND={contact:'',instagram:'',threads:'',en:'Loka',zh:'布村生活站',u
 // Project Settings → API → Project URL and the publishable (anon) key. The publishable key is
 // meant to be public; never put a secret or service_role key here.
 // phone stays false until an SMS provider is set up in Supabase (it costs money per SMS).
-const AUTH={url:'',key:'',google:true,email:true,phone:false};
+// Loka's own project (Sydney, created 19 Nov 2026). google stays false until a Google OAuth client is
+// set up in Supabase → Authentication → Providers.
+const AUTH={url:'https://ksnjvgfptqhtydcmmqwm.supabase.co',key:'sb_publishable_JIlgPYIVzeFqupY1WANZxw_J9gomZjO',google:false,email:true,phone:false};

@@ -188,7 +188,9 @@ Progress (2026-11-18): **database half done.** `supabase/migrations/001_init.sql
 tested offline in PGlite by `tests/db/rls_check.mjs` (27 attacks, all blocked, including both
 [O2] attacks). 2026-11-19: project `loka` created in Sydney, 001 + 002 applied, the same attacks
 blocked on the real database, security advisor clean. Still to do:
-`home_photos` (needs Storage, separate migration); `js/store.js` Supabase layer; two-phone test.
+`home_photos` (needs Storage, separate migration); two-phone test by the owner.
+2026-11-19: data layer done in `js/db.js` (store.js stays the offline cache), sign-in switched on
+(email code), admin desk on live data. See HANDOFF log.
 
 ### [ ] O3. Sign-in and admin gate (Opus)
 

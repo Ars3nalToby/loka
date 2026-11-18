@@ -13,7 +13,19 @@ function calc(){const set=(id,html)=>{const e=document.getElementById(id);if(e)e
  const w=num('s_w1')+num('s_w2');
  set('s_out',w<=RULES.studentHrs?`<b>${w}</b> / ${RULES.studentHrs} ${t('hours this fortnight. Within the limit while your course is in session.','小时（本两周）。在上课期间的限额内。')}`:`<b style="color:var(--hot)">${w}</b> / ${RULES.studentHrs}: ${t('over by','超出')} ${w-RULES.studentHrs} ${t('hours. This can put a student visa at risk during term. Limits do not apply in official course breaks.','小时。学期内超时可能影响学生签证；官方假期不受此限。')}`)}
 
-function adminHtml(){const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map(x=>({k:'jobs',x}))],find=r=>(S[r.k]||[]).find(q=>q.id===r.id);
+let ADREP=null;
+function adminLive(){if(!DB.admin)return `<h1>${t('Admin <em>desk.</em>','管理<em>后台。</em>')}</h1><div class="note">${AUTHU?t('This account is not an admin. The database only lets Loka admins review listings.','这个账户不是管理员。只有 Loka 管理员能审核信息，这由数据库把关。'):t('Sign in with an admin account to review listings.','请用管理员账户登录后审核。')}</div>${AUTHU?'':`<button class="btn" data-a="signin">${t('Sign in','登录')}</button>`}`;
+ if(ADREP==null){ADREP=[];dbReports().then(r=>{ADREP=r;if(tab==='admin')render()})}
+ const pend=[...S.homes.filter(x=>x.db&&(x.status==='pending'||x.hidden)).map(x=>({k:'homes',x})),...S.jobs.filter(x=>x.db&&(x.status==='pending'||x.hidden)).map(x=>({k:'jobs',x}))];
+ const row=({k,x})=>{const fl=k==='homes'?homeFlags(x):jobFlags(x);return `<div class="card"><div class="tt">${liveTag(x)}${esc(x.title)}</div><div class="meta">${k==='homes'?`$${x.rent}/${t('wk','周')} · ${t('bond','押金')} $${x.bond}`:`$${x.pay}/${t('hr','时')}`} · ${esc(x.area)} · ${esc(x.by)} · ${ago(x)}</div>${fl.map(f=>`<span class="flag">⚠ ${f}</span>`).join('')}${x.note?`<div class="note">${esc(x.note)}</div>`:''}
+  <div class="cta"><button class="btn ghost" data-a="${k==='homes'?'home':'job'}" data-v="${x.id}">${t('Open','查看')}</button><button class="btn hot" data-a="adrem" data-k="${k}" data-v="${x.id}">${t('Take down','下架')}</button><button class="btn" data-a="adpub" data-k="${k}" data-v="${x.id}">${t('Publish','发布')}</button></div></div>`};
+ const find=r=>(S[r.kind]||[]).find(q=>q.id===r.item);
+ return `<h1>${t('Admin <em>desk.</em>','管理<em>后台。</em>')}</h1><div class="sub">${t('Live database. Every button here is checked again by the database.','真实数据库。这里的每个操作，数据库都会再核对一次权限。')}</div>
+ <div style="display:flex;gap:10px"><div class="stat"><b>${pend.length}</b><span>${t('to review','待审核')}</span></div><div class="stat"><b>${ADREP.length}</b><span>${t('open reports','未处理举报')}</span></div><div class="stat"><b>${S.homes.filter(x=>x.db&&x.verified).length}</b><span>${t('verified','已核实')}</span></div></div>
+ <div class="sec">${t('Waiting for review','待审核')}</div>${pend.map(row).join('')||`<div class="note">${t('Nothing waiting.','没有待审核的信息。')}</div>`}
+ <div class="sec">${t('Open reports','未处理的举报')}</div>${ADREP.map(r=>{const x=find(r);return `<div class="card"><div class="tt">${x?esc(x.title):t('(already removed)','（已下架）')}</div><div class="meta">${esc(r.kind)} · ${esc(r.why)}</div><div class="cta">${x?`<button class="btn ghost" data-a="${r.kind==='homes'?'home':'job'}" data-v="${x.id}">${t('Open','查看')}</button>`:''}<button class="btn ghost" data-a="adrep" data-v="${r.id}">${t('Close report','关闭举报')}</button></div></div>`}).join('')||`<div class="note">${t('No open reports.','没有未处理的举报。')}</div>`}
+ <div class="sec">${t('Verify rooms','核实房源')}</div>${S.homes.filter(x=>x.db&&x.status==='published').map(x=>`<div class="lb"><span style="flex:1;min-width:0"><b style="display:block;overflow-wrap:anywhere">${esc(x.title)}</b><span class="meta">$${x.rent} · ${esc(x.area)}</span></span><button class="paid ${x.verified?'y':''}" data-a="adver" data-v="${x.id}">${x.verified?'✓ '+t('Verified','已核实'):t('Mark verified','标记核实')}</button></div>`).join('')||`<div class="note">${t('No published rooms yet.','还没有已发布的房源。')}</div>`}`}
+function adminHtml(){if(DB.on)return adminLive();const all=[...S.homes.map(x=>({k:'homes',x})),...S.jobs.map(x=>({k:'jobs',x}))],find=r=>(S[r.k]||[]).find(q=>q.id===r.id);
  const q=S.reports.filter(find);
  return `<h1>${t('Admin <em>desk.</em>','管理<em>后台。</em>')}</h1><div class="sub">${t('Only you would see this. In this demo it is open; the real one sits behind your login.','正式版只有你登录后可见，演示版暂时开放。')}</div>
  <div style="display:flex;gap:10px"><div class="stat"><b>${all.length}</b><span>${t('listings','条信息')}</span></div><div class="stat"><b>${q.length}</b><span>${t('reported','被举报')}</span></div><div class="stat"><b>${S.homes.filter(x=>x.verified).length}</b><span>${t('verified','已核实')}</span></div></div>
@@ -72,15 +84,15 @@ function squadForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Star
  <label>${t('Type','类型')}</label><select id="f_sport">${Object.keys(SPORT).map(k=>`<option value="${k}">${SPORT[k][0]} ${t(SPORT[k][1],SPORT[k][2])}</option>`).join('')}</select>
  <label>${t('Title','标题')}</label><input id="f_title" placeholder="${t('Thursday doubles','周四双打')}">
  <div class="g2"><div><label>${t('Suburb','区域')}</label><input id="f_area" placeholder="Sunnybank Hills"></div><div><label>${t('Venue / meeting point','场地/集合点')}</label><input id="f_venue" list="courtlist" autocomplete="off"><datalist id="courtlist">${COURTS.map(c=>`<option value="${esc(c.name)}">${esc(c.area)}</option>`).join('')}</datalist></div></div>
- <div class="g2"><div><label>${t('Date & time','日期时间')}</label><input id="f_start" type="datetime-local"></div><div><label>${t('Minutes','时长(分钟)')}</label><input id="f_mins" type="number" value="120"></div></div>
- <div class="g2"><div><label>${t('Level','水平')}</label><select id="f_level">${Object.keys(LEVEL).map(k=>`<option value="${k}">${t(LEVEL[k][0],LEVEL[k][1])}</option>`).join('')}</select></div><div><label>${t('Spots','人数')}</label><input id="f_cap" type="number" value="8"></div></div>
- <div class="g2"><div><label>${t('$ per person (0 = free)','人均 $（0=免费）')}</label><input id="f_price" type="number" value="15"></div><div><label>${t('Your PayID (optional)','你的 PayID（可选）')}</label><input id="f_payid"></div></div>
+ <div class="g2"><div><label>${t('Date & time','日期时间')}</label><input id="f_start" type="datetime-local"></div><div><label>${t('Minutes','时长(分钟)')}</label><input id="f_mins" type="number" inputmode="decimal" value="120"></div></div>
+ <div class="g2"><div><label>${t('Level','水平')}</label><select id="f_level">${Object.keys(LEVEL).map(k=>`<option value="${k}">${t(LEVEL[k][0],LEVEL[k][1])}</option>`).join('')}</select></div><div><label>${t('Spots','人数')}</label><input id="f_cap" type="number" inputmode="decimal" value="8"></div></div>
+ <div class="g2"><div><label>${t('$ per person (0 = free)','人均 $（0=免费）')}</label><input id="f_price" type="number" inputmode="decimal" value="15"></div><div><label>${t('Your PayID (optional)','你的 PayID（可选）')}</label><input id="f_payid"></div></div>
  ${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="f_host">`}
  <label>${t('Note','备注')}</label><textarea id="f_note" rows="2"></textarea>
  <button class="btn" data-a="create">${t('Publish squad','发布')}</button>`)}
 
 function taskForm(){openSheet(`<div class="tt" style="font-size:21px">${t('Post a task','发布任务')}</div>
- <label>${t('What do you need?','需要什么帮忙？')}</label><input id="k_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="k_area"></div><div><label>${t('Reward $','酬劳 $')}</label><input id="k_reward" type="number" value="30"></div></div>
+ <label>${t('What do you need?','需要什么帮忙？')}</label><input id="k_title"><div class="g2"><div><label>${t('Suburb','区域')}</label><input id="k_area"></div><div><label>${t('Reward $','酬劳 $')}</label><input id="k_reward" type="number" inputmode="decimal" value="30"></div></div>
  ${S.me?'':`<label>${t('Your name','你的名字')}</label><input id="k_by">`}<button class="btn" data-a="createtask">${t('Post','发布')}</button>`)}
 
 // ───────── poster (canvas → image; long-press to save) ─────────

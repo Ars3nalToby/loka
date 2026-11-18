@@ -17,8 +17,9 @@ function loadSb(){return new Promise((ok,no)=>{if(window.supabase&&window.supaba
 async function authInit(){if(!authReady())return;
  try{await loadSb();sb=window.supabase.createClient(AUTH.url,AUTH.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
   const {data}=await sb.auth.getSession();AUTHU=data.session?data.session.user:null;
-  sb.auth.onAuthStateChange((ev,session)=>{AUTHU=session?session.user:null;if(ev==='SIGNED_IN')afterSignIn();render()});
-  if(AUTHU)await needMfa();render()}catch(e){console.warn('Auth unavailable',e)}}
+  sb.auth.onAuthStateChange((ev,session)=>{const was=AUTHU&&AUTHU.id;AUTHU=session?session.user:null;if(ev==='SIGNED_IN')afterSignIn();render();
+   if((AUTHU&&AUTHU.id)!==was)setTimeout(dbLoad,0)});
+  if(AUTHU)await needMfa();render();dbLoad()}catch(e){console.warn('Auth unavailable',e)}}
 
 // ---------- Australian mobile numbers ----------
 // Accepts 0412 345 678, 412345678, +61 412 345 678, 61412345678. Returns +61412345678 or null.
@@ -32,13 +33,13 @@ function authSheet(step){const live=authReady(),dis=live?'':' disabled';step=ste
  const pre=live?'':`<div class="note warn"><b>${t('Preview only.','仅为预览。')}</b> ${t('Sign-in is built but not switched on yet: Loka’s own account database still has to be connected. Nothing you type here is sent anywhere.','登录功能已经做好，但还没启用：Loka 自己的账户数据库还没接上。这里输入的任何内容都不会被发送。')}</div>`;
  if(step==='code'){openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${t('Enter the 6-digit code','输入 6 位验证码')}</div>
   <div class="sub">${t('Sent to','已发送到')} <b>${esc(otpTo.kind==='phone'?showPhone(otpTo.v):otpTo.v)}</b>. ${t('It expires soon, so use it now.','验证码很快过期，请尽快输入。')}</div>
-  <input id="au_code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" class="otp" placeholder="••••••">
+  <input id="au_code" data-enter="au_verify" enterkeyhint="go" inputmode="numeric" autocomplete="one-time-code" maxlength="6" class="otp" placeholder="••••••">
   <button class="btn" data-a="au_verify">${t('Sign in','登录')}</button><button class="btn ghost" data-a="au_start">${t('Use a different email or number','换一个邮箱或号码')}</button>`);return}
  openSheet(`<div class="tt" style="font-size:26px;font-weight:900">${t('Sign in to Loka','登录 Loka')}</div>
  <div class="sub">${t('Needed to post a room, see contact details, report a listing or save across devices. Browsing never needs an account.','发布房源、查看联系方式、举报或跨设备收藏才需要登录。浏览房源不需要账户。')}</div>${pre}
  <label class="tick agree"><input type="checkbox" id="au_ok"${dis}><span>${t('I am 18 or older, and I have read the','我已年满 18 岁，并已阅读')} <a href="#" data-a="tab" data-v="privacy">${t('privacy notice','隐私说明')}</a> ${t('and','和')} <a href="#" data-a="tab" data-v="about">${t('listing rules','发布规则')}</a>.</span></label>
  ${AUTH.google?`<button class="authb g" data-a="au_google"${dis}><span class="gl">${GLOGO}</span>${t('Continue with Google','使用 Google 继续')}</button>`:''}
- ${AUTH.email?`<div class="or"><span>${t('or with your email','或用邮箱')}</span></div><input id="au_email" type="email" autocomplete="email" placeholder="you@example.com"${dis}><button class="authb" data-a="au_email"${dis}>${t('Email me a code','发验证码到邮箱')}</button>`:''}
+ ${AUTH.email?`<div class="or"><span>${t('or with your email','或用邮箱')}</span></div><input id="au_email" data-enter="au_email" enterkeyhint="send" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com"${dis}><button class="authb" data-a="au_email"${dis}>${t('Email me a code','发验证码到邮箱')}</button>`:''}
  ${AUTH.phone?`<div class="or"><span>${t('or with an Australian mobile','或用澳洲手机号')}</span></div><div class="phone"><span>+61</span><input id="au_phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="0412 345 678"${dis}></div><button class="authb" data-a="au_phone"${dis}>${t('Text me a code','短信发验证码')}</button><div class="fine">${t('Your number is only used to send sign-in codes. Loka will never send marketing texts.','手机号只用来发送登录验证码，Loka 绝不会发广告短信。')}</div>`:''}
  <div class="fine">${t('Loka never asks for ID documents, ID numbers or your date of birth.','Loka 不会要求你提供证件、证件号码或出生日期。')}</div>`)}
 
@@ -63,7 +64,7 @@ function afterSignIn(){needMfa()}
 // If the account has an authenticator app, ask for its code before treating the session as fully signed in.
 async function needMfa(){if(!sb)return false;const {data}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
  if(data&&data.currentLevel==='aal1'&&data.nextLevel==='aal2'){const {data:f}=await sb.auth.mfa.listFactors();const v=(f&&f.totp||[]).find(x=>x.status==='verified');
-  if(v){openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${ico('shield')} ${t('Two-step verification','两步验证')}</div><div class="sub">${t('Open your authenticator app and enter the 6-digit code for Loka.','打开验证器 app，输入 Loka 的 6 位验证码。')}</div><input id="mfa_code" class="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"><button class="btn" data-a="mfa_check" data-v="${v.id}">${t('Confirm','确认')}</button>`);return true}}return false}
+  if(v){openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${ico('shield')} ${t('Two-step verification','两步验证')}</div><div class="sub">${t('Open your authenticator app and enter the 6-digit code for Loka.','打开验证器 app，输入 Loka 的 6 位验证码。')}</div><input id="mfa_code" data-enter="mfa_check" enterkeyhint="go" class="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••"><button class="btn" data-a="mfa_check" data-v="${v.id}">${t('Confirm','确认')}</button>`);return true}}return false}
 
 // ---------- Account sheet ----------
 async function accountSheet(){if(!authReady()||!AUTHU)return authSheet();
