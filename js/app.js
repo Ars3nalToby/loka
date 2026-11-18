@@ -11,7 +11,7 @@ function render(){
   h+=`<section class="hposter">${petals()}<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
   <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
   <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
-  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span>${skyline()}</section>
+  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span><div class="sky">${panorama()}</div></section>
   <button class="landed" data-a="tab" data-v="landed"><span class="lb-p" aria-hidden="true">✈︎</span><span><b>${t('Just landed in Brisbane?','刚落地布里斯班？')}</b><i>${t('Airport to city, 50c transport, SIM, safe numbers. Works offline.','机场进城、50 分车资、手机卡、紧急电话。离线也能看。')}</i></span><em>→</em></button>
   ${liveStrip()}
   <div class="demo">${t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
@@ -33,6 +33,7 @@ function render(){
   </div>
   <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
   <button class="rcta" data-a="tab" data-v="rights"><span class="rc-b">${ibis(58,'walk')}</span><span><b>${t('Renter rights, one page','租客权益，一页看懂')}</b><i>${t('What the RTA can do, free advice lines, QCAT, and who to call first.','RTA 能做什么、免费咨询热线、QCAT，以及遇事先找谁。')}</i></span><em>→</em></button>
+  ${landmarksHtml()}
   ${slangCard()}
   <div class="res">${t('Loka is flagging','Loka 目前标记出')} <b>${bad}</b> ${t('sample listings that break a rule: bond over 4 weeks or pay under the minimum.','条违规示例：押金超过 4 周或时薪低于最低工资。')}</div><button class="link" data-a="tab" data-v="about">${t('How Loka works and the listing rules','Loka 怎么运作 · 发布规则')}</button>`;
   if(need.length)h+=`<div class="sec">${t('One spot short','就差一个')}</div>`+need.map(q=>`<button class="card" data-a="open" data-v="${q.id}"><div class="row"><div><div class="tt">${sp(q.sport)[0]} ${esc(q.title)}</div><div class="meta">${when(q.start)} · ${esc(q.area)}</div></div>${badge(q)}</div></button>`).join('');
@@ -138,6 +139,7 @@ document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b){if(e.target.id==='sheet')closeSheet();return}
  const a=b.dataset.a,v=b.dataset.v,q=S.squads.find(x=>x.id===v);
  if(a==='theme')return setTheme(!isDark(),b);
+ if(a==='lmrooms'){hf={...HF0,z:zone(v)};rview='map';mapSel='';tab='homes';render();scrollTo(0,0);return}
  if(a==='evf'){liveF=v;liveRepaint();return}
  if(a==='liver'){b.classList.add('spin1');liveLoad(true);return}
  if(a==='install')return doInstall();

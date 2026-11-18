@@ -25,24 +25,6 @@ function ibis(size,mood,label){size=size||64;
  <g class="head"><circle cx="20" cy="15" r="7" fill="#191512"/><path d="M15 17C10 21 6 28 4 36" fill="none" stroke="#191512" stroke-width="3" stroke-linecap="round"/>
  <circle cx="21.5" cy="13.5" r="2.2" fill="#fff"/><circle cx="22" cy="13.6" r="1.1" fill="#191512"/><circle cx="23.5" cy="18" r="1.8" fill="#F2A7A0" opacity=".9"/></g></g></svg>`}
 
-// Skyline strip for the bottom of the home poster: the river, a CityCat, the Story Bridge with
-// twinkling lights, a Queenslander on stumps, a palm, a big wheel and Bin Bin on the bank.
-// Brisbane clock, whatever the phone's own time zone is. Queensland has no daylight saving.
-function brisHour(){try{return +new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Brisbane',hour:'numeric',hourCycle:'h23'}).format(new Date())}catch(e){return new Date().getHours()}}
-const isNight=()=>{const h=brisHour();return h>=19||h<6};
-function skyline(){const L='#F4F0E7',night=isNight()||(typeof isDark==='function'&&isDark()),lights=[60,74,88,102,116,130,144].map((x,i)=>`<circle class="tw" style="--t:${i*.35}s" cx="${x}" cy="${i%2?35:33}" r="1.3" fill="#F4C766"/>`).join('');
- const stars=[[20,10],[52,4],[96,12],[140,6],[176,14],[248,8],[300,4],[336,14],[120,22],[70,24]].map(([x,y],i)=>`<circle class="star" style="--t:${(i*.37).toFixed(2)}s" cx="${x}" cy="${y}" r="${i%3?.8:1.2}" fill="#FFF3D6"/>`).join('');
- return `<div class="sky${night?' night':''}" aria-hidden="true"><svg viewBox="0 0 360 86" preserveAspectRatio="xMidYMax meet">
- ${night?`<g class="stars">${stars}</g><g class="moon"><circle cx="160" cy="12" r="7" fill="#FFF3D6"/><circle cx="163" cy="10" r="6" fill="#1d6a56"/></g>`:''}
- <g opacity=".22" fill="${L}"><rect x="180" y="20" width="12" height="44"/><rect x="194" y="8" width="10" height="56"/><rect x="206" y="26" width="14" height="38"/><rect x="222" y="14" width="9" height="50"/><rect x="233" y="30" width="12" height="34"/></g>
- <g class="wheel" opacity=".55"><g class="spin-w"><circle cx="270" cy="38" r="17" fill="none" stroke="${L}" stroke-width="1.4"/>${[0,30,60,90,120,150].map(a=>`<path d="M${(270+17*Math.cos(a*Math.PI/180)).toFixed(1)} ${(38+17*Math.sin(a*Math.PI/180)).toFixed(1)}L${(270-17*Math.cos(a*Math.PI/180)).toFixed(1)} ${(38-17*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="${L}" stroke-width=".6"/>`).join('')}${[0,60,120,180,240,300].map(a=>`<circle cx="${(270+17*Math.cos(a*Math.PI/180)).toFixed(1)}" cy="${(38+17*Math.sin(a*Math.PI/180)).toFixed(1)}" r="2" fill="#F4C766"/>`).join('')}</g><path d="M262 64L270 38L278 64" fill="none" stroke="${L}" stroke-width="1.4"/></g>
- <g class="bridge" fill="none" stroke="${L}" stroke-width="1.6" opacity=".8"><path d="M30 46H170"/><path d="M48 46L74 22L100 46L126 22L152 46"/><path d="M74 22V58M126 22V58"/><path d="M58 46L74 30L90 46M110 46L126 30L142 46" stroke-width=".8"/>${lights}</g>
- <g class="qlder" opacity=".9"><path d="M298 44L318 32L338 44Z" fill="#E2683C"/><rect x="302" y="44" width="32" height="12" fill="${L}"/><path d="M302 49H334" stroke="#1F6F5C" stroke-width=".8"/><path d="M306 56V64M318 56V64M330 56V64" stroke="${L}" stroke-width="1.6"/><rect x="314" y="46" width="7" height="6" fill="#F4C766" class="glow"/>${night?`<g class="possum"><ellipse cx="327" cy="37.5" rx="4.5" ry="3" fill="#8f8a84"/><circle cx="323" cy="35.5" r="2.6" fill="#a5a09a"/><circle cx="321.6" cy="33.4" r="1" fill="#a5a09a"/><circle cx="324.4" cy="33.4" r="1" fill="#a5a09a"/><circle class="eye" cx="322.3" cy="35.4" r=".55" fill="#F4C766"/><circle class="eye" cx="323.9" cy="35.4" r=".55" fill="#F4C766"/><path d="M331 38c3 0 4 3 2 5" stroke="#5e5953" stroke-width="1.4" fill="none" stroke-linecap="round"/></g>`:''}</g>
- <g class="palm"><path d="M350 64C349 54 350 46 352 40" stroke="#c9a46a" stroke-width="2" fill="none"/><g class="frond" fill="#2f9a7f"><path d="M352 40C346 36 340 38 337 42C343 39 348 40 352 40Z"/><path d="M352 40C358 35 364 37 366 41C360 38 356 39 352 40Z"/><path d="M352 40C350 33 353 29 357 28C354 32 353 36 352 40Z"/></g></g>
- <path d="M0 64C60 60 120 68 180 64S300 60 360 64V86H0Z" fill="#185a4a"/><path class="ripple" d="M0 70C40 68 80 72 120 70S200 68 240 71S320 69 360 70" stroke="#2f9a7f" stroke-width="1.2" fill="none" opacity=".7"/>
- <g class="cat"><path d="M0 69H26L22 74H4Z" fill="${L}"/><rect x="6" y="63" width="15" height="6" rx="2" fill="${L}"/><path d="M8 65H19" stroke="#1F6F5C" stroke-width="1.6" stroke-dasharray="2 1.2"/><path d="M-6 72H-1M-10 74H-3" stroke="${L}" stroke-width=".8" opacity=".6"/></g>
- <g transform="translate(150 38) scale(.5)">${ibis(64,'idle')}</g></svg></div>`}
-
 // The small CityCat that sails up and down the map river. Skipped for Reduce Motion and still maps.
 function mapBoat(pathId){if(typeof REDUCED!=='undefined'&&REDUCED.matches)return'';
  return `<g class="mboat" aria-hidden="true"><g transform="scale(.9)"><path d="M-9 0H9L6 4H-6Z" fill="#fff" stroke="#1F6F5C" stroke-width="1"/><rect x="-5" y="-4" width="10" height="4" rx="1.4" fill="#1F6F5C"/></g><animateMotion dur="38s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.5;1" calcMode="linear"><mpath href="#${pathId}"/></animateMotion></g>`}
@@ -59,3 +41,54 @@ let slangOff=0;
 function slangIdx(){const d=Math.floor((Date.now()+10*36e5)/864e5);return (d+slangOff)%SLANG.length}
 function slangCard(){const w=SLANG[slangIdx()];
  return `<button class="slang" data-a="slang" aria-label="${t('Next Brissie word','下一个布村用语')}"><span class="sl-k">${t('Brissie word','布村用语')} · ${slangIdx()+1}/${SLANG.length}</span><span class="sl-w">${esc(w[0])}</span><span class="sl-m">${esc(t(w[1],w[2]))}</span><span class="sl-e">“${esc(w[3])}”</span><span class="sl-n">${t('Tap for another','点一下换一个')} ↻</span></button>`}
+
+// ───────── Brisbane panorama (18 Nov 2026) ─────────
+// The river skyline as seen from the south bank, left to right in real order: Mt Coot-tha and its
+// TV masts, Kurilpa Bridge, Queen's Wharf with the Sky Deck and the Neville Bonner Bridge, the CBD,
+// City Hall's clock tower, South Bank's wheel and Streets Beach, the Story Bridge landing on the
+// Kangaroo Point Cliffs. Original line drawing. Colours come from CSS (currentColor, --rv) so the
+// same art works on the green poster, on cream cards and in dark mode. o.vb crops it for the
+// landmark cards, so every card is a window onto the same city.
+function panorama(o){o=o||{};const night=o.night!=null?o.night:(isNight()||(typeof isDark==='function'&&isDark()));
+ const P=(d,c)=>`<path d="${d}" class="${c}"/>`,R=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" class="${c}"/>`;
+ // Story Bridge top chord: approach, up to the north pier, down the cantilever arm, the suspended span, and back
+ const sbTop='M286 56 L300 43 L312 30 L324 42 L332 49 L348 49 L356 42 L368 30 L380 43 L394 56',sbDeck='M282 56 H398';
+ const web=[[300,43,306,56],[312,30,306,56],[312,30,318,56],[324,42,318,56],[324,42,330,56],[332,49,340,56],[348,49,340,56],[356,42,350,56],[356,42,362,56],[368,30,362,56],[368,30,374,56],[380,43,374,56],[380,43,388,56],[300,43,294,56]].map(([a,b,c,d])=>`M${a} ${b}L${c} ${d}`).join('');
+ const sbLights=[[300,43],[306,36.5],[312,30],[318,36],[324,42],[332,49],[340,49],[348,49],[356,42],[362,36],[368,30],[374,36.5],[380,43]].map(([x,y],i)=>`<circle class="tw" style="--t:${(i*.21).toFixed(2)}s" cx="${x}" cy="${y}" r="1.1"/>`).join('');
+ const nbCables=[150,156,170,178,186,194].map(x=>`M166 32L${x} ${(70+((x-146)/60)*2-Math.sin((x-146)/60*Math.PI)*4).toFixed(1)}`).join('');
+ const kurilpa=[[76,72,70,52],[76,72,84,54],[90,72,86,50],[90,72,98,55],[104,72,100,53],[104,72,110,57]];
+ const wheelSpokes=[0,30,60,90,120,150].map(a=>{const r=a*Math.PI/180,c=Math.cos(r)*16,s=Math.sin(r)*16;return `M${(262+c).toFixed(1)} ${(52+s).toFixed(1)}L${(262-c).toFixed(1)} ${(52-s).toFixed(1)}`}).join('');
+ const gond=[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<circle cx="${(262+Math.cos(r)*16).toFixed(1)}" cy="${(52+Math.sin(r)*16).toFixed(1)}" r="1.7" class="pv-gold"/>`}).join('');
+ const stars=night?[[14,12],[60,6],[96,14],[150,6],[200,10],[244,5],[300,12],[340,6],[388,10],[120,26]].map(([x,y],i)=>`<circle class="star" style="--t:${(i*.37).toFixed(2)}s" cx="${x}" cy="${y}" r="${i%3?.7:1.1}" fill="#FFF3D6"/>`).join('')+`<g class="moon"><circle cx="232" cy="12" r="6" fill="#FFF3D6"/><circle cx="234.6" cy="10.4" r="5.2" class="pv-sky"/></g>`:'';
+ const towerWin=(x,y,w,h)=>`<path d="${Array.from({length:Math.floor(h/4)},(_,i)=>`M${x+1.5} ${y+3+i*4}H${x+w-1.5}`).join('')}" class="pv-win"/>`;
+ return `<svg class="pano${night?' night':''}" viewBox="${o.vb||'0 0 400 100'}" preserveAspectRatio="${o.par||'xMidYMax meet'}" aria-hidden="true">${o.vb?`<rect x="-10" y="-10" width="420" height="120" class="pv-sky"/>`:''}${stars}
+ ${P('M0 70C18 50 44 42 70 51S100 66 116 72V78H0Z','pv-hill')}
+ <g class="pv-masts">${[[34,47,26],[44,45,21],[56,49,29]].map(([x,b,t])=>`<path d="M${x} ${b}V${t}M${x-2.5} ${b}L${x} ${t+6}L${x+2.5} ${b}" class="pv-line thin"/><circle class="blink" cx="${x}" cy="${t}" r="1.2"/>`).join('')}</g>
+ <g class="pv-cbd">${[[176,34,10],[188,22,9],[199,40,8],[228,26,10],[240,36,9],[251,46,8],[155,42,8]].map(([x,y,w])=>R(x,y,w,78-y,'pv-back')).join('')}</g>
+ <g class="pv-qw">${R(114,30,11,48,'pv-solid')}${R(127,26,12,52,'pv-solid')}${R(141,35,8,43,'pv-solid')}${towerWin(114,30,11,48)}${towerWin(127,26,12,52)}${towerWin(141,35,8,43)}
+  <path d="M107 27Q127 20 149 24V27.6Q127 24 107 30.4Z" class="pv-deck"/><path d="M110 29.6Q127 25 147 27.2" class="pv-glow"/></g>
+ <g class="pv-hall">${R(204,58,24,20,'pv-solid')}${R(212.5,33,7,25,'pv-solid')}<path d="M211.5 33.5Q216 26 220.5 33.5Z" class="pv-solid"/><path d="M216 27V21" class="pv-line thin"/><circle cx="216" cy="38" r="2" class="pv-gold clock"/><path d="M207 62V76M211 62V76M221 62V76M225 62V76" class="pv-cut"/><path class="flag" d="M216 21h4l-1 1.6 1 1.6h-4z"/></g>
+ <g class="pv-kur">${kurilpa.map(([a,b,c,d])=>`<path d="M${a} ${b}L${c} ${d}" class="pv-line"/>`).join('')}<path d="M70 52L90 72M84 54L76 72M86 50L104 72M98 55L90 72M100 53L110 57" class="pv-line hair"/>${P('M66 72H116','pv-line')}</g>
+ <g class="pv-nb">${P('M146 70Q176 64 206 72','pv-line')}<path d="M160 70L166 32" class="pv-line thick"/><path d="${nbCables}" class="pv-line hair"/></g>
+ <g class="pv-sb">${P('M236 74Q258 69 290 74V78H236Z','pv-sand')}<g class="wheel"><g class="spin-w"><circle cx="262" cy="52" r="16" class="pv-line"/><path d="${wheelSpokes}" class="pv-line hair"/>${gond}</g><path d="M255 72L262 52L269 72" class="pv-line"/></g>
+  ${[[242,74],[284,74]].map(([x,y])=>`<g class="palm"><path d="M${x} ${y}C${x-1} ${y-7} ${x} ${y-12} ${x+2} ${y-16}" class="pv-trunk"/><g class="frond" style="transform-origin:${x+2}px ${y-16}px"><path d="M${x+2} ${y-16}C${x-4} ${y-20} ${x-9} ${y-18} ${x-11} ${y-14}C${x-5} ${y-17} ${x-1} ${y-16} ${x+2} ${y-16}Z" class="pv-leaf"/><path d="M${x+2} ${y-16}C${x+8} ${y-21} ${x+13} ${y-19} ${x+15} ${y-15}C${x+9} ${y-18} ${x+5} ${y-17} ${x+2} ${y-16}Z" class="pv-leaf"/><path d="M${x+2} ${y-16}C${x} ${y-23} ${x+3} ${y-27} ${x+7} ${y-27}C${x+4} ${y-24} ${x+3} ${y-20} ${x+2} ${y-16}Z" class="pv-leaf"/></g></g>`).join('')}</g>
+ <g class="pv-cliff">${P('M374 60H400V78H372Z','pv-rock')}<path d="M378 62V77M383 61V77M388 62V77M393 61V77M397 62V77" class="pv-cut"/>${P('M372 61Q386 56 400 59V62H374Z','pv-leaf')}</g>
+ <g class="pv-story"><path d="M312 56V78M368 56V78" class="pv-line pier"/><path d="${sbTop}" class="pv-line thick"/><path d="${sbDeck}" class="pv-line"/><path d="${web}" class="pv-line hair"/><path d="M312 30V56M368 30V56" class="pv-line"/>${sbLights}</g>
+ ${P('M0 78H400V100H0Z','pv-river')}<path class="ripple" d="M0 84C40 82 80 86 120 84S200 82 240 85S320 83 400 84" fill="none" stroke-width="1.2"/>
+ <path d="M186 79h46M300 80h36M60 81h28" class="pv-refl"/>
+ <g class="cat"><path d="M0 83H26L22 88H4Z" class="pv-boat"/><rect x="6" y="77" width="15" height="6" rx="2" class="pv-boat"/><path d="M8 79H19" stroke="#1F6F5C" stroke-width="1.6" stroke-dasharray="2 1.2"/></g>
+ <g transform="translate(290 58) scale(.32)">${ibis(64,'idle')}</g></svg>`}
+
+// Landmark cards: each a crop of the panorama, with a checked fact and a way into rooms nearby.
+const LANDMARKS=[
+ {k:'story',vb:'274 26 130 57',area:'Kangaroo Point',en:'Story Bridge',zh:'故事桥 Story Bridge',f:['Opened on 6 July 1940; Australia’s longest cantilever bridge. It lands on the Kangaroo Point Cliffs.','1940 年 7 月 6 日通车，澳洲最长的悬臂桥，南端落在 Kangaroo Point 悬崖上。']},
+ {k:'qw',vb:'100 16 140 61',area:'Brisbane City',en:'Queen’s Wharf',zh:'皇后码头 Queen’s Wharf',f:['The Sky Deck is open to the public more than 100 m above the river. The Neville Bonner Bridge (opened August 2024) walks you to South Bank; its mast is 75 m, as tall as the Story Bridge.','Sky Deck 离河面 100 多米，对公众开放。Neville Bonner 步行桥 2024 年 8 月开通，走过去就是 South Bank；桥塔高 75 米，和 Story Bridge 一样高。']},
+ {k:'hall',vb:'160 17 143 62',area:'Brisbane City',en:'City Hall',zh:'市政厅 City Hall',f:['Free Clock Tower Tours run from the Museum of Brisbane inside City Hall. Check Today in Brisbane for the next one.','市政厅里的 Museum of Brisbane 有免费钟楼导览，下一场可以在“今日布村”查。']},
+ {k:'sb',vb:'220 34 104 46',area:'South Brisbane',en:'South Bank',zh:'南岸 South Bank',f:['The big wheel, Streets Beach (a free swimming lagoon) and the riverside parklands, right across from the CBD.','摩天轮、免费的人工沙滩泳池 Streets Beach，还有河边公园，就在市中心对岸。']},
+ {k:'coot',vb:'0 18 140 61',area:'Toowong',en:'Mt Coot-tha & Kurilpa',zh:'Mt Coot-tha 与 Kurilpa 桥',f:['The TV masts on Mt Coot-tha mark the lookout and the Botanic Gardens (free guided walks). Kurilpa’s spiky masts carry walkers and bikes from the CBD to South Brisbane.','Mt Coot-tha 上的电视塔旁边是观景台和植物园（有免费导览）。Kurilpa 桥的尖桅杆连接市中心和 South Brisbane，只给行人和单车走。']}];
+function landmarksHtml(){const night=isNight()||isDark();
+ return `<div class="sec row2"><span>${t('Brisbane landmarks','布村地标')}</span><span class="cnt">${LANDMARKS.length}</span></div><div class="lms">${LANDMARKS.map((l,i)=>`<div class="lm${night?' night':''}" style="--i:${i}"><div class="lm-art">${panorama({vb:l.vb,par:'xMidYMid meet',night})}</div><div class="lm-b"><b>${t(l.en,l.zh)}</b><p>${t(l.f[0],l.f[1])}</p><button class="mini-btn" data-a="lmrooms" data-v="${esc(l.area)}">${ico('house')} ${t('Rooms near here','附近房源')}</button></div></div>`).join('')}</div>`}
+
+// Brisbane clock, whatever the phone's own time zone is. Queensland has no daylight saving.
+function brisHour(){try{return +new Intl.DateTimeFormat('en-AU',{timeZone:'Australia/Brisbane',hour:'numeric',hourCycle:'h23'}).format(new Date())}catch(e){return new Date().getHours()}}
+function isNight(){const h=brisHour();return h>=19||h<6}
