@@ -29,7 +29,7 @@ function eventUrls(now) {
 const SRC = {
   events: { ttl: 900, urls: eventUrls },
   transit: { ttl: 300, urls: () => ['https://translink.com.au/service-updates/rss'] },
-  weather: { ttl: 300, urls: () => ['https://www.bom.gov.au/fwo/IDZ00056.warnings_qld.xml'] }
+  weather: { ttl: 300, urls: () => ['https://reg.bom.gov.au/fwo/IDZ00056.warnings_qld.xml'] }
 };
 
 const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
