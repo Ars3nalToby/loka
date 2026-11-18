@@ -32,6 +32,7 @@ Antigravity). Only one works at a time. These rules keep the relay from breaking
 
 1. Run `node --test` from the repo root; all tests must pass. If you touched sw.js, the manifest
    or anything offline, also run `python3 tests/e2e/pwa_check.py` (Playwright) and read its output.
+   If you touched layout or CSS, run `QUICK=1 python3 tests/e2e/clip_audit.py`; it must say ISSUES 0.
    Then test in a browser at 390px wide, in English and in 中文.
 2. Bump `VERSION` in `sw.js` and update its `SHELL` list if files were added or renamed.
 3. Tick the task in `docs/ROADMAP.md` and add one line under "Log" in `HANDOFF.md`:

@@ -90,4 +90,4 @@ function mapPreview(){const list=filtHomes(),x=list.find(h=>h.id===mapSel);
  if(!x)return `<div class="mprev empty">${ico('pin')} ${list.length?t(`Tap a price to preview. ${list.length} rooms on the map.`,`点价格预览房源。地图上共有 ${list.length} 个房源。`):t('No rooms match these filters.','没有符合筛选的房源。')}</div>`;
  const km=hf.c?homeKm(x,hf.c):null;
  return `<button class="mprev" data-a="home" data-v="${x.id}"><div class="pic">${art(x)}</div><div class="mpb"><div class="mpt"><span class="price">$${x.rent}<small>/${t('wk','周')}</small></span>${checkBadge(x).replace(/<(\/?)button/g,'<$1span').replace(/ data-a="vinfo"/,'').replace('class="vf','class="vf in')}</div>
- <div class="tt">${esc(x.title)}</div><div class="meta">${ico('pin')} ${esc(x.area)}${km!=null?` · ≈ ${km.toFixed(1)} km ${t('to','到')} ${CAMPUS_SHORT[hf.c]}`:''}</div><span class="go">${t('View room','查看房源')} →</span></div></button>`}
+ <div class="tt">${esc(ttl(x.title))}</div><div class="meta">${ico('pin')} ${esc(x.area)}${km!=null?` · ≈ ${km.toFixed(1)} km ${t('to','到')} ${CAMPUS_SHORT[hf.c]}`:''}</div><span class="go">${t('View room','查看房源')} →</span></div></button>`}

@@ -2,6 +2,10 @@
 // Classic script: shares global scope with the other js/ files. Load order is set in index.html.
 // ───────── helpers ─────────
 const t=(en,zh)=>S.lang==='zh'?zh:en;
+// A lister may write a title in both languages, "English · 中文". Show the half that matches the reader's
+// language (the lister's own words; nothing is translated). Any other title is shown exactly as written.
+const CJK=/[\u3400-\u9fff]/;
+function ttl(s){s=String(s||'');const p=s.split(' · ');if(p.length!==2)return s;const z=p.findIndex(x=>CJK.test(x));if(z<0||CJK.test(p[1-z]))return s;return S.lang==='zh'?p[z]:p[1-z]}
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SPORT={bad:['🏸','Badminton','羽毛球'],run:['🏃','Run','跑步'],ride:['🚴','Ride','骑行'],social:['🍲','Social','饭局/社交']};
 const LEVEL={easy:['Easy / social','养生'],mid:['Intermediate','中级'],hard:['Hard / fast','拉练']};
