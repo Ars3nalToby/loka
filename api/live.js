@@ -27,9 +27,11 @@ function eventUrls(now) {
   return [0, 100].map(off => `${ODS}?select=${FIELDS}&where=${encodeURIComponent(where)}&order_by=start_datetime&limit=100&offset=${off}`);
 }
 const SRC = {
-  events: { ttl: 900, urls: eventUrls },
-  transit: { ttl: 300, urls: () => ['https://translink.com.au/service-updates/rss'] },
-  weather: { ttl: 300, urls: () => ['https://reg.bom.gov.au/fwo/IDZ00056.warnings_qld.xml'] }
+  // ttl: seconds Vercel's edge may reuse a copy. swr: extra seconds it may hand out the old copy while
+  // fetching a new one. Safety feeds (transport, weather warnings) are kept within a few minutes.
+  events: { ttl: 600, swr: 1200, urls: eventUrls },
+  transit: { ttl: 180, swr: 60, urls: () => ['https://translink.com.au/service-updates/rss'] },
+  weather: { ttl: 180, swr: 60, urls: () => ['https://reg.bom.gov.au/fwo/IDZ00056.warnings_qld.xml'] }
 };
 
 const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
@@ -90,7 +92,7 @@ async function handler(req, res) {
     if (k === 'events') items = shapeEvents(await Promise.all(urls.map(u => get(u, true).catch(() => null))));
     else items = parseRss(await get(urls[0], false), k === 'transit' ? 'translink.com.au' : 'bom.gov.au', k === 'transit' ? 80 : 40);
     if (k === 'events' && !items.length) throw new Error('empty');
-    res.setHeader('Cache-Control', `public, max-age=60, s-maxage=${src.ttl}, stale-while-revalidate=${src.ttl * 6}`);
+    res.setHeader('Cache-Control', `public, max-age=60, s-maxage=${src.ttl}, stale-while-revalidate=${src.swr}`);
     return res.status(200).end(JSON.stringify({ k, at: new Date().toISOString(), items }));
   } catch (e) {
     res.setHeader('Cache-Control', 'no-store');

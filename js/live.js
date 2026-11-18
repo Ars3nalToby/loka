@@ -11,9 +11,11 @@ const bneDay=d=>new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',mont
 const bneTime=d=>new Intl.DateTimeFormat(S.lang==='zh'?'zh-CN':'en-AU',{timeZone:TZ,hour:'numeric',minute:'2-digit',hour12:S.lang!=='zh'}).format(d).replace(' ','');
 function agoT(iso){const m=Math.max(0,Math.round((Date.now()-Date.parse(iso))/6e4));return m<1?t('just now','刚刚'):m<60?t(`${m} min ago`,`${m} 分钟前`):t(`${Math.round(m/60)} h ago`,`${Math.round(m/60)} 小时前`)}
 
+// How old (ms) each feed may get on screen before Loka asks again. Safety feeds are refreshed sooner.
+const LIVE_FRESH={events:10*6e4,transit:3*6e4,weather:3*6e4};
 async function liveLoad(force){if(liveLoading)return;liveLoading=true;
  await Promise.all(['events','transit','weather'].map(async k=>{
-  if(!force&&LIVE[k]&&Date.now()-LIVE_AT[k]<5*6e4)return;
+  if(!force&&LIVE[k]&&Date.now()-LIVE_AT[k]<LIVE_FRESH[k])return;
   try{const r=await fetch('/api/live?k='+k,{signal:AbortSignal.timeout?AbortSignal.timeout(12000):undefined});const j=await r.json();
    if(!r.ok||!Array.isArray(j.items))throw new Error(j.error||'error');LIVE[k]={at:j.at,items:j.items};LIVE_AT[k]=Date.now();delete LIVE_ERR[k];liveSave()}
   catch(e){const c=liveSaved()[k];if(c&&!LIVE[k]){LIVE[k]={at:c.at,items:c.items,saved:true};LIVE_AT[k]=0}else LIVE_ERR[k]=true}}));
@@ -72,3 +74,16 @@ function todayBody(){const ev=LIVE.events&&LIVE.events.items,today=bneDay(new Da
  return h}
 
 function todayHtml(){liveLoad();return `<section class="thero"><div><span class="kick"><i class="live-dot"></i>${t('Live from official sources','官方来源 · 实时')}</span><h1>${t('Today in<br><em>Brisbane.</em>','今日<br><em>布村。</em>')}</h1><div class="td">${esc(new Intl.DateTimeFormat(S.lang==='zh'?'zh-CN':'en-AU',{timeZone:TZ,weekday:'long',day:'numeric',month:'long'}).format(new Date()))}</div></div><button class="refresh" data-a="liver" aria-label="${t('Refresh','刷新')}">↻</button></section><div id="livebox">${todayBody()}</div>`}
+// Keep "Today in Brisbane" fresh in a tab or home-screen app that was left open or in the background:
+// refresh when Loka comes back to the screen, and every 3 minutes while it is on screen.
+// Listings refresh too (db.js), at most every 5 minutes.
+let DB_AT=0;
+// Never redraw under someone's fingers: skip while a form sheet is open or a field is being typed in.
+const busyTyping=()=>{const f=document.activeElement;return !!(f&&f.matches&&f.matches('input,textarea,select'))||!!document.querySelector('#sheet.on input,#sheet.on textarea')};
+function freshen(){if(document.visibilityState!=='visible'||!navigator.onLine||busyTyping())return;
+ if(['home','today','guides'].includes(tab))liveLoad();
+ if(typeof dbLoad==='function'&&Date.now()-DB_AT>5*6e4){DB_AT=Date.now();dbLoad()}}
+document.addEventListener('visibilitychange',freshen);
+addEventListener('pageshow',e=>{if(e.persisted)freshen()});
+addEventListener('online',freshen);
+setInterval(freshen,3*6e4);

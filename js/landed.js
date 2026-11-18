@@ -47,7 +47,8 @@ function landedHtml(){const tel=n=>`<a class="mini-btn" href="tel:${n.replace(/\
 // ───────── Service worker: register, tell people about updates, and the "Loka check-up" ─────────
 function swOK(){return 'serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')}
 function swRegister(){if(!swOK())return;const had=!!navigator.serviceWorker.controller;
- navigator.serviceWorker.register('sw.js').catch(()=>{});
+ navigator.serviceWorker.register('sw.js').then(reg=>{let last=Date.now();
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-last>36e5){last=Date.now();reg.update().catch(()=>{})}})}).catch(()=>{});
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!document.getElementById('upd')){const d=document.createElement('div');d.id='upd';d.className='upd';
   d.innerHTML=`<span>${t('Loka was updated.','Loka 已更新。')}</span><button data-a="reload">${t('Refresh','刷新')}</button>`;document.body.appendChild(d)}})}
 function swAsk(msg){return new Promise(res=>{const c=navigator.serviceWorker&&navigator.serviceWorker.controller;if(!c)return res(null);const ch=new MessageChannel();
