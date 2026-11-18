@@ -20,6 +20,7 @@ function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl
  ${priceMeter(x)}${ladderHtml(x)}
  ${(()=>{const js=S.jobs.filter(j=>zone(j.area)===zone(x.area)&&!jobFlags(j).length).sort((a,b)=>wk(b)-wk(a)).slice(0,3);return js.length?`<div class="sec">${t('Jobs that could pay for it','能撑起这份房租的工作')}</div>`+js.map(j=>`<button class="mini" data-a="job" data-v="${j.id}"><span><b>${esc(j.title)}</b><i>${esc(j.area)} · ≈ $${wk(j)}/${t('wk before tax','周（税前）')}</i></span><em class="${x.rent/wk(j)<=.4?'gd':'bd'}">${Math.round(x.rent/wk(j)*100)}%<small>${t('of pay','占收入')}</small></em></button>`).join('')+`<div class="note">${t('Share of that job’s weekly pay this rent would take. Under about a third is comfortable.','这份房租占该工作周薪的比例，三分之一以内比较宽松。')}</div>`:''})()}
  <div class="sec">${t('Contact','联系方式')}</div><div class="tt">${esc(x.contact)}</div><div class="meta">${t('Listed by','发布人')} ${esc(x.by)}${x.role&&ROLE[x.role]?' · '+t(ROLE[x.role][0],ROLE[x.role][1]):''}</div>
+ <button class="btn share" data-a="share" data-v="${x.id}">${ico('share')} ${t('Share to Instagram, Threads, WeChat','分享到 Instagram、Threads、微信')}</button>
  <button class="btn ghost" data-a="enq" data-v="${x.id}">${t('Copy a ready enquiry message','复制一段现成的询问信息')}</button>
  <button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>
  <button class="btn" data-a="fav" data-k="homes" data-v="${x.id}" data-re="home">${isSaved('homes',x.id)?t('Saved ♥','已收藏 ♥'):t('Save this home','收藏')}</button>

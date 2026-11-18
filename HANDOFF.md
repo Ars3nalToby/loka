@@ -66,6 +66,7 @@ function. Top-level `let`/`const` names must stay unique across all files.
 | `js/art.js` | `art(listing)`: illustrated room scenes (perspective room, window view by zone, day/dusk/night). Stand-in until real photos (O4). |
 | `js/suburbs.js` | `SUBURB_DATA` (53 suburbs, 4 zones, 5 campuses, approx. lat/lng), `ZONE`, `ZN`, `SUB()`. Single source of truth for suburbs. |
 | `js/check.js` | Loka Check: `lokaCode` (daily code), `CHECKS`, `checkState`, `checkBadge`, `ladderHtml`, renter steps `RSTEPS`/`renterHtml`, `inspHtml`, `priceMeter` |
+| `js/share.js` | Share sheet: Threads Post Intent, Instagram story image (canvas 1080x1920 + QR via `js/vendor/qrcode.js`, MIT, kazuhikoarase) through the Web Share API, copy text/link; `#/room/<id>` deep links (`openFromHash`). See `docs/SOCIAL.md`. |
 | `js/map.js` | Drawn Brisbane map: `mapSvg` (zones as hulls, river, M1, campuses, room pins), `mapLegend`, `ZCOL` zone colours |
 | `js/rooms.js` | `listHomes`, `homeDetail`, `matchSheet`, `compareHtml`, `enqText`, `verifiedSheet`, `verifyForm`, `homeForm` |
 | `js/jobs.js` | `listJobs`, `jobDetail`, `jobForm` |
@@ -198,3 +199,9 @@ One line per session: date, model, what changed, what the next assistant must kn
   presented as travel time). Type / price / other filters fold into a `<details class="moref">`
   drawer (`hfOpen`, `hfCount`). Home map pins and zone chips now open the Rooms map zoomed
   in. `filtHomes()` in rooms.js is the one place the room filters live. SW `loka-v8`.
+- 18 Nov 2026 · Claude Opus 5.5 · **Instagram + Threads sharing** (`js/share.js`,
+  `docs/SOCIAL.md`). Threads = official Post Intent; Instagram = generated story image via the
+  share sheet (download fallback), link copied for a Link sticker; story content kept inside
+  Instagram's top/bottom 250px safe zones; QR verified to decode to the room link. Room deep
+  links `#/room/<id>`. Follow buttons need real handles in `BRAND.instagram` / `BRAND.threads`
+  (empty = hidden). Auto-posting is documented, not built (needs O2). 22 tests. SW `loka-v9`.

@@ -211,6 +211,10 @@ Write those two attempts as a script in `tests/` and record the result in `HANDO
 
 ### [ ] S4. One link per room, and a share card (Sonnet)
 
+> Mostly done 18 Nov 2026 (Opus): `#/room/<id>` links, share sheet with Threads, Instagram
+> story image with QR, WeChat text (see `docs/SOCIAL.md`). **Still to do:** `#/job/`,
+> `#/suburb/`, `#/zone/` routes, and testing inside WeChat's own browser on a real phone.
+
 - Hash routes: `#/room/<id>`, `#/job/<id>`, `#/suburb/<name>`, `#/zone/<id>`. Opening a
   room link shows that room directly.
 - "Share" on a room: copy link, copy bilingual text, and a downloadable 1080x1440 image

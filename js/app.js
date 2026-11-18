@@ -75,7 +75,7 @@ function render(){
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
  if(tab==='ask')h+=askHtml();
- if(tab==='about')h+=back+aboutHtml();
+ if(tab==='about')h+=back+aboutHtml()+followHtml();
  if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
  if(tab==='guide'){
   h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
@@ -143,6 +143,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='mz'){hf={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:v};rview='map';mapSel='';tab='homes';render();scrollTo(0,0)}
  if(a==='hz'){hf.z=hf.z===v?'':v;render()}
  if(a==='rv'){rview=v;mapSel='';render()}
+ if(a==='share')shareSheet(v)
+ if(a==='shig')shareInstagram(v)
+ if(a==='shtext'){const x=S.homes.find(h=>h.id===v);copy(shareText(x)+'\n'+roomUrl(v),t('Copied. Paste it into WeChat or 小红书.','已复制，粘贴到微信或小红书即可。'))}
+ if(a==='shlink')copy(roomUrl(v),t('Link copied','链接已复制'))
  if(a==='hc'){hf.c=hf.c===v?'':v;render()}
  if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
  if(a==='msub'){const z=zone(v);if(z!=='other'&&hf.z!==z){hf.z=z;const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}else{const h=filtHomes().find(x=>x.area===v);mapSel=h?h.id:'';render()}}
@@ -191,7 +195,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='saveme'){const n=val('meName');if(!n)return;S.me=n;save();render();toast(t('Saved','已保存'))}
  if(a==='reset'){const l=S.lang;S=seed();S.qa=seedQA();S.lang=l;save();render();toast(t('Reset','已重置'))}
 });
-render();
+render();openFromHash();
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // Header: transparent at the top, frosted once the page scrolls.
 addEventListener('scroll',()=>{const e=document.getElementById('top');if(e)e.classList.toggle('stuck',scrollY>8)},{passive:true});
