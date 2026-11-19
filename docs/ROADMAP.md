@@ -277,3 +277,25 @@ Software will not produce rooms. For the first 30 listings:
 Payments, deposits, paid featured listings, commissions, a WeChat Mini Program, in-app chat,
 AI listing writers, and anything on the Jobs side. Each either needs legal advice first (see
 `HANDOFF.md`) or does nothing for the first 20 matches.
+
+## Parking lot (no work until Rooms has 20 real matches)
+
+### Idea: "小布村 questions" — local know-how the Facebook groups keep asking (owner, 19 Nov 2026)
+Seen in the Facebook group Brisbane 小布村愛哈啦: "Is the 卤味 shop next to the supermarket at
+Sunny Park still open? Is there a phone number? I want to call to check they have beef shank."
+Small Chinese-run shops often have no website and stale or missing Google listings, and centres
+change tenants (Sunny Park's own leasing sheets show the anchor supermarket changing in 2025).
+- **What Loka could do later:** the Ask board (tables `questions`/`answers` already exist) with a
+  "Shops & services" topic, answers marked with the date they were checked, and a "still true?"
+  button that asks the next visitor to confirm. Later, shops could claim their own entry and keep
+  hours and phone current themselves (possible local-sponsor income, see the owner's notes).
+- **Hard limits:** never copy posts or comments from Facebook, WeChat or 小红书 (their terms and
+  AGENTS.md). Only people's own posts on Loka.
+- **Legal risk to clear first:** comments that name a business and accuse it ("they overcharge")
+  can be defamatory, and an Australian site that hosts and encourages comments can be treated as
+  their publisher (High Court, Fairfax Media v Voller [2021] HCA 27). Before any review-like
+  feature: a lawyer's view on the current Queensland defamation rules, report-and-remove inside
+  a set time, and no star ratings or "warning" posts about named businesses.
+- **Validation before building:** the owner collects 2 weeks of screenshots of recurring questions
+  in the group and sorts them (rooms / jobs / shops / services / admin help). Build only for the
+  category that repeats most and that Loka can answer better than Google Maps.
