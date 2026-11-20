@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -84,7 +84,15 @@ ok(r.rows.length === 1, 'the published room is visible to the public');
 r = await as('anon', `select contact from public.home_contacts`);
 ok(!!r.err || r.rows.length === 0, 'signed-out visitors cannot read contact details');
 r = await as(B, `select contact from public.home_contacts`);
-ok(r.rows.length === 1, 'a signed-in user can read the contact of a published room');
+ok(!!r.err || r.rows.length === 0, '[005] a signed-in user cannot bulk-read other people\'s contacts');
+r = await as(B, `select public.reveal_contact('homes', $1) c`, [h1]);
+ok(r.rows?.[0]?.c === 'wechat: amy_bne', '[005] a signed-in user can reveal one published contact');
+r = await as('anon', `select public.reveal_contact('homes', $1) c`, [h1]);
+ok(!!r.err, '[005] a signed-out visitor cannot reveal a contact');
+r = await as(A, `select contact from public.home_contacts where home_id = $1`, [h1]);
+ok(r.rows?.length === 1, '[005] the owner can still read their own contact');
+r = await as(B, `select * from private.contact_views`);
+ok(!!r.err, '[005] nobody using the app can read who viewed which contact');
 r = await as(B, `update public.homes set rent = 10 where id = $1`, [h1]);
 ok(r.n === 0 || !!r.err, 'another user cannot edit someone else\'s room');
 r = await as(B, `delete from public.homes where id = $1`, [h1]);
@@ -120,6 +128,24 @@ await db.exec(`update auth.users set email_confirmed_at = now() where id = '${BO
 ok((await db.query(`select is_admin from public.profiles where id = $1`, [BOSS])).rows[0].is_admin === true, 'it becomes admin once the email is confirmed');
 r = await as(A, `select * from private.admin_emails`);
 ok(!!r.err, 'nobody using the app can read the admin list');
+
+// Contact harvesting limit (005): 20 different listings per 24 h, repeats free
+await db.exec(`reset role; set session authorization postgres`);
+const ids = (await db.query(`insert into public.homes(owner,type,agr,title,area,rent,bond,adv_weeks,decl_fixed_price,decl_bond_rta,decl_sublet_ok,decl_true,status)
+  select '${ADM}','room','room','Room '||g,'Sunnybank',250,1000,2,true,true,true,true,'published' from generate_series(1,21) g returning id`)).rows.map(x => x.id);
+for (const id of ids) await db.query(`insert into public.home_contacts values ($1, 'tel 0400 000 000')`, [id]);
+await db.exec(`delete from private.contact_views`);
+let got = 0;
+for (const id of ids.slice(0, 20)) { const q = await as(B, `select public.reveal_contact('homes', $1) c`, [id]); if (q.rows?.[0]?.c) got++; }
+ok(got === 20, '[005] 20 different contacts in a day are allowed');
+r = await as(B, `select public.reveal_contact('homes', $1) c`, [ids[20]]);
+ok(/contact_limit/.test(r.err || ''), '[005] the 21st different contact in 24 hours is refused');
+r = await as(B, `select public.reveal_contact('homes', $1) c`, [ids[0]]);
+ok(r.rows?.[0]?.c === 'tel 0400 000 000', '[005] re-opening a contact already seen still works');
+r = await as(B, `select public.reveal_contact('homes', $1) c`, [h1]);
+await db.exec(`reset role; set session authorization postgres; update public.homes set status = 'pending' where id = '${h1}'`);
+r = await as(B, `select public.reveal_contact('homes', $1) c`, [h1]);
+ok(r.rows?.[0]?.c == null, '[005] a contact of a listing that is not published is never revealed');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);

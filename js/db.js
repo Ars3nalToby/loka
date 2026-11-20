@@ -64,15 +64,21 @@ async function dbCreateJob(row,contact){if(needSignIn())return null;
  const {data,error}=await sb.from('jobs').insert({...row,owner:AUTHU.id}).select('id').single();if(error)throw error;
  const c=await sb.from('job_contacts').insert({job_id:data.id,contact});if(c.error)throw c.error;await dbLoad();return data.id}
 
-// Contact for one listing. Signed-in only; the database returns nothing to anyone else.
+// Contact for one listing. Signed-in only, one listing at a time, through reveal_contact() (migration 005):
+// at most 20 different contacts per account per day, so one account cannot harvest every lister.
 async function dbContact(kind,x){if(!AUTHU||x.contact!=null)return;
- const tb=kind==='homes'?'home_contacts':'job_contacts',k=kind==='homes'?'home_id':'job_id';
- const {data,error}=await sb.from(tb).select('contact').eq(k,x.id).maybeSingle();x.contact=error?'':(data?data.contact:'')}
+ let {data,error}=await sb.rpc('reveal_contact',{p_kind:kind==='homes'?'homes':'jobs',p_id:x.id});
+ // Until migration 005 is applied to the live project the function does not exist (PGRST202): use the old read.
+ if(error&&(error.code==='PGRST202'||/reveal_contact/.test(error.message||'')&&/not find|does not exist/i.test(error.message||''))){
+  const tb=kind==='homes'?'home_contacts':'job_contacts',k=kind==='homes'?'home_id':'job_id';
+  const q=await sb.from(tb).select('contact').eq(k,x.id).maybeSingle();error=q.error;data=q.data?q.data.contact:''}
+ x.climit=!!(error&&/contact_limit/.test(error.message||''));x.contact=error?'':(data||'')}
 function contactHtml(kind,x){const by=`<div class="meta">${t(kind==='homes'?'Listed by':'Posted by','发布人')} ${esc(x.by)}${x.role&&ROLE[x.role]?' · '+t(ROLE[x.role][0],ROLE[x.role][1]):''}</div>`;
  const head=`<div class="sec">${t('Contact','联系方式')}</div>`;
  if(!x.db)return head+`<div class="tt">${esc(x.contact)}</div>${by}<button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>`;
  if(!AUTHU)return head+`<button class="btn" data-a="signin">${ico('key')} ${t('Sign in to see the contact','登录后查看联系方式')}</button>${by}<div class="fine">${t('Contacts are only shown to signed-in people, to keep listers safe from spam and scams.','联系方式只给登录用户看，保护发布人不被骚扰和诈骗。')}</div>`;
  if(x.contact==null){dbContact(kind,x).then(()=>{const s=document.getElementById('sheet');if(s&&s.classList.contains('on'))(kind==='homes'?homeDetail:jobDetail)(x.id)});return head+`<div class="meta">${t('Loading…','加载中…')}</div>${by}`}
+ if(!x.contact&&x.climit)return head+`<div class="note warn">${t('You have opened 20 contacts today. To protect listers from spam, more open tomorrow.','你今天已查看 20 个联系方式。为保护发布人不被骚扰，明天可以继续查看。')}</div>${by}`;
  if(!x.contact)return head+`<div class="meta">${t('No contact on file.','没有联系方式。')}</div>${by}`;
  return head+`<div class="tt">${esc(x.contact)}</div>${by}<button class="btn ghost" data-a="copy" data-v="${esc(x.contact)}">${t('Copy contact','复制联系方式')}</button>`}
 

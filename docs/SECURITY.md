@@ -50,3 +50,9 @@ npx eslint@9 <scripts in index.html order>   # see HANDOFF.md for the one-liner
 - 8 s timeout, 3 MB cap, edge cache (`s-maxage`) so upstreams see a handful of requests per hour; errors return 502 with `no-store`.
 - CSP unchanged: the browser only talks to its own origin for live data.
 
+
+## Contact harvesting limit (21 Nov 2026, migration 005)
+- Other people's contacts are read only through `public.reveal_contact(kind, id)`, one listing at a time.
+- 20 different listings per account per 24 hours; re-opening one already seen is free; owner and admins unlimited.
+- Who viewed which contact is stored in `private.contact_views`, which the API cannot read.
+- Tested offline in tests/db/rls_check.mjs (bulk read refused, 21st refused, unpublished never revealed).
