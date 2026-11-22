@@ -74,7 +74,7 @@ function shapeEvents(pages) {
 }
 
 async function get(url, json) {
-  const r = await fetch(url, { headers: { 'User-Agent': 'Loka/1.0 (+https://tobyloka.vercel.app; Brisbane community notice board)', Accept: json ? 'application/json' : 'application/rss+xml, application/xml, text/xml' }, signal: AbortSignal.timeout(8000), redirect: 'follow' });
+  const r = await fetch(url, { headers: { 'User-Agent': 'Loka/1.0 (+https://lokabne.au; Brisbane community notice board)', Accept: json ? 'application/json' : 'application/rss+xml, application/xml, text/xml' }, signal: AbortSignal.timeout(8000), redirect: 'follow' });
   if (!r.ok) throw new Error('upstream ' + r.status);
   const body = await r.text(); if (body.length > 3e6) throw new Error('too big');
   return json ? JSON.parse(body) : body;

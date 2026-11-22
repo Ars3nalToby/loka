@@ -24,7 +24,7 @@ redirect with PKCE. Not yet tested against a live Supabase project.
 1. **Supabase project for Loka.** Create a separate project (not the-non-negotiables), region
    Sydney (ap-southeast-2). Put its Project URL and publishable key into `AUTH` in `js/config.js`.
 2. **Auth URLs.** Supabase → Authentication → URL Configuration: Site URL
-   `https://tobyloka.vercel.app`, and add it to Redirect URLs.
+   `https://lokabne.au`, and add it to Redirect URLs.
 3. **Google.** In Google Cloud Console create an OAuth client (type: Web application). Authorised
    redirect URI = the callback URL Supabase shows on its Google provider page. Paste the client ID
    and secret into Supabase → Authentication → Providers → Google. Set the OAuth consent screen

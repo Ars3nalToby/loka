@@ -8,7 +8,7 @@
 //  • Pages and /api/live: network first, but give up after a few seconds and use the last copy.
 //  • The offline page is the cached "./", never "index.html": Vercel's cleanUrls redirects
 //    /index.html to /, and browsers refuse a redirected response for a page load.
-const VERSION='loka-v27';
+const VERSION='loka-v28';
 const SHELL=['./','css/app.css','js/theme.js','js/config.js','js/rules.js','js/store.js','js/seed.js','js/state.js','js/ui.js','js/validate.js','js/art.js','js/brisbane.js','js/check.js','js/vendor/qrcode.js','js/share.js','js/auth.js','js/db.js','js/vendor/supabase.js','js/map.js','js/courts.js','js/rooms.js','js/jobs.js','js/ask.js','js/more.js','js/rights.js','js/live.js','js/landed.js','js/play.js','js/motion.js','js/app.js','js/suburbs.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png','icons/favicon-32.png','icons/icon-180.png'];
 const isShell=u=>SHELL.some(p=>p!=='./'&&u.pathname.endsWith('/'+p));
 

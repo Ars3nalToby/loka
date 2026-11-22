@@ -68,7 +68,7 @@ function repaintCheck(){const b=document.getElementById('hcbox');if(b)b.innerHTM
 function checkBody(){if(!HC)return `<div class="note">${t('Tap the button to check this phone.','点上面的按钮检查这部手机。')}</div>`;if(HC.busy)return `<div class="ev-skel"></div><div class="ev-skel"></div><div class="ev-skel"></div>`;
  const row=(ok,en,zh,ex,fix)=>`<div class="hc ${ok===true?'ok':ok===false?'no':'na'}"><span class="hc-i">${ok===true?'✓':ok===false?'!':'–'}</span><span><b>${t(en,zh)}</b>${ex?`<i>${ex}</i>`:''}${ok===false&&fix?`<em>${fix}</em>`:''}</span></div>`;
  const f=HC.feeds,fl=k=>f[k]&&f[k].ok?`${f[k].n} · ${f[k].ms} ms`:t('no answer','没有回应');
- return row(HC.secure,'Secure connection (https)','安全连接（https）','',t('Open Loka from https://tobyloka.vercel.app','请从 https://tobyloka.vercel.app 打开'))
+ return row(HC.secure,'Secure connection (https)','安全连接（https）','',t('Open Loka from https://lokabne.au','请从 https://lokabne.au 打开'))
   +row(HC.sw,'Offline engine running','离线引擎已启动',HC.ver?esc(HC.ver):'',t('Close Loka fully and open it again. It starts on the second visit.','完全关掉 Loka 再打开一次，第二次打开时会启动。'))
   +row(HC.offline,'Ready with no signal','没有信号也能打开',HC.missing&&HC.missing.length?t('Missing: ','缺少：')+esc(HC.missing.slice(0,3).join(', ')):'',t('Stay on Wi-Fi for a minute with Loka open, then check again.','连着 Wi-Fi、开着 Loka 等一分钟，再检查一次。'))
   +row(HC.installed,'On the home screen','已添加到主屏幕','',t('See “Keep Loka on your phone” on the Just landed page.','看“刚落地”页面里的“把 Loka 放到手机主屏幕”。'))

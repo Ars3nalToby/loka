@@ -3,7 +3,7 @@
 Start a **new chat** for each task. Paste one prompt. One task per chat keeps usage low and
 keeps the relay clean. Each prompt works on its own; the model needs nothing else from you.
 
-Repo: `https://github.com/Ars3nalToby/loka` · Live site: `https://tobyloka.vercel.app`
+Repo: `https://github.com/Ars3nalToby/loka` · Live site: `https://lokabne.au`
 
 ---
 
@@ -11,7 +11,7 @@ Repo: `https://github.com/Ars3nalToby/loka` · Live site: `https://tobyloka.verc
 
 ```
 You are taking over Loka, my bilingual (English / 中文) Brisbane rooms and jobs web app.
-Repo: github.com/Ars3nalToby/loka. It deploys to Vercel from main: tobyloka.vercel.app.
+Repo: github.com/Ars3nalToby/loka. It deploys to Vercel from main: lokabne.au.
 
 Do this first, in order:
 1. Clone or pull the repo, then read AGENTS.md, HANDOFF.md and docs/ROADMAP.md in full.
@@ -48,7 +48,7 @@ me, put it in a short list at the end.
 
 ```
 You are continuing work on Loka, my bilingual (English / 中文) Brisbane rooms and jobs web
-app. Repo: github.com/Ars3nalToby/loka. It deploys to Vercel from main: tobyloka.vercel.app.
+app. Repo: github.com/Ars3nalToby/loka. It deploys to Vercel from main: lokabne.au.
 
 Do this first, in order:
 1. Clone or pull the repo, then read AGENTS.md, HANDOFF.md and docs/ROADMAP.md.
