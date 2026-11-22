@@ -43,7 +43,7 @@ function playLive(p){const ev=LIVE.events&&LIVE.events.items,tr=LIVE.transit&&LI
  if(p.tr&&tr){const m=tr.filter(i=>p.tr.test(i.t+' '+i.d)).slice(0,4);h+=`<div class="sec">${t('Ferry notices right now','渡轮最新通知')}</div>`+(m.length?m.map(i=>`<a class="tr ${sev(i)===2?'maj':''}" href="${esc(safeUrl(i.u,'https://translink.com.au/service-updates'))}" target="_blank" rel="noopener"><b>${esc(i.t)}</b><i>${esc(i.d)}</i></a>`).join(''):`<div class="note">${t('No ferry notices right now.','目前没有渡轮通知。')}</div>`)}
  return h}
 function guidesHtml(){liveLoad();const night=isNight()||isDark();
- return `<section class="ghero"><span class="kick">${t('Brisbane, the way creators do it','跟着博主玩布村')}</span><h1>${t('How to play<br><em>Brisbane.</em>','布村<br><em>怎么玩。</em>')}</h1><p>${t('Day plans like the ones on YouTube and 小红书, joined to today’s real sessions and transport notices.','像 YouTube 和小红书上的攻略，再接上今天真实的活动场次和交通通知。')}</p></section>
+ return `<section class="ghero"><span class="kick">${t('Brisbane, the way creators do it','跟着博主玩布村')}</span><h1>${t('How to play<br><em>Brisbane.</em>','布村<br><em>怎么玩。</em>')}</h1><p>${t('Day plans like the ones on YouTube and 小红书 (RedNote), joined to today’s real sessions and transport notices.','像 YouTube 和小红书（RedNote）上的攻略，再接上今天真实的活动场次和交通通知。')}</p></section>
  ${PLAYS.map((p,i)=>`<button class="gcard" data-a="guide1" data-v="${p.id}" style="--i:${i}"><span class="g-art${night?' night':''}">${panorama({vb:p.vb,par:'xMidYMid meet',night})}</span><span class="g-b"><em>${t(p.hook[0],p.hook[1])}</em><b>${t(p.en,p.zh)}</b><i>${ico('guide')} ${t(p.time[0],p.time[1])} · ${t(p.cost[0],p.cost[1])}</i></span></button>`).join('')}
  <div class="note">${t('Checked against official sources on','已于')} ${t(PLAY_CHECKED[0],PLAY_CHECKED[1])}${t('. Loka does not recommend businesses and is not paid by any place listed.','对照官方资料核对。Loka 不推荐商家，也没有收任何地点的钱。')}</div>`}
 function guideSheet(id){const p=play(id);if(!p)return;const night=isNight()||isDark();
@@ -51,7 +51,7 @@ function guideSheet(id){const p=play(id);if(!p)return;const night=isNight()||isD
  <div class="g-meta"><span>${ico('guide')} ${t(p.time[0],p.time[1])}</span><span>${ico('coin')} ${t(p.cost[0],p.cost[1])}</span></div>
  <ol class="g-steps">${p.stops.map((s,i)=>`<li style="--i:${i}"><b>${esc(s[0])}</b><p>${t(s[2],s[3])}</p>${s[1]?`<a class="mini-btn" href="${mapsQ(s[1])}" target="_blank" rel="noopener">${ico('pin')} ${t('Map','地图')} ↗</a>`:''}${s[4]?`<button class="mini-btn hot" data-a="tab" data-v="${s[4]}">${t('Open in Loka','在 Loka 打开')} →</button>`:''}</li>`).join('')}</ol>
  <div id="glive">${playLive(p)}</div>
- <button class="btn" data-a="gcopy" data-v="${p.id}">📕 ${t('Copy as a 小红书 post','复制成小红书文案')}</button>
+ <button class="btn" data-a="gcopy" data-v="${p.id}">📕 ${t('Copy as a 小红书 (RedNote) post','复制成小红书（RedNote）文案')}</button>
  <div class="note">${t('Times and services change; tap through to the official page before you go.','时间和服务会变动，出发前点进官方页面确认。')}</div>`)}
 function rednoteText(p){const zh=S.lang==='zh';
  return `${zh?'📍':'📍'}${p.zh}｜${p.hook[1]}\n\n⏰ ${p.time[1]}  💰 ${p.cost[1]}\n\n${p.stops.map((s,i)=>`${['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][i]||'•'} ${s[0]}\n${s[3]}`).join('\n\n')}\n\n💡 今天有什么场次、交通有没有变动，我都在 Loka 上看：${BRAND.url}\n\n#布里斯班 #布村 #布里斯班旅游 #澳洲留学 #布里斯班生活 #昆士兰`}

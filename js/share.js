@@ -68,7 +68,7 @@ function shareSheet(id){const x=S.homes.find(h=>h.id===id);if(!x)return;shareBlo
  <div class="shb">
   <button class="sh ig" data-a="shig" data-v="${id}" disabled><span class="shi">${ico('igl')}</span><span><b>${t('Instagram Story','Instagram 快拍')}</b><i>${t('Image + link copied for a Link sticker','图片 + 已复制链接，可贴进 Link 贴纸')}</i></span></button>
   <a class="sh th" href="${threadsUrl(x)}" target="_blank" rel="noopener"><span class="shi">${ico('thr')}</span><span><b>Threads</b><i>${t('Opens Threads with the post written for you','打开 Threads，帖子已帮你写好')}</i></span></a>
-  <button class="sh wc" data-a="shtext" data-v="${id}"><span class="shi">${ico('chat')}</span><span><b>${t('WeChat / 小红书 text','微信 / 小红书 文案')}</b><i>${t('Copies the text and link','复制文案和链接')}</i></span></button>
+  <button class="sh wc" data-a="shtext" data-v="${id}"><span class="shi">${ico('chat')}</span><span><b>${t('WeChat / 小红书 (RedNote) text','微信 / 小红书（RedNote）文案')}</b><i>${t('Copies the text and link','复制文案和链接')}</i></span></button>
   <button class="sh ln" data-a="shlink" data-v="${id}"><span class="shi">${ico('lnk')}</span><span><b>${t('Copy link','复制链接')}</b><i>${esc(roomUrl(id).replace(/^https?:\/\//,''))}</i></span></button>
  </div>
  <div class="note">${t('Instagram does not let websites post for you or add links. After the image opens in Instagram: tap the sticker icon, choose Link, and paste. The link is already copied.','Instagram 不允许网站代你发帖或加链接。图片在 Instagram 打开后：点贴纸图标，选 Link，粘贴即可，链接已经帮你复制好。')}</div>

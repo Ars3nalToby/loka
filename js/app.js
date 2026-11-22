@@ -31,7 +31,7 @@ function render(){
    <button class="tile" data-a="tab" data-v="tools"><div class="e">${ico('tools')}</div><div class="n">${t('Money tools','算账工具')}</div><div class="d">${t('Move-in cost, pay check','入住成本、工资核对')}</div></button>
    <button class="tile" data-a="tab" data-v="guide" style="grid-column:1/3"><div class="e">${ico('guide')}</div><div class="n">${t('First 30 days','落地 30 天')} · ${S.done.length}/${GUIDE.length}</div><div class="d">${t('The checklist and the rules that stop you getting ripped off','落地清单和防坑规则')}</div></button>
   </div>
-  <div class="sec">${t('Guides on 小红书','小红书攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
+  <div class="sec">${t('Guides on 小红书 (RedNote)','小红书（RedNote）攻略')}</div><div class="xhs">${[['doc','Sunnybank job-hunt guide','Sunnybank 找工全攻略'],['house','Brisbane rental traps to avoid','布里斯班租房避坑指南'],['coin','Legal pay and tax back basics','合法时薪与退税']].map(g=>`<a href="https://www.xiaohongshu.com/"><span>${ico(g[0])}</span>${t(g[1],g[2])}<i>小红书 (RedNote) · ${t('coming soon','即将上线')}</i></a>`).join('')}</div>
   <button class="rcta" data-a="tab" data-v="rights"><span class="rc-b">${ibis(58,'walk')}</span><span><b>${t('Renter rights, one page','租客权益，一页看懂')}</b><i>${t('What the RTA can do, free advice lines, QCAT, and who to call first.','RTA 能做什么、免费咨询热线、QCAT，以及遇事先找谁。')}</i></span><em>→</em></button>
   <button class="gcta" data-a="tab" data-v="guides"><span class="gc-i">📕</span><span><b>${t('How to play Brisbane','布村怎么玩')}</b><i>${t('Creator-style day plans, joined to today’s real events.','像博主那样的攻略，接上今天真实的活动。')}</i></span><em>→</em></button>
   ${landmarksHtml()}
@@ -149,7 +149,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='install')return doInstall();
  if(a==='runcheck')return runCheck();
  if(a==='guide1')return guideSheet(v);
- if(a==='gcopy'){const p=play(v);if(!p)return;const txt=rednoteText(p);(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(t('Copied. Paste it into 小红书.','已复制，去小红书粘贴吧。')),()=>toast(t('Copy did not work on this browser.','这个浏览器无法复制。')));return}
+ if(a==='gcopy'){const p=play(v);if(!p)return;const txt=rednoteText(p);(navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast(t('Copied. Paste it into 小红书 (RedNote).','已复制，去小红书（RedNote）粘贴吧。')),()=>toast(t('Copy did not work on this browser.','这个浏览器无法复制。')));return}
  if(a==='reload')return location.reload();
  if(a==='persist'){if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().then(()=>runCheck());return}
  if(a==='slang'){slangOff++;b.classList.remove('flip');void b.offsetWidth;b.innerHTML=slangCard().replace(/^<button[^>]*>|<\/button>$/g,'');b.classList.add('flip');return}
@@ -179,7 +179,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(/^(au_|mfa_)/.test(a)&&a!=='au_start')authAct(a)
  if(a==='share')shareSheet(v)
  if(a==='shig')shareInstagram(v)
- if(a==='shtext'){const x=S.homes.find(h=>h.id===v);copy(shareText(x)+'\n'+roomUrl(v),t('Copied. Paste it into WeChat or 小红书.','已复制，粘贴到微信或小红书即可。'))}
+ if(a==='shtext'){const x=S.homes.find(h=>h.id===v);copy(shareText(x)+'\n'+roomUrl(v),t('Copied. Paste it into WeChat or 小红书 (RedNote).','已复制，粘贴到微信或小红书（RedNote）即可。'))}
  if(a==='shlink')copy(roomUrl(v),t('Link copied','链接已复制'))
  if(a==='hc'){hf.c=hf.c===v?'':v;render()}
  if(a==='mpick'){mapSel=mapSel===v?'':v;const m=document.querySelector('.rmap');if(m)m.innerHTML=mapSvg({rooms:true,still:true})+(hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:'');const p=document.getElementById('mprev');if(p)p.innerHTML=mapPreview()}
