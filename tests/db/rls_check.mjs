@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -146,6 +146,28 @@ r = await as(B, `select public.reveal_contact('homes', $1) c`, [h1]);
 await db.exec(`reset role; set session authorization postgres; update public.homes set status = 'pending' where id = '${h1}'`);
 r = await as(B, `select public.reveal_contact('homes', $1) c`, [h1]);
 ok(r.rows?.[0]?.c == null, '[005] a contact of a listing that is not published is never revealed');
+
+// Owner alerts + report rules (006). Copied back from the live database 23 Nov 2026.
+await db.exec(`reset role; set session authorization postgres`);
+const C = 'c0000000-0000-4000-8000-00000000000c', D = 'd0000000-0000-4000-8000-00000000000d', E = 'e0000000-0000-4000-8000-00000000000e';
+await db.exec(`insert into auth.users(id) values ('${C}'),('${D}'),('${E}')`);
+const h6 = (await db.query(`insert into public.homes(owner,type,agr,title,area,rent,bond,adv_weeks,decl_fixed_price,decl_bond_rta,decl_sublet_ok,decl_true,status)
+  values ('${A}','room','room','Room six','Sunnybank',250,1000,2,true,true,true,true,'published') returning id`)).rows[0].id;
+ok((await db.query(`select count(*)::int c from private.owner_alerts where kind = 'new_home' and item = $1`, [h6])).rows[0].c === 1, '[006] a new room puts an alert in the owner\'s feed');
+r = await as(A, `select * from private.owner_alerts`);
+ok(!!r.err, '[006] nobody using the app can read the owner\'s alert feed');
+for (const u of [C, D, E]) await as(u, `insert into public.reports(kind,item,why) values ('homes',$1,'fake')`, [h6]);
+r = await as('anon', `select id from public.homes where id = $1`, [h6]);
+ok(r.rows.length === 1, '[006] three brand-new accounts cannot gang up to hide a real room');
+await db.exec(`reset role; set session authorization postgres; update public.profiles set created_at = now() - interval '4 days' where id in ('${C}','${D}','${E}'); delete from public.reports where item = '${h6}'`);
+for (const u of [C, D, E]) await as(u, `insert into public.reports(kind,item,why) values ('homes',$1,'fake')`, [h6]);
+r = await as('anon', `select id from public.homes where id = $1`, [h6]);
+ok(r.rows.length === 0, '[006] three established accounts reporting a room hides it until an admin looks');
+for (let i = 0; i < 10; i++) await as(E, `insert into public.reports(kind,item,why) values ('homes',$1,'spam')`, [ids[i]]);
+r = await as(E, `insert into public.reports(kind,item,why) values ('homes',$1,'spam')`, [ids[11]]);
+ok(/limit: 10 reports per day/.test(r.err || ''), '[006] an 11th report in 24 hours is refused');
+r = await as(C, `insert into public.reports(kind,item,why,reporter) values ('homes',$1,'looks fake',$2) returning reporter`, [ids[12], A]);
+ok(r.rows?.[0]?.reporter === C, '[006] a report is always filed under the real sender, not a name they type');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);

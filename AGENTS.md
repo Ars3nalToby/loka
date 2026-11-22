@@ -52,7 +52,7 @@ Antigravity). Only one works at a time. These rules keep the relay from breaking
 - **Never redraw under someone's fingers.** Background refreshes skip while a field is focused or a
   form sheet is open.
 - **Every bug fixed gets a test** that would have caught it, in tests/ or in one of the audits.
-- **Database changes** go in a new numbered file in `supabase/migrations/`, are added to
+- **Database changes** (never applied live without committing the same file in the same session) go in a new numbered file in `supabase/migrations/`, are added to
   tests/db/rls_check.mjs with attack checks, pass offline first, then are applied to the live project.
   Never put real emails or other personal data in migrations.
 - **Say what was tested and how.** If something could only be tested with stand-ins (for example the
