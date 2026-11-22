@@ -31,10 +31,10 @@ const showPhone=p=>p?p.replace(/^\+61(\d{3})(\d{3})(\d{3})$/,'0$1 $2 $3'):'';
 // ---------- Sign-in sheet ----------
 function authSheet(step){const live=authReady(),dis=live?'':' disabled';step=step||'start';
  const pre=live?'':`<div class="note warn"><b>${t('Preview only.','仅为预览。')}</b> ${t('Sign-in is built but not switched on yet: Loka’s own account database still has to be connected. Nothing you type here is sent anywhere.','登录功能已经做好，但还没启用：Loka 自己的账户数据库还没接上。这里输入的任何内容都不会被发送。')}</div>`;
- if(step==='code'){const em=otpTo.kind==='email';openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${em?t('Check your email','请查看邮箱'):t('Enter the 6-digit code','输入 6 位验证码')}</div>
-  <div class="sub">${t('Sent to','已发送到')} <b>${esc(em?otpTo.v:showPhone(otpTo.v))}</b>. ${em?t('Tap the sign-in link in the email on this phone, in this same browser. If the email shows a 6-digit code instead, type it here.','在这部手机、这个浏览器里点开邮件中的登录链接即可。如果邮件里是 6 位验证码，就在这里输入。'):t('It expires soon, so use it now.','验证码很快过期，请尽快输入。')}</div>
-  ${em?`<div class="fine">${t('Using Loka from the home-screen icon? Open lokabne.au in Safari or Chrome to sign in for now; the link cannot reach the home-screen app.','如果你是从主屏幕图标打开 Loka：目前请先用 Safari 或 Chrome 打开 lokabne.au 登录，邮件链接进不去主屏幕 app。')}</div>`:''}
-  <input id="au_code" data-enter="au_verify" enterkeyhint="go" inputmode="numeric" autocomplete="one-time-code" maxlength="6" class="otp" placeholder="••••••">
+ if(step==='code'){const em=otpTo.kind==='email';openSheet(`<div class="tt" style="font-size:24px;font-weight:900">${em?t('Enter the code from your email','输入邮件里的验证码'):t('Enter the 6-digit code','输入 6 位验证码')}</div>
+  <div class="sub">${t('Sent to','已发送到')} <b>${esc(em?otpTo.v:showPhone(otpTo.v))}</b>. ${em?t('Type the code from the email from Loka (no-reply@lokabne.au). It can take a minute to arrive.','请输入 Loka（no-reply@lokabne.au）寄来的验证码。邮件可能要一分钟左右才到。'):t('It expires soon, so use it now.','验证码很快过期，请尽快输入。')}</div>
+  ${em?`<div class="fine">${t('Not there? Check Junk or Spam. The code works in the browser and in the home-screen app.','没收到？请看看垃圾邮件箱。验证码在浏览器和主屏幕 app 里都能用。')}</div>`:''}
+  <input id="au_code" data-enter="au_verify" enterkeyhint="go" inputmode="numeric" autocomplete="one-time-code" maxlength="10" class="otp" placeholder="••••••">
   <button class="btn" data-a="au_verify">${t('Sign in','登录')}</button><button class="btn ghost" data-a="au_start">${t('Use a different email or number','换一个邮箱或号码')}</button>`);return}
  openSheet(`<div class="tt" style="font-size:26px;font-weight:900">${t('Sign in to Loka','登录 Loka')}</div>
  <div class="sub">${t('Needed to post a room, see contact details, report a listing or save across devices. Browsing never needs an account.','发布房源、查看联系方式、举报或跨设备收藏才需要登录。浏览房源不需要账户。')}</div>${pre}
@@ -52,7 +52,7 @@ async function authAct(a){if(!authReady()||authBusy)return;
    const {error}=await sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true,emailRedirectTo:location.origin+'/'}});if(error)throw error;otpTo={kind:'email',v};authSheet('code')}
   if(a==='au_phone'){if(!need18())return;const p=auMobile(document.getElementById('au_phone').value);if(!p)return toast(t('Enter an Australian mobile, e.g. 0412 345 678','请输入澳洲手机号，例如 0412 345 678'));
    const {error}=await sb.auth.signInWithOtp({phone:p});if(error)throw error;otpTo={kind:'phone',v:p};authSheet('code')}
-  if(a==='au_verify'){const code=(document.getElementById('au_code').value||'').replace(/\D/g,'');if(code.length!==6)return toast(t('The code has 6 digits','验证码是 6 位数字'));
+  if(a==='au_verify'){const code=(document.getElementById('au_code').value||'').replace(/\D/g,'');if(code.length<6||code.length>10)return toast(t('Type all the digits of the code','请输入完整的验证码'));
    const q=otpTo.kind==='phone'?{phone:otpTo.v,token:code,type:'sms'}:{email:otpTo.v,token:code,type:'email'};const {error}=await sb.auth.verifyOtp(q);if(error)throw error;closeSheet()}
   if(a==='au_out'){await sb.auth.signOut();closeSheet();toast(t('Signed out','已退出'))}
   if(a==='mfa_start'){const {data,error}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'Loka '+new Date().toISOString().slice(0,10)});if(error)throw error;mfaEnroll=data;accountSheet()}

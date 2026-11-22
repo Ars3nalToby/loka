@@ -8,7 +8,7 @@ Sources checked 18 Nov 2026 are listed at the end. Re-check before launch.
 | Method | How | Cost |
 | --- | --- | --- |
 | Google sign-in | `signInWithOAuth({provider:'google'})`, PKCE flow | Free |
-| Email code | `signInWithOtp({email})` then `verifyOtp(type 'email')`, 6 digits | Free (Supabase's built-in mailer has low hourly limits; add your own SMTP before launch) |
+| Email code | `signInWithOtp({email})` then `verifyOtp(type 'email')`, 6-10 digits | Free: custom SMTP via Resend (free plan 100 emails/day), sender no-reply@lokabne.au, set up 23 Nov 2026 |
 | Australian mobile code | `signInWithOtp({phone})`, numbers normalised to +614XXXXXXXX by `auMobile()`; landlines and overseas numbers refused | Paid per SMS via the SMS provider. Off (`AUTH.phone=false`) until set up |
 | Two-step verification | TOTP via `auth.mfa.enroll / challengeAndVerify`; works with Google Authenticator, Microsoft Authenticator, Authy. Asked for at every sign-in once enrolled | Free |
 
