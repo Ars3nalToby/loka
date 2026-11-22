@@ -250,7 +250,11 @@ addEventListener('load',swRegister);
 // turns solid green and shows the small logo ("green"), and turns cream only after the whole poster has
 // gone past ("stuck"). Poster text fades out before it reaches the header, so nothing is seen half cut.
 // Wide screens: the poster is a separate rounded card below an ordinary header.
+// Header height is measured, never guessed: fonts and iPhone browsers change it by a pixel or two.
+var hdrObs=null;function hdrSize(e){const h=e.getBoundingClientRect().height;if(h)document.documentElement.style.setProperty('--hh',h.toFixed(2)+'px')}
 function hdr(){hdrRaf=0;const e=document.getElementById('top');if(!e)return;const p=tab==='home'?document.querySelector('.hposter'):null,on=!!p&&!WIDE.matches;
+ if(!hdrObs&&window.ResizeObserver){hdrObs=new ResizeObserver(()=>hdrSize(e));hdrObs.observe(e)}hdrSize(e);
+ document.documentElement.classList.toggle('pullgreen',on&&scrollY<300);
  e.classList.toggle('onposter',on);const hb=e.getBoundingClientRect().bottom;
  if(on){const past=p.getBoundingClientRect().bottom<=hb+2;e.classList.toggle('stuck',past);e.classList.toggle('green',!past&&scrollY>8)}
  else{e.classList.remove('green');e.classList.toggle('stuck',scrollY>8)}

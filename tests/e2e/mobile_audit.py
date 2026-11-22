@@ -23,6 +23,12 @@ with sync_playwright() as p:
   pg.goto('http://localhost:8339/');pg.wait_for_selector('#nav button');time.sleep(1)
   def go(lbl):
     for k in pg.evaluate(J):seen.setdefault((k[0],k[1]),[k[2],set()])[1].add(lbl)
+  # Home poster must sit flush under the header: no cream strip at the top (iPhone Chrome bug, 23 Nov 2026)
+  for w in (320,375,390,430):
+    pg.set_viewport_size({'width':w,'height':844});pg.evaluate("closeSheet();tab='home';render();scrollTo(0,0)");time.sleep(.3)
+    gap=pg.evaluate("document.querySelector('.hposter').getBoundingClientRect().top")
+    if gap>0.5:seen.setdefault(('TOP-GAP above home poster',str(w)+'px'),[str(round(gap,1))+'px',set()])[1].add('home')
+  pg.set_viewport_size({'width':390,'height':844})
   for t in TABS:
     pg.evaluate(f"closeSheet();tab='{t}';render();scrollTo(0,0)");time.sleep(.3);go(t)
   for f in ['homeForm()','jobForm()','authSheet()','homeDetail(S.homes[0].id)','jobDetail(S.jobs[0].id)','matchSheet()']:

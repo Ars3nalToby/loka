@@ -451,7 +451,10 @@ button,a,input,select,textarea,label{touch-action:manipulation;-webkit-tap-highl
 html.lock,html.lock body{overflow:hidden}
 .sheet .in{max-height:92vh;max-height:92dvh;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 header{padding-top:max(16px,env(safe-area-inset-top));padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
-.hposter{margin-top:calc(-74px - env(safe-area-inset-top));padding-top:calc(78px + env(safe-area-inset-top))}
+/* Poster tucks under the header by the header's MEASURED height (--hh, set by hdrSize() in app.js). A guessed 74px left a 1-2px cream strip on iPhone Chrome (fonts make the header taller). */
+.hposter{margin-top:calc(-1 * var(--hh,calc(76px + env(safe-area-inset-top))));padding-top:calc(var(--hh,calc(76px + env(safe-area-inset-top))) + 4px)}
+/* iOS rubber-band pull at the top of Home shows green, not a cream line above the poster */
+html.pullgreen{background:#25806a}html[data-theme=dark].pullgreen{background:#1b5f4f}
 nav{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 /* Fingertip-sized targets (44pt): visible size unchanged where a bigger button would look heavy */
 .back{min-height:44px;display:inline-flex;align-items:center}
