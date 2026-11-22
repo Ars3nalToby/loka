@@ -80,5 +80,11 @@
       "destination": "https://lokabne.au/$1",
       "permanent": true
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/daily",
+      "schedule": "0 17 * * *"
+    }
   ]
 }
