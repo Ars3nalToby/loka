@@ -61,7 +61,7 @@ async function authAct(a){if(!authReady()||authBusy)return;
   if(a==='mfa_off'){const f=document.querySelector('[data-a="mfa_off"]').dataset.v;const {error}=await sb.auth.mfa.unenroll({factorId:f});if(error)throw error;accountSheet();toast(t('Two-step verification removed','已关闭两步验证'))}
   if(a==='mfa_check'){const code=(document.getElementById('mfa_code').value||'').replace(/\D/g,'');const f=document.querySelector('[data-a="mfa_check"]').dataset.v;const {error}=await sb.auth.mfa.challengeAndVerify({factorId:f,code});if(error)throw error;closeSheet();render()}
  }catch(e){toast(t('That did not work: ','未成功：')+(e&&e.message?e.message:''))}finally{authBusy=false}}
-function afterSignIn(){needMfa()}
+function afterSignIn(){needMfa();if(typeof scoutAfterSignIn==='function')scoutAfterSignIn()}
 // If the account has an authenticator app, ask for its code before treating the session as fully signed in.
 async function needMfa(){if(!sb)return false;const {data}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
  if(data&&data.currentLevel==='aal1'&&data.nextLevel==='aal2'){const {data:f}=await sb.auth.mfa.listFactors();const v=(f&&f.totp||[]).find(x=>x.status==='verified');

@@ -76,8 +76,8 @@ function render(){
  }
  if(tab==='earn'){const mx=Math.max(...S.scouts.map(x=>x.earned));
   h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Loka pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Loka 不按入住或入职发放现金。')}</div>
-  <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Post it here','发到 Loka','30 seconds, with a contact.','30 秒，留个联系方式。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
-  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="newhome">${t('Post a room','发房源')}</button></div></div>
+  <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Invite the landlord','邀请房东','Type the room details (never their contact). Send them the link: they check it and post it themselves.','填写房间资料（不填对方联系方式），把链接发给房东，由房东自己核对并发布。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
+  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="scoutnew">${t('Invite a landlord','邀请房东')}</button></div></div>
   <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
@@ -89,7 +89,7 @@ function render(){
  if(tab==='guides')h+=back+guidesHtml();
  if(tab==='check')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+checkHtml();
  if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
- if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+adminHtml();
+ if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+((!DB.on||DB.admin)?adminHtml().replace('</h1>','</h1>'+scoutCard()):adminHtml());
  if(tab==='guide'){
   h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
   h+=GUIDE.map(g=>`<button class="chk ${S.done.includes(g[0])?'on':''}" data-a="done" data-v="${g[0]}"><span class="bx">${S.done.includes(g[0])?'✓':''}</span><span class="tx">${t(g[1],g[2])}</span></button>`).join('');
@@ -202,6 +202,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='fav'){const k=b.dataset.k,i=S.saved[k].indexOf(v);i>-1?S.saved[k].splice(i,1):S.saved[k].push(v);save();render();if(b.dataset.re==='home')homeDetail(v);if(b.dataset.re==='job')jobDetail(v);toast(i>-1?t('Removed','已取消'):t('Saved','已收藏'))}
  if(a==='done'){const i=S.done.indexOf(v);i>-1?S.done.splice(i,1):S.done.push(v);save();render()}
  if(a==='newhome')homeForm();
+ if(a==='scoutnew')scoutForm();
+ if(a==='scoutmake')scoutMake();
+ if(a==='scoutcopy'){if(SCOUT_LAST)copy(SCOUT_LAST[v==='en'?'en':'zh'],t('Copied. Send it to the landlord yourself.','已复制，请自己发给房东。'))}
+ if(a==='scoutgo')scoutGo();
+ if(a==='scoutno'){scoutDone();closeSheet()}
  if(a==='newjob')jobForm();
  if(a==='createhome'){const by=S.me||val('h_by'),title=val('h_title'),rent=+val('h_rent');if(!by||!title||!rent||!val('h_contact'))return toast(t('Name, title, rent and contact are required','名字、标题、租金、联系方式必填'));if(!SUB(val('h_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));const hb=Math.max(0,+val('h_bond')||0),adv=Math.max(0,+val('h_adv')||0),agr=val('h_agr'),role=val('h_role'),ck=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};
   const pb=publishBlock(rent,hb,adv,agr);
@@ -211,7 +216,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
   const n={id:'h'+Date.now(),type:val('h_type'),title,area:val('h_area')||'Brisbane',near:val('h_near'),rent,bond:Math.max(0,+val('h_bond')||0),bills:val('h_bills')==='1',furn:val('h_furn')==='1',verified:false,zh:S.lang==='zh',reward:0,ago:0,by,contact:val('h_contact'),note:val('h_note'),agr,adv,role,consent:role==='head'};
   if(dbLive()){const row={type:n.type,agr:agr==='fixed'?'fixed':'room',role:ROLE[role]?role:'owner',owner_consent:role==='head'&&ck('h_c3'),title:title.slice(0,140),area:n.area,near:(n.near||'').slice(0,140),rent,bond:hb,adv_weeks:adv,bills:n.bills,furnished:n.furn,chinese_ok:S.lang==='zh',note:(n.note||'').slice(0,1200),
     decl_fixed_price:ck('h_c1'),decl_bond_rta:ck('h_c2'),decl_sublet_ok:role==='head'?ck('h_c3'):true,decl_true:ck('h_c4'),by_name:by.slice(0,40)};
-   b.disabled=true;dbCreateHome(row,n.contact.slice(0,140)).then(id=>{if(id){closeSheet();tab='homes';render();homeDetail(id);toast(t('Sent for review. It goes live once an admin checks it.','已提交审核，管理员核对后公开。'))}}).catch(e=>toast(dbErr(e))).finally(()=>{b.disabled=false});return}
+   b.disabled=true;dbCreateHome(row,n.contact.slice(0,140)).then(id=>{if(id){scoutDone();closeSheet();tab='homes';render();homeDetail(id);toast(t('Sent for review. It goes live once an admin checks it.','已提交审核，管理员核对后公开。'))}}).catch(e=>toast(dbErr(e))).finally(()=>{b.disabled=false});return}
   S.homes.push(n);save();tab='homes';render();homeDetail(n.id)}
  if(a==='createjob'){const by=S.me||val('j_by'),title=val('j_title'),pay=+val('j_pay');if(!by||!title||!pay||!val('j_contact'))return toast(t('Name, role, pay and contact are required','名字、职位、时薪、联系方式必填'));
   if(!SUB(val('j_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));
