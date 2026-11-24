@@ -56,3 +56,15 @@ npx eslint@9 <scripts in index.html order>   # see HANDOFF.md for the one-liner
 - 20 different listings per account per 24 hours; re-opening one already seen is free; owner and admins unlimited.
 - Who viewed which contact is stored in `private.contact_views`, which the API cannot read.
 - Tested offline in tests/db/rls_check.mjs (bulk read refused, 21st refused, unpublished never revealed).
+
+## Weekly maintenance 24 Nov 2026 (migration 008, written, NOT applied live yet)
+- Gap: the 3-posts-a-day limit counted rows still in the table, so deleting your own posts reset it
+  (insert → delete → insert without end; floods the review queue and owner alert feed). 008 logs every
+  app-user post in `private.post_log` (unreadable by the app) and counts that too.
+- Gap: `questions` / `answers` (Ask board, not used by the app yet) accepted unlimited unmoderated,
+  publicly readable posts from any signed-in account through the API. 008 makes inserting admin-only
+  until a moderated Ask board exists.
+- Known, not fixed (needs owner settings): no CAPTCHA on sign-in, so anyone can make Loka send code
+  emails to any address and use up the 30/hour SMTP cap / Resend's 100/day. Supabase Auth → Bot and
+  Abuse Protection (Turnstile) is the fix when it becomes a problem.
+- Tested offline: tests/db/rls_check.mjs [008] checks (4 failed before 008, all pass after).

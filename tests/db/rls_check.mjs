@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql', '007_wanted.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql', '007_wanted.sql', '008_post_limit_qa_close.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -221,6 +221,24 @@ ok((await db.query(`select count(*)::int c from private.owner_alerts where kind 
 await as(A, ...insW(want())); await as(A, ...insW(want()));
 r = await as(A, ...insW(want()));
 ok(/limit: 3 new wanted per day/.test(r.err || ''), '[007] a 4th wanted ad in 24 hours is refused');
+
+// [008] Daily posting limit cannot be reset by deleting, and the unused Ask tables are closed
+r = await as(A, `delete from public.homes where owner = $1 returning id`, [A]);
+ok(r.n >= 3, '[008] setup: owner deleted their own rooms');
+r = await as(A, ...ins(home()));
+ok(/limit: 3 new homes per day/.test(r.err || ''), '[008] deleting your rooms does not reset the 3-a-day posting limit');
+r = await as(A, `delete from public.wanted where owner = $1`, [A]);
+r = await as(A, ...insW(want()));
+ok(/limit: 3 new wanted per day/.test(r.err || ''), '[008] deleting your wanted ads does not reset the 3-a-day limit');
+r = await as(B, `insert into public.questions(owner, area, body) values ($1, 'Sunnybank', 'spam spam') returning id`, [B]);
+ok(!!r.err, '[008] a signed-in user cannot post straight into the unmoderated questions table');
+r = await as(ADM, `insert into public.questions(owner, area, body) values ($1, 'Sunnybank', 'admin seed') returning id`, [ADM]);
+ok(!r.err, '[008] an admin can still add a question');
+const q1 = r.rows?.[0]?.id;
+r = await as(B, `insert into public.answers(owner, question, body) values ($1, $2, 'spam') returning id`, [B, q1]);
+ok(!!r.err, '[008] a signed-in user cannot post straight into the unmoderated answers table');
+r = await as(B, `select * from private.post_log`);
+ok(!!r.err, '[008] nobody using the app can read the posting log');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);
