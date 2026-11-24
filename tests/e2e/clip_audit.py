@@ -7,7 +7,7 @@ HERE=os.path.dirname(os.path.abspath(__file__));ROOT=os.path.dirname(os.path.dir
 from playwright.sync_api import sync_playwright
 srv=subprocess.Popen([sys.executable,os.path.join(HERE,'fixture_server.py'),'8336',ROOT],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
 U='http://localhost:8336/'
-TABS=['home','homes','jobs','today','landed','guides','rights','play','help','earn','tools','guide','ask','me','about','privacy','check','admin']
+TABS=['home','homes','jobs','today','landed','guides','rights','play','help','earn','tools','guide','ask','me','about','privacy','check','admin','wanted']
 JS=r"""()=>{const W=innerWidth,out=[];const name=e=>{let s=e.tagName.toLowerCase();if(e.id)s+='#'+e.id;if(e.classList.length)s+='.'+[...e.classList].slice(0,3).join('.');return s};
 const txt=e=>(e.innerText||e.getAttribute('aria-label')||'').trim().replace(/\s+/g,' ').slice(0,40);
 const vis=e=>{const r=e.getBoundingClientRect();if(!r.width||!r.height)return false;const c=getComputedStyle(e);return c.visibility!=='hidden'&&c.display!=='none'&&+c.opacity!==0};
@@ -42,6 +42,8 @@ try:
      pg.goto(U);pg.wait_for_selector('#nav button');time.sleep(1.2)
      pg.evaluate(f"S.lang='{lang}';document.documentElement.dataset.theme='{'dark' if dark else ''}'")
      L=f"{w}/{lang}/{'dark' if dark else 'light'}"
+     # Wanted posts 求租: one from someone else (long note, every field) and one of the visitor's own.
+     pg.evaluate("S.wanted=[{id:'wa1',db:false,mine:false,kind:'room',budget:280,zones:['south','innersouth','west','inner'],move:'2027-02-14',stay:'12',campus:'gu-nathan',zh:true,note:'Griffith master’s student from Chengdu, quiet, non-smoker, cooks simple meals, looking for a long stay near the 130 bus line, happy to share a bathroom',by:'Amy Zhang Xiaoyu',ago:5},{id:'wa2',db:false,mine:true,kind:'any',budget:350,zones:['west'],move:'',stay:'any',campus:'uq',zh:false,note:'',by:'Me',ago:30}]")
      for t in TABS:
       pg.evaluate(f"tab='{t}';render();scrollTo(0,0)");time.sleep(.35);audit(pg,L+':'+t)
      # pop-up sheets
@@ -50,6 +52,11 @@ try:
       if pg.query_selector(sel):
        pg.click(sel);time.sleep(.6);audit(pg,L+':sheet-'+t)
        if w==390 and lang=='zh' and not dark:pg.screenshot(path=f'/tmp/aud/sheet-{t}.png')
+     for nm,js in [('want','wantDetail("wa1")'),('want-mine','wantDetail("wa2")'),('want-form','(()=>{const a=AUTHU;AUTHU={id:"x"};wantForm();AUTHU=a})()')]:
+      pg.evaluate(f"closeSheet&&closeSheet();tab='wanted';render();scrollTo(0,0);{js}");time.sleep(.6);audit(pg,L+':sheet-'+nm)
+      if w==390 and not dark:pg.screenshot(path=f'/tmp/aud/sheet-{nm}-{lang}.png')
+     if w==390 and not dark:
+      pg.evaluate("closeSheet();tab='wanted';render();scrollTo(0,0)");time.sleep(.4);pg.screenshot(path=f'/tmp/aud/wanted-{lang}.png',full_page=True)
      if w==320:
       for t in ['home','homes','jobs','today','landed']:
        pg.evaluate(f"closeSheet&&closeSheet();tab='{t}';render();scrollTo(0,0)");time.sleep(.4);pg.screenshot(path=f'/tmp/aud/{L.replace("/","-")}-{t}.png',full_page=True)

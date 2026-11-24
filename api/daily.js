@@ -25,7 +25,7 @@ const zlib = require('node:zlib');
 const crypto = require('node:crypto');
 const SUPA = 'https://ksnjvgfptqhtydcmmqwm.supabase.co';
 const PUBLISHABLE = 'sb_publishable_JIlgPYIVzeFqupY1WANZxw_J9gomZjO'; // public by design (also in js/config.js)
-const TABLES = ['profiles', 'homes', 'home_contacts', 'jobs', 'job_contacts', 'questions', 'answers', 'reports'];
+const TABLES = ['profiles', 'homes', 'home_contacts', 'jobs', 'job_contacts', 'questions', 'answers', 'reports', 'wanted', 'wanted_contacts'];
 const FROM = 'Loka backups <no-reply@lokabne.au>';
 const BNE = 10 * 36e5; // Queensland is UTC+10 all year
 

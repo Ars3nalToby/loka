@@ -5,7 +5,7 @@ import subprocess,time,sys,json,os
 from playwright.sync_api import sync_playwright
 HERE=os.path.dirname(os.path.abspath(__file__));ROOT=os.path.dirname(os.path.dirname(HERE))
 srv=subprocess.Popen([sys.executable,os.path.join(HERE,'fixture_server.py'),'8339',ROOT],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
-TABS=['home','homes','jobs','today','landed','guides','rights','play','help','earn','tools','guide','ask','me','about','privacy','check']
+TABS=['home','homes','jobs','today','landed','guides','rights','play','help','earn','tools','guide','ask','me','about','privacy','check','wanted']
 J=r"""()=>{const o=[];const vis=e=>{const r=e.getBoundingClientRect();const c=getComputedStyle(e);return r.width&&r.height&&c.visibility!=='hidden'&&c.display!=='none'};
 for(const e of document.querySelectorAll('input,select,textarea')){if(!vis(e)||e.type==='checkbox'||e.type==='radio')continue;const f=parseFloat(getComputedStyle(e).fontSize);if(f<16)o.push(['ZOOM-ON-FOCUS (font<16px)',e.id||e.name||e.type,f+'px'])}
 for(const e of document.querySelectorAll('button,a[href],[data-a],input[type=checkbox],select,label.tick')){if(!vis(e)||e.closest('svg'))continue;let r=e.getBoundingClientRect();const af=getComputedStyle(e,'::after');if(e.matches('.tickb,.vf,.card .row .heart')&&af.content!=='none'&&af.position==='absolute'){const i=parseFloat(af.top)||0;r={width:r.width-2*i,height:r.height-2*i}}

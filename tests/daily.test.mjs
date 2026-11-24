@@ -32,7 +32,7 @@ test('on a Brisbane Monday it emails a gzipped backup of every table to BACKUP_T
   const mail = r.calls.find(c => c.url === 'https://api.resend.com/emails'); const m = JSON.parse(mail.opt.body);
   assert.deepEqual(m.to, ['owner@example.com']); assert.match(m.from, /no-reply@lokabne\.au/);
   const data = JSON.parse(zlib.gunzipSync(Buffer.from(m.attachments[0].content, 'base64')));
-  assert.equal(data.tables.homes[0].title, 'Room'); assert.equal(Object.keys(data.tables).length, 8);
+  assert.equal(data.tables.homes[0].title, 'Room'); assert.equal(Object.keys(data.tables).length, 10);
   assert.ok(r.calls.filter(c => c.url.includes('/rest/v1/') && !c.url.includes('suburbs')).every(c => c.opt.headers.apikey === 'sb_secret_TEST'));
 });
 test('the reply never contains secrets or table contents', async () => {

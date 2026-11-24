@@ -832,3 +832,6 @@ header.onposter:not(.stuck) .thm{background:rgba(255,255,255,.14);box-shadow:non
 .card .row .heart{min-width:44px;min-height:44px}
 input,select,textarea{touch-action:manipulation}
 button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* Wanted 求租 bar (js/wanted.js): the dark .match card in Loka green */
+.match.wb{background:#1F6F5C;color:#F4F0E7;margin-top:10px}.match.wb em{background:#F4F0E7;color:#1F6F5C}

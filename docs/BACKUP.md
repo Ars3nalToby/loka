@@ -7,7 +7,7 @@ Set up 23 Nov 2026 (Claude Opus 5.5). Code: `api/daily.js`. Schedule: `crons` in
 | When | What | Why |
 | --- | --- | --- |
 | Every day, 03:00-03:59 Brisbane (Vercel Hobby fires anywhere in the hour) | One read of `public.suburbs` with the public key | Supabase Free pauses a project after about a week of low database activity |
-| Mondays (Brisbane), same run | Reads the 8 public tables with the Supabase secret key, gzips them as JSON, emails the file to `BACKUP_TO` via Resend | Supabase Free has no backups. The GitHub repo is public, so backups never go to GitHub |
+| Mondays (Brisbane), same run | Reads the 10 public tables (incl. wanted, wanted_contacts) with the Supabase secret key, gzips them as JSON, emails the file to `BACKUP_TO` via Resend | Supabase Free has no backups. The GitHub repo is public, so backups never go to GitHub |
 
 ## Settings (Vercel → tobyloka → Settings → Environment Variables, Production)
 

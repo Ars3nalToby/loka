@@ -234,7 +234,11 @@ blocked on the real database, security advisor clean. Still to do:
   code to the link. This image is what gets posted in WeChat groups and on 小红书.
 - Test inside WeChat's built-in browser: no blocked downloads, long-press to save the image.
 
-### [ ] S5. "Wanted" posts 求租 (Sonnet)
+### [x] S5. "Wanted" posts 求租 (Sonnet)
+
+> Done 24 Nov 2026 (Opus 5.5), ahead of S1/S2/O4 because the live database had 0 listings: demand
+> capture first. `js/wanted.js`, migration 007. Listers see matching renters on their own room. Not done:
+> push/email alerts when a new room fits (needs a sender job; "shown on next visit" is what ships).
 
 Renters post what they need: budget, zones or suburbs, move-in date, length of stay,
 campus. Listers browse Wanted and message the renter. A new room that fits a Wanted post is

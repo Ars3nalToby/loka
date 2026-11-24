@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql', '007_wanted.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -168,6 +168,59 @@ r = await as(E, `insert into public.reports(kind,item,why) values ('homes',$1,'s
 ok(/limit: 10 reports per day/.test(r.err || ''), '[006] an 11th report in 24 hours is refused');
 r = await as(C, `insert into public.reports(kind,item,why,reporter) values ('homes',$1,'looks fake',$2) returning reporter`, [ids[12], A]);
 ok(r.rows?.[0]?.reporter === C, '[006] a report is always filed under the real sender, not a name they type');
+
+// Wanted posts 求租 (007)
+await db.exec(`reset role; set session authorization postgres; delete from private.contact_views where viewer = '${D}'`);
+const want = (o = {}) => ({ budget: 280, zones: '{south}', stay: '6', campus: 'gu-nathan', note: 'Griffith student, quiet, non-smoker', decl_true: true, decl_contact_ok: true, ...o });
+const insW = w => { const k = Object.keys(w); return [`insert into public.wanted(${k.join(',')}) values (${k.map((_, i) => '$' + (i + 1)).join(',')}) returning id,status,expires_at`, Object.values(w)]; };
+r = await as('anon', ...insW(want()));
+ok(!!r.err, '[007] a signed-out visitor cannot post a wanted ad');
+r = await as(A, ...insW(want({ status: 'published', expires_at: '2099-01-01' })));
+const w1 = r.rows?.[0]?.id;
+ok(!r.err && r.rows[0].status === 'pending' && new Date(r.rows[0].expires_at) < new Date(Date.now() + 31 * 864e5), '[007] a new wanted ad is forced to pending and expires within 30 days, whatever the client sends');
+r = await as(A, ...insW(want({ zones: '{goldcoast}' })));
+ok(!!r.err, '[007] a side of town outside Loka\'s coverage is rejected');
+r = await as(A, ...insW(want({ decl_contact_ok: false })));
+ok(/wanted_declarations_true/.test(r.err || ''), '[007] a wanted ad without both declarations is rejected');
+r = await as(A, ...insW(want({ note: 'call me 0412 345 678' })));
+ok(/wanted_note_no_contact/.test(r.err || ''), '[007] a phone number in the public note is rejected (it belongs in the protected contact)');
+r = await as(A, ...insW(want({ note: '加我微信 abc123' })));
+ok(/wanted_note_no_contact/.test(r.err || ''), '[007] a WeChat ID in the public note is rejected');
+r = await as(A, ...insW(want({ budget: 10 })));
+ok(!!r.err, '[007] an impossible budget is rejected');
+await as(A, `insert into public.wanted_contacts(wanted_id, contact) values ($1, 'wx: student_bne')`, [w1]);
+r = await as('anon', `select id from public.wanted`);
+ok(r.rows.length === 0, '[007] a pending wanted ad is invisible to the public');
+r = await as(A, `update public.wanted set status = 'published' where id = $1`, [w1]);
+ok(/only an admin can publish/.test(r.err || ''), '[007] the renter cannot publish their own ad');
+r = await as(ADM, `update public.wanted set status = 'published' where id = $1`, [w1]);
+ok(!r.err && r.n === 1, '[007] an admin can publish a wanted ad');
+r = await as('anon', `select id from public.wanted`);
+ok(r.rows.length === 1, '[007] the published ad is visible to everyone');
+r = await as('anon', `select contact from public.wanted_contacts`);
+ok(!!r.err || r.rows.length === 0, '[007] signed-out visitors cannot read the renter\'s contact');
+r = await as(D, `select contact from public.wanted_contacts`);
+ok(!!r.err || r.rows.length === 0, '[007] a signed-in user cannot bulk-read renters\' contacts');
+r = await as(D, `select public.reveal_contact('wanted', $1) c`, [w1]);
+ok(r.rows?.[0]?.c === 'wx: student_bne', '[007] a signed-in lister can reveal one renter contact (counted in the daily 20)');
+r = await as(B, `select public.reveal_contact('wanted', $1) c`, [w1]);
+ok(/contact_limit/.test(r.err || ''), '[007] wanted contacts share the same 20-a-day limit as rooms and jobs');
+r = await as(B, `update public.wanted set budget = 900 where id = $1`, [w1]);
+ok(r.n === 0 || !!r.err, '[007] another user cannot edit someone else\'s wanted ad');
+r = await as(A, `update public.wanted set expires_at = '2099-01-01' where id = $1 returning status, expires_at`, [w1]);
+ok(r.rows?.[0]?.status === 'pending' && new Date(r.rows[0].expires_at) < new Date(Date.now() + 31 * 864e5), '[007] renewing only ever gives 30 days from now, and goes back for review');
+await db.exec(`reset role; set session authorization postgres; update public.wanted set status = 'published', expires_at = now() - interval '1 day' where id = '${w1}'`);
+r = await as('anon', `select id from public.wanted`);
+ok(r.rows.length === 0, '[007] an expired wanted ad disappears from public view');
+r = await as(C, `select public.reveal_contact('wanted', $1) c`, [w1]);
+ok(r.rows?.[0]?.c == null, '[007] the contact on an expired ad is never revealed');
+await db.exec(`reset role; set session authorization postgres; update public.wanted set expires_at = now() + interval '5 days' where id = '${w1}'`);
+r = await as(C, `insert into public.reports(kind,item,why) values ('wanted',$1,'fake renter')`, [w1]);
+ok(!r.err, '[007] a wanted ad can be reported');
+ok((await db.query(`select count(*)::int c from private.owner_alerts where kind = 'new_wanted' and item = $1`, [w1])).rows[0].c === 1, '[007] a new wanted ad puts an alert in the owner\'s feed');
+await as(A, ...insW(want())); await as(A, ...insW(want()));
+r = await as(A, ...insW(want()));
+ok(/limit: 3 new wanted per day/.test(r.err || ''), '[007] a 4th wanted ad in 24 hours is refused');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);

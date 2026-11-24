@@ -19,6 +19,7 @@ function render(){
    <button class="hero r" data-a="tab" data-v="homes"><span class="e">${HERO_ART.rooms}</span><div class="n">${t('Rooms','招租')}</div><div class="d">${S.homes.length} ${t('listed','条')} · ${t('from','最低')} $${Math.min(...S.homes.map(x=>x.rent))}/${t('wk','周')}</div></button>
    <button class="hero j" data-a="tab" data-v="jobs"><span class="e">${HERO_ART.jobs}</span><div class="n">${t('Jobs','找工')}</div><div class="d">${S.jobs.length} ${t('listed','条')} · ${t('up to','最高')} $${Math.max(...S.jobs.map(x=>x.pay))}/${t('hr','时')}</div></button>
   </div>
+  ${wantedBar()}
   <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
   <div class="sec row2"><span>${t('New rooms','新上房源')}</span><button class="link sm" data-a="tab" data-v="homes">${t('See all','查看全部')} →</button></div>
   <div class="strip">${[...S.homes].sort((a,b)=>(a.ago||0)-(b.ago||0)).slice(0,4).map(x=>`<button class="mini-room" data-a="home" data-v="${x.id}"><div class="pic">${art(x)}</div><div class="mr-b"><span class="price">$${x.rent}<small>/${t('wk','周')}</small></span><span class="mr-a">${ico('pin')} ${esc(x.area)}</span></div></button>`).join('')}</div>
@@ -49,6 +50,7 @@ function render(){
   </details>
   <div class="chips cc"><span class="cl">${ico('cap')} ${t('Near','靠近')}</span>${SUBURB_DATA.campuses.filter(c=>['uq','qut-gp','gu-nathan','gu-sb'].includes(c.id)).map(c=>`<button class="chip ${hf.c===c.id?'on':''}" data-a="hc" data-v="${c.id}">${CAMPUS_SHORT[c.id]}</button>`).join('')}</div>
   <div class="bar2"><div class="vt" role="group" aria-label="${t('View','视图')}"><button class="${rview==='list'?'on':''}" data-a="rv" data-v="list">${ico('list')} ${t('List','列表')}</button><button class="${rview==='map'?'on':''}" data-a="rv" data-v="map">${ico('map')} ${t('Map','地图')}</button></div><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div>
+  ${rview==='list'?wantedBar():''}
   ${rview==='map'?`<div class="rmap">${mapSvg({rooms:true})}${hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:''}</div><div id="mprev">${mapPreview()}</div><div class="maplegend"><span><i class="g"></i>${t('Verified','已核实')}</span><span><i class="k"></i>${t('Not yet verified','尚未全部核实')}</span><span><i class="sq"></i>${t('Campus','校区')}</span></div>`:`<div id="cnt" class="cntl"></div><div id="list">${listHomes()}</div>`}`;
  }
  if(tab==='jobs'){
@@ -81,6 +83,7 @@ function render(){
   <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
+ if(tab==='wanted')h+=`<button class="back" data-a="tab" data-v="homes">← ${t('Rooms','招租')}</button>`+wantedHtml();
  if(tab==='ask')h+=askHtml();
  if(tab==='about')h+=back+aboutHtml()+`<button class="btn ghost" data-a="tab" data-v="rights">${t('Renter rights and who to call','租客权益与求助电话')}</button>`+followHtml();
  if(tab==='rights')h+=back+rightsHtml();
@@ -125,7 +128,7 @@ function render(){
   <button class="btn ghost" data-a="reset">${t('Reset demo data','重置演示数据')}</button>`;
  }
  a.innerHTML=h;motion();hdr();if(tab==='home')liveLoad();
- const main=['help','guide','tools','earn','play','about','rights','today','landed','guides'].includes(tab)?'home':['admin','privacy','check'].includes(tab)?'me':tab;
+ const main=tab==='wanted'?'homes':['help','guide','tools','earn','play','about','rights','today','landed','guides'].includes(tab)?'home':['admin','privacy','check'].includes(tab)?'me':tab;
  document.getElementById('nav').innerHTML=[['home',t('Home','首页')],['homes',t('Rooms','招租')],['jobs',t('Jobs','找工')],['ask',t('Ask','问问')],['me',t('Me','我的')]].map(n=>`<button class="${main===n[0]?'on':''}" data-a="tab" data-v="${n[0]}"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[n[0]]}</svg>${n[1]}</button>`).join('');
  if(tab==='tools')calc();
  const c=document.getElementById('cnt');if(c)c.textContent=LC;
@@ -202,6 +205,15 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='fav'){const k=b.dataset.k,i=S.saved[k].indexOf(v);i>-1?S.saved[k].splice(i,1):S.saved[k].push(v);save();render();if(b.dataset.re==='home')homeDetail(v);if(b.dataset.re==='job')jobDetail(v);toast(i>-1?t('Removed','已取消'):t('Saved','已收藏'))}
  if(a==='done'){const i=S.done.indexOf(v);i>-1?S.done.splice(i,1):S.done.push(v);save();render()}
  if(a==='newhome')homeForm();
+ if(a==='newwant')wantForm();
+ if(a==='createwant')wantCreate(b);
+ if(a==='want')wantDetail(v);
+ if(a==='wz'){wz=wz===v?'':v;render()}
+ if(a==='wzsel'){WSEL.has(v)?WSEL.delete(v):WSEL.add(v);b.classList.toggle('on',WSEL.has(v))}
+ if(a==='wmsg'){const w=(S.wanted||[]).find(x=>x.id===v);if(w)copy(wMsg(w),t('Message copied','信息已复制'))}
+ if(a==='wshare')copy(t('Looking for a room in Brisbane? Post what you need on Loka, free: ','在布村找房？到 Loka 免费发布求租：')+location.origin+'/#/go/wanted',t('Copied. Paste it into WeChat or 小红书 (RedNote).','已复制，粘贴到微信或小红书（RedNote）即可。'))
+ if(a==='wdown'){const w=(S.wanted||[]).find(x=>x.id===v);if(!w)return;if(!w.db){S.wanted=S.wanted.filter(x=>x.id!==v);save();closeSheet();render();return}if(confirm(t('Take your post down?','下架你的求租？')))dbWanted(v,{status:'removed'},t('Taken down. Good luck in the new place!','已下架，祝新家住得开心！'))}
+ if(a==='wrenew')dbWanted(v,{expires_at:new Date().toISOString()},t('Renewed. It shows again once an admin checks it.','已续期，管理员审核后重新显示。'));
  if(a==='scoutnew')scoutForm();
  if(a==='scoutmake')scoutMake();
  if(a==='scoutcopy'){if(SCOUT_LAST)copy(SCOUT_LAST[v==='en'?'en':'zh'],t('Copied. Send it to the landlord yourself.','已复制，请自己发给房东。'))}
