@@ -11,7 +11,8 @@ function render(){
   h+=`<section class="hposter">${petals()}<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" pathLength="1"/></svg><div class="pbig">${esc(BRAND.en)}<b>.</b></div><div class="ptg"><em>${esc(BRAND.zh)}</em><s></s>BRISBANE</div>
   <h1>${t('Find a room.<br><em>Find a job.</em>','招租，找工。<br><em>用你的语言。</em>')}</h1>
   <div class="p2">${t('招租，找工。<em>用你的语言。</em>','Find a room. <em>Find a job.</em>')}</div>
-  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span><div class="sky">${panorama()}</div></section>
+  <div class="psub">${t('Brisbane rooms and jobs checked against Queensland rules, with verified listings clearly marked. For students, working-holiday makers, new arrivals and locals.','布里斯班的房和工，按昆州规定逐条检查，核实过的房源清楚标注。给留学生、打工度假、新移民和本地人。')}</div><span class="season ${season().k}"><i></i>${t(season().en,season().zh)} · Brisbane</span><div class="sky">${panorama()}</div>${walker()}</section>
+  ${ticker()}
   <button class="landed" data-a="tab" data-v="landed"><span class="lb-p" aria-hidden="true">✈︎</span><span><b>${t('Just landed in Brisbane?','刚落地布里斯班？')}</b><i>${t('Airport to city, 50c transport, SIM, safe numbers. Works offline.','机场进城、50 分车资、手机卡、紧急电话。离线也能看。')}</i></span><em>→</em></button>
   ${liveStrip()}
   <div class="demo">${DB.on?(S.homes.some(x=>x.db&&x.status==='published')?t('Live beta. Every listing is checked by a person before it appears.','公测版：每条信息上线前都由人工审核。'):t('Live beta. Listings tagged Sample are examples until the first real ones are approved.','公测版：标着"示例"的房源和工作仅作示范，等第一批真实信息审核通过后替换。')):t('Demo build with sample listings. Data stays on this phone until the shared database is connected.','演示版，房源和工作均为示例；数据只存在这台手机上。')}</div>
@@ -20,6 +21,7 @@ function render(){
    <button class="hero j" data-a="tab" data-v="jobs"><span class="e">${HERO_ART.jobs}</span><div class="n">${t('Jobs','找工')}</div><div class="d">${S.jobs.length} ${t('listed','条')} · ${t('up to','最高')} $${Math.max(...S.jobs.map(x=>x.pay))}/${t('hr','时')}</div></button>
   </div>
   ${wantedBar()}
+  ${landlordCard()}
   <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
   <div class="sec row2"><span>${t('New rooms','新上房源')}</span><button class="link sm" data-a="tab" data-v="homes">${t('See all','查看全部')} →</button></div>
   <div class="strip">${[...S.homes].sort((a,b)=>(a.ago||0)-(b.ago||0)).slice(0,4).map(x=>`<button class="mini-room" data-a="home" data-v="${x.id}"><div class="pic">${art(x)}</div><div class="mr-b"><span class="price">$${x.rent}<small>/${t('wk','周')}</small></span><span class="mr-a">${ico('pin')} ${esc(x.area)}</span></div></button>`).join('')}</div>
@@ -218,7 +220,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='flyer')flyerSheet(v);
  if(a==='flyerkind'){flyerKind=v;document.querySelectorAll('[data-a="flyerkind"]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));flyerDraw()}
  if(a==='flyerdraw')flyerDraw();
+ if(a==='flyerfmt'){flyerFmt=v;document.querySelectorAll('[data-a="flyerfmt"]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));flyerDraw()}
  if(a==='golist')goList();
+ if(a==='listfree')flyerLanding();
  if(a==='flyersave')flyerSave();
  if(a==='flyerprint')flyerPrint();
  if(a==='scoutmake')scoutMake();

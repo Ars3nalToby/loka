@@ -838,7 +838,7 @@ button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulatio
 /* ───────── Noticeboard flyer (25 Nov 2026, js/flyer.js) ───────── */
 .story-prev.flyer-prev{width:100%;max-width:340px;aspect-ratio:auto;display:block;background:none;box-shadow:none;border-radius:0;overflow:visible;min-height:120px}
 .story-prev.flyer-prev .sp-load{padding:40px 0;text-align:center}
-.story-prev.flyer-prev img{width:100%;height:auto;aspect-ratio:1240/1754;border-radius:10px;box-shadow:0 6px 24px rgba(25,21,18,.14)}
+.story-prev.flyer-prev img{width:100%;height:auto;border-radius:10px;box-shadow:0 6px 24px rgba(25,21,18,.14)}
 .flyer-prev .meta{margin-top:8px;word-break:break-all;text-align:center}
 #printf{display:none}
 @media print{@page{size:A4 portrait;margin:0}
@@ -846,3 +846,31 @@ button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulatio
  html.printing #printf{display:block!important;width:210mm;height:297mm;overflow:hidden}
  html.printing #printf img{display:block;width:210mm;height:297mm;object-fit:contain}
  html.printing,html.printing body{background:#fff!important;margin:0!important;padding:0!important}}
+/* ───────── Stop-and-look pass (25 Nov 2026, js/flyer.js) ───────── */
+.lticker{margin:-4px -18px 14px;overflow:hidden;background:#191512;color:#F4F0E7;padding:9px 0;font-weight:800;font-size:13px;letter-spacing:.01em;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.tk-in{display:inline-flex;align-items:center;animation:tick 38s linear infinite;will-change:transform}
+.tk-in span,.tk-in i{margin-right:14px}
+.tk-in i{font-style:normal;color:#E2683C;font-size:11px}
+.lticker:active .tk-in{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+.walker{position:absolute;bottom:4px;left:0;z-index:2;pointer-events:none;animation:stroll 26s linear infinite;will-change:transform}
+.walker .ibis{display:block}
+@keyframes stroll{0%{transform:translateX(calc(100vw + 20px))}100%{transform:translateX(-60px)}}
+@media (min-width:560px){@keyframes stroll{0%{transform:translateX(540px)}100%{transform:translateX(-60px)}}}
+.llcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin:0 0 12px;padding:14px 16px;border-radius:22px;background:#FBF3E4;border:1.5px solid rgba(201,154,43,.45);color:var(--txt);cursor:pointer;position:relative;overflow:hidden}
+.llcard::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-100%);animation:shine 5.5s ease-in-out 1.2s infinite;pointer-events:none}
+@keyframes shine{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.llcard b{display:block;font-size:17px;font-weight:900;line-height:1.25}
+.llcard i{display:block;font-style:normal;font-size:13px;color:var(--mut);margin-top:3px;line-height:1.4}
+.llcard em{font-style:normal;margin-left:auto;flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#C99A2B;color:#fff;font-weight:900;animation:nudge 2.4s ease-in-out infinite}
+@keyframes nudge{0%,70%,100%{transform:none}80%{transform:translateX(5px)}90%{transform:translateX(-1px)}}
+.ll-art{flex:none;width:64px;height:52px}.ll-art svg{width:100%;height:100%;overflow:visible}
+.ll-door{transform-box:fill-box;transform-origin:0 50%;animation:door 4s ease-in-out infinite}
+@keyframes door{0%,55%,100%{transform:none}65%,85%{transform:perspective(60px) rotateY(-55deg)}}
+.ll-key{transform-box:fill-box;transform-origin:50% 0;animation:swing 2.6s ease-in-out infinite alternate}
+@keyframes swing{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.ll-win{animation:glow 4s ease-in-out infinite}
+@keyframes glow{0%,100%{fill:#F3C9A8}50%{fill:#F6D98A}}
+.llcard:active{transform:scale(.985)}
+[data-theme=dark] .llcard{background:#2a241b;border-color:rgba(201,154,43,.35)}
+@media (prefers-reduced-motion:reduce){.tk-in,.walker,.llcard::after,.llcard em,.ll-door,.ll-key,.ll-win{animation:none!important}}

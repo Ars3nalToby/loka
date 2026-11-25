@@ -10,6 +10,7 @@ D=/tmp/loka-pglite; [ -d $D/node_modules/@electric-sql/pglite ] || npm i --silen
 NODE_PATH=$D/node_modules node tests/db/rls_check.mjs >/tmp/loka-db.txt 2>&1 && ok "database rules ($(grep -c '^PASS' /tmp/loka-db.txt) attacks blocked)" || { bad "database rules"; grep FAIL /tmp/loka-db.txt; }
 QUICK=1 python3 tests/e2e/clip_audit.py 2>/dev/null | grep -q 'ISSUES 0 | page errors 0' && ok "nothing cut off (320/390px, EN+中文)" || bad "clip audit: run QUICK=1 python3 tests/e2e/clip_audit.py"
 python3 tests/e2e/mobile_audit.py 2>/dev/null | grep -q '^TOTAL 0' && ok "phone usability" || bad "mobile audit: run python3 tests/e2e/mobile_audit.py"
+python3 tests/e2e/flyer_check.py >/tmp/loka-flyer.txt 2>/dev/null && ok "flyers + Home extras" || { bad "flyer check"; cat /tmp/loka-flyer.txt; }
 python3 tests/e2e/pwa_check.py >/tmp/loka-pwa.txt 2>/dev/null; grep -q 'OFFLINE reload ok' /tmp/loka-pwa.txt && grep -q "^errors \[\]" /tmp/loka-pwa.txt && ok "installable app works offline" || { bad "PWA check"; cat /tmp/loka-pwa.txt; }
 git diff --quiet HEAD -- sw.js js css index.html manifest.webmanifest 2>/dev/null || { git diff HEAD -- sw.js | grep -q "VERSION=" && ok "sw VERSION bumped" || bad "app files changed but sw.js VERSION was not bumped"; }
 node tests/secret_scan.mjs >/dev/null && ok "no secret keys (only public keys)" || bad "secret key in repo: remove it and rotate it in Supabase"
