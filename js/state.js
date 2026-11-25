@@ -7,7 +7,7 @@ let tab='home',filter='all',posterTheme='neon';
 const HF0={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:'',c:''};
 let hf={...HF0},jf={q:'',fair:false,zh:false};
 let mq={b:350,z:'south',zh:false};
-let rview='list'; // Rooms page: 'list' or 'map'
+let rview='notes'; // Rooms page: 'notes' (two-column room notes, default), 'list' or 'map'
 let hfOpen=false; // Rooms page: is the Filters drawer open
 const hfCount=()=>(hf.type!=='all')+(hf.max?1:0)+(hf.zh?1:0)+(hf.bills?1:0)+(hf.nobond?1:0)+(hf.clean?1:0);
 const save=()=>store.set(S);

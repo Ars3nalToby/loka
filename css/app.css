@@ -875,3 +875,60 @@ button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulatio
 [data-theme=dark] .llcard{background:#2a241b;border-color:rgba(201,154,43,.35)}
 @media (prefers-reduced-motion:reduce){.tk-in,.walker,.llcard::after,.llcard em,.ll-door,.ll-key,.ll-win{animation:none!important}}
 .copybox{width:100%;margin-top:12px;font:inherit;font-size:16px;line-height:1.5;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--txt);resize:none}
+/* ───────── Room notes (25 Nov 2026): two-column feed on Rooms ───────── */
+.notes{columns:2;column-gap:10px;margin-top:6px}
+.rnote{break-inside:avoid;display:block;width:100%;margin:0 0 10px;padding:0;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;color:var(--txt);cursor:pointer;box-shadow:0 6px 18px -14px rgba(25,21,18,.45);transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s}
+.rnote:active{transform:scale(.97)}
+@media (hover:hover){.rnote:hover{transform:translateY(-3px);box-shadow:0 14px 26px -16px rgba(25,21,18,.5)}}
+.rn-pic{display:block;position:relative;overflow:hidden;background:var(--bg2)}
+.rn-pic svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.rn-price{position:absolute;left:8px;bottom:8px;background:rgba(25,21,18,.82);color:#F4F0E7;font-weight:900;font-size:15px;padding:4px 9px;border-radius:999px;backdrop-filter:blur(4px)}
+.rn-price small{font-weight:700;font-size:11px;opacity:.8}
+.rn-flag{position:absolute;right:8px;top:8px;background:#9E3A16;color:#fff;font-weight:800;font-size:12px;padding:3px 8px;border-radius:999px}
+.rn-b{display:block;padding:10px 11px 12px}
+.rn-t{display:block;font-weight:800;font-size:14.5px;line-height:1.35}
+.rn-m{display:flex;align-items:center;gap:4px;font-size:12.5px;color:var(--mut);margin-top:5px}
+.rn-m .ic{width:13px;height:13px}
+.rn-f{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:9px}
+.rn-who{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mut);min-width:0}
+.rn-who i{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:11px;color:#F4F0E7;background:linear-gradient(135deg,#25806a,#185a4a)}
+.rn-ck{flex:none;display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--mut);background:var(--bg2);padding:3px 7px;border-radius:999px}
+.rn-ck.all{background:#E3F0EB;color:#185a4a}.rn-ck .ic{width:12px;height:12px}
+.rn-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.rn-tags i{font-style:normal;font-size:11.5px;font-weight:700;color:#185a4a;background:#E3F0EB;padding:2px 7px;border-radius:999px}
+.enter .rnote{animation:noteIn .55s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i,0)*45ms)}
+@keyframes noteIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+[data-theme=dark] .rn-tags i,[data-theme=dark] .rn-ck.all{background:#1d3a32;color:#bfe3d6}
+@media (prefers-reduced-motion:reduce){.enter .rnote{animation:none}}
+/* ───────── The Loka way (Home) ───────── */
+.lway{margin:0 0 12px;padding:16px 16px 12px;border-radius:24px;background:linear-gradient(165deg,#FFFFFF,#F7F2E8);border:1px solid var(--line);position:relative;overflow:hidden}
+.lw-h .kick{display:block;font-size:11.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#1F6F5C}
+.lw-h b{display:block;font-size:20px;font-weight:900;line-height:1.25;margin-top:3px}
+.lw-s{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px dashed rgba(25,21,18,.12);margin-top:10px;transition:opacity .4s}
+.lw-s:first-of-type{border-top:0}
+.lw-n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;background:var(--bg2);color:var(--mut);animation:lwOn 9s infinite}
+.lw-s.s2 .lw-n{animation-delay:3s}.lw-s.s3 .lw-n{animation-delay:6s}
+@keyframes lwOn{0%,30%{background:#1F6F5C;color:#F4F0E7;transform:scale(1.12)}36%,100%{background:var(--bg2);color:var(--mut);transform:none}}
+.lw-a{flex:none;width:92px;height:56px;display:grid;place-items:center}
+.lw-a svg{width:56px;height:46px;overflow:visible}
+.lw-t b{display:block;font-weight:900;font-size:15px;line-height:1.3}
+.lw-t i{display:block;font-style:normal;font-size:12.8px;color:var(--mut);margin-top:2px;line-height:1.4}
+.lw-phone{display:inline-flex;align-items:center;gap:1px;padding:8px 9px;border-radius:12px;background:#191512;color:#F6D98A;font:900 15px/1 Nunito,sans-serif;letter-spacing:.02em;box-shadow:0 0 0 3px #2c2620,0 8px 16px -8px rgba(0,0,0,.6)}
+.lw-lk{color:#9b927f;margin-right:1px}
+.reel{display:inline-block;height:1em;overflow:hidden;width:.72em;text-align:center}
+.reel>span{display:flex;flex-direction:column;animation:reel 9s cubic-bezier(.2,.9,.25,1) infinite;animation-delay:calc(var(--d)*.12s)}
+.reel b{display:block;height:1em;font-weight:900}
+@keyframes reel{0%{transform:translateY(0)}14%,100%{transform:translateY(-5em)}}
+.s2 .env{fill:#F3C9A8;stroke:#C4502A;stroke-width:1.6}.s2 .env-f{fill:none;stroke:#C4502A;stroke-width:1.6;stroke-linejoin:round}
+.s2 .rta{fill:#1F6F5C}.s2 text{fill:#F4F0E7;font:900 6px Nunito,sans-serif}
+.s2 .env,.s2 .env-f{animation:fly 9s ease-in-out 3s infinite;transform-box:view-box}
+@keyframes fly{0%{transform:none;opacity:1}18%{transform:translate(18px,-2px) scale(.55);opacity:0}19%{transform:none;opacity:0}30%,100%{transform:none;opacity:1}}
+.s3 .ring{fill:#E3F0EB;stroke:#1F6F5C;stroke-width:2.5}.s3 .tick2{fill:none;stroke:#1F6F5C;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;animation:draw 9s ease 6s infinite}
+@keyframes draw{0%{stroke-dashoffset:24}12%,100%{stroke-dashoffset:0}}
+.lw-more{display:block;width:100%;margin-top:6px;padding:12px 0 4px;text-align:left;font-weight:800;color:#1F6F5C;font-size:14px;background:none;border:0;cursor:pointer}
+[data-theme=dark] .lway{background:linear-gradient(165deg,#1f1c18,#191612);border-color:rgba(255,255,255,.08)}
+[data-theme=dark] .lw-h .kick,[data-theme=dark] .lw-more{color:#8fd3bd}
+@media (prefers-reduced-motion:reduce){.lw-n,.reel>span,.s2 .env,.s2 .env-f,.s3 .tick2{animation:none!important}.reel>span{transform:translateY(-5em)}.s3 .tick2{stroke-dashoffset:0}}
+.rn-f{flex-wrap:wrap;row-gap:6px}.rn-who{overflow-wrap:anywhere}
+@media (max-width:360px){.lw-a{width:74px}.lw-phone{font-size:13px;padding:7px 7px}.lw-s{gap:9px}}
+.bar2{flex-wrap:wrap;row-gap:8px}

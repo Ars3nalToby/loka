@@ -5,12 +5,24 @@ function filtHomes(){const l=S.homes.filter(h=>(!hf.z||zone(h.area)===hf.z)&&(hf
  return hf.c?l.sort((a,b)=>(homeKm(a,hf.c)??99)-(homeKm(b,hf.c)??99)):l.sort((a,b)=>a.rent-b.rent)}
 function listHomes(){let l=filtHomes();
  LC=l.length+' '+t(l.length===1?'room':'rooms','个房源');
+ if(rview==='notes')return notesHomes(l);
  return l.map(h=>{const fl=homeFlags(h);return `<div class="card photo"><div class="pic">${art(h)}
   ${checkBadge(h)}<button class="heart ${isSaved('homes',h.id)?'on':''}" data-a="fav" data-k="homes" data-v="${h.id}">♥</button>
   <div class="pp"><span class="price">$${h.rent}<small>/${t('wk','周')}</small></span></div></div>
   <div class="body"><button data-a="home" data-v="${h.id}" style="text-align:left;width:100%"><div class="tt">${liveTag(h)}${esc(ttl(h.title))}</div><div class="meta">${ico('pin')} ${esc(h.area)}${hf.c&&homeKm(h,hf.c)!=null?` · <b class="km">≈ ${homeKm(h,hf.c).toFixed(1)} km ${t('to','到')} ${CAMPUS_SHORT[hf.c]}</b>`:''}${h.near?' · '+t('near ','近 ')+esc(h.near):''} · ${ago(h)}</div></button>
   ${h.zh?`<span class="tag b">${t('中文 OK','中文沟通')}</span>`:''}${!h.bond?`<span class="tag g">${t('No bond','免押金')}</span>`:''}<span class="tag">${h.bills?t('Bills included','包水电网'):t('+ bills','水电另计')}</span>
   ${fl.map(x=>`<span class="flag">⚠ ${x}</span>`).join('')}</div></div>`}).join('')||`<div class="note">${t('No rooms match. Loosen a filter.','没有符合的房源，放宽筛选试试。')}</div>`}
+// Room notes: a two-column feed that reads like people's notes, not a property portal. Card heights vary
+// (stable per listing) so the grid feels hand-made. Every note still shows the price, the area, the
+// Loka Check dots and any rule flag; the whole note opens the room.
+function noteH(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;return [128,156,184][h%3]}
+function notesHomes(l){if(!l.length)return `<div class="note">${t('No rooms match. Loosen a filter.','没有符合的房源，放宽筛选试试。')}</div>`;
+ return `<div class="notes">${l.map((h,i)=>{const fl=homeFlags(h),st=checkState(h),who=String(h.by||'Loka').trim(),ini=esc(Array.from(who)[0]||'L');
+  return `<button class="rnote" data-a="home" data-v="${h.id}" style="--i:${i%8}"><span class="rn-pic" style="height:${noteH(h.id)}px">${art(h)}<span class="rn-price">$${h.rent}<small>/${t('wk','周')}</small></span>${fl.length?`<span class="rn-flag" title="${esc(fl[0])}">⚠ ${fl.length}</span>`:''}</span>
+  <span class="rn-b"><span class="rn-t">${liveTag(h)}${esc(ttl(h.title))}</span>
+  <span class="rn-m">${ico('pin')} ${esc(h.area)}${hf.c&&homeKm(h,hf.c)!=null?` · ≈ ${homeKm(h,hf.c).toFixed(1)} km`:''}</span>
+  <span class="rn-f"><span class="rn-who"><i>${ini}</i>${esc(who.slice(0,14))}</span><span class="rn-ck ${st.all?'all':''}" aria-label="${t('Loka Check','Loka 核实')} ${st.done}/4">${st.all?ico('shield'):''}${st.done}/4</span></span>
+  ${h.zh||!h.bond||h.bills?`<span class="rn-tags">${h.zh?`<i>${t('中文 OK','中文沟通')}</i>`:''}${h.bills?`<i>${t('Bills in','包水电')}</i>`:''}${!h.bond?`<i>${t('No bond','免押金')}</i>`:''}</span>`:''}</span></button>`}).join('')}</div>`}
 function homeDetail(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const fl=homeFlags(x),room=x.type!=='unit';
  openSheet(`<div class="pic" style="border-radius:18px;overflow:hidden">${art(x)}</div><div class="price" style="margin-top:10px">$${x.rent}<small>/${t('wk','周')} · ${t(ht(x.type)[1],ht(x.type)[2])}</small></div>
  ${x.mine&&x.status==='pending'?`<div class="note warn">${t('Only you can see this. It goes live after a Loka admin checks it, usually within a day.','只有你看得到。Loka 管理员审核后才会公开，通常一天内。')}</div>`:''}${x.mine?wantedForRoomHtml(x):''}<div class="tt" style="font-size:19px">${liveTag(x)}${esc(ttl(x.title))}</div><div class="meta">${esc(x.area)}${x.near?' · '+t('near ','近 ')+esc(x.near):''}</div>

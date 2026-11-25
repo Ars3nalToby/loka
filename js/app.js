@@ -22,6 +22,7 @@ function render(){
   </div>
   ${wantedBar()}
   ${landlordCard()}
+  ${lokaWay()}
   <button class="match" data-a="match"><span><b>${t('Match me in 3 taps','三步帮我配')}</b><i>${t('Budget, side of town, language. Get a room and a job that fit together.','预算、区域、语言，配出能一起成立的房和工。')}</i></span><em>→</em></button>
   <div class="sec row2"><span>${t('New rooms','新上房源')}</span><button class="link sm" data-a="tab" data-v="homes">${t('See all','查看全部')} →</button></div>
   <div class="strip">${[...S.homes].sort((a,b)=>(a.ago||0)-(b.ago||0)).slice(0,4).map(x=>`<button class="mini-room" data-a="home" data-v="${x.id}"><div class="pic">${art(x)}</div><div class="mr-b"><span class="price">$${x.rent}<small>/${t('wk','周')}</small></span><span class="mr-a">${ico('pin')} ${esc(x.area)}</span></div></button>`).join('')}</div>
@@ -51,8 +52,8 @@ function render(){
   <div class="chips">${[[0,t('Any price','不限价')],[250,'≤ $250'],[350,'≤ $350'],[500,'≤ $500']].map(c=>`<button class="chip ${hf.max===c[0]?'on':''}" data-a="hf" data-k="max" data-v="${c[0]}">${c[1]}</button>`).join('')}<button class="chip ${hf.zh?'on':''}" data-a="hf" data-k="zh">${t('中文 OK','中文沟通')}</button><button class="chip ${hf.nobond?'on':''}" data-a="hf" data-k="nobond">${t('No bond','免押金')}</button><button class="chip ${hf.bills?'on':''}" data-a="hf" data-k="bills">${t('Bills included','包水电')}</button><button class="chip ${hf.clean?'on':''}" data-a="hf" data-k="clean">${t('No red flags','无警示')}</button></div>
   </details>
   <div class="chips cc"><span class="cl">${ico('cap')} ${t('Near','靠近')}</span>${SUBURB_DATA.campuses.filter(c=>['uq','qut-gp','gu-nathan','gu-sb'].includes(c.id)).map(c=>`<button class="chip ${hf.c===c.id?'on':''}" data-a="hc" data-v="${c.id}">${CAMPUS_SHORT[c.id]}</button>`).join('')}</div>
-  <div class="bar2"><div class="vt" role="group" aria-label="${t('View','视图')}"><button class="${rview==='list'?'on':''}" data-a="rv" data-v="list">${ico('list')} ${t('List','列表')}</button><button class="${rview==='map'?'on':''}" data-a="rv" data-v="map">${ico('map')} ${t('Map','地图')}</button></div><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div>
-  ${rview==='list'?wantedBar():''}
+  <div class="bar2"><div class="vt" role="group" aria-label="${t('View','视图')}"><button class="${rview==='notes'?'on':''}" data-a="rv" data-v="notes">${ico('doc')} ${t('Notes','笔记')}</button><button class="${rview==='list'?'on':''}" data-a="rv" data-v="list">${ico('list')} ${t('List','列表')}</button><button class="${rview==='map'?'on':''}" data-a="rv" data-v="map">${ico('map')} ${t('Map','地图')}</button></div><button class="post" data-a="newhome">+ ${t('List a place','发布房源')}</button></div>
+  ${rview!=='map'?wantedBar():''}
   ${rview==='map'?`<div class="rmap">${mapSvg({rooms:true})}${hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:''}</div><div id="mprev">${mapPreview()}</div><div class="maplegend"><span><i class="g"></i>${t('Verified','已核实')}</span><span><i class="k"></i>${t('Not yet verified','尚未全部核实')}</span><span><i class="sq"></i>${t('Campus','校区')}</span></div>`:`<div id="cnt" class="cntl"></div><div id="list">${listHomes()}</div>`}`;
  }
  if(tab==='jobs'){
