@@ -4,7 +4,7 @@
 //
 // Every fact here was checked against the official site on RIGHTS_CHECKED. Phone numbers, fees and
 // hours change: re-check them against the linked pages before editing, and update the date.
-const RIGHTS_CHECKED=['18 Nov 2026','2026 年 11 月 18 日'];
+const RIGHTS_CHECKED=['25 Nov 2026','2026 年 11 月 25 日'];
 
 const HELP=[
  {k:'rta',name:'RTA · Residential Tenancies Authority',zh:'昆州租务管理局',
@@ -16,8 +16,8 @@ const HELP=[
   zhd:'免费、独立、站在租客这边。可以帮你弄懂权利、和房东或中介沟通、写信、填表、准备 QCAT 听证。提供免费口译，包括普通话和粤语。',
   tel:'1300 744 263',hrs:['Mon–Fri 9am–5pm. Tenants Queensland lists extended hours to 7pm on Tue and Wed.','周一至周五 9:00–17:00；Tenants Queensland 写明周二、周三延长到晚上 7 点。'],url:'https://qstars.org.au/',site:'qstars.org.au'},
  {k:'qcat',name:'QCAT · Civil and Administrative Tribunal',zh:'昆州民事与行政仲裁庭',
-  en:'The tribunal that makes binding decisions (orders) in rental disputes. You speak for yourself; lawyers are not allowed unless there are exceptional circumstances. Filing fees change every year and start at $27.90 for claims up to $500. You can ask for a fee waiver if money is tight.',
-  zhd:'租房纠纷里真正能“判”的机构，作出有约束力的裁决。一般要自己出庭陈述，除特殊情况外不允许请律师。申请费每年调整，$500 以下的申请目前是 $27.90；经济困难可以申请免费。',
+  en:'The tribunal that makes binding decisions (orders) in rental disputes. You usually speak for yourself; a lawyer or agent needs QCAT’s permission. Filing fees change every year and start at $27.90 for claims up to $500. The fee can be waived in some cases, for example if you get a full-rate Centrelink pension or benefit.',
+  zhd:'租房纠纷里真正能“判”的机构，作出有约束力的裁决。一般要自己陈述，请律师或代理人需要 QCAT 批准。申请费每年调整，$500 以下的申请目前是 $27.90；部分情况可免费，例如领取全额 Centrelink 养老金或补助。',
   tel:'1300 753 228',url:'https://www.qcat.qld.gov.au/matter-types/residential-tenancy-disputes',site:'qcat.qld.gov.au'},
  {k:'clc',name:'Community legal centres',zh:'社区法律中心',
   en:'Free legal help near you. Use the “Find a CLC” directory. Note: Legal Aid Queensland says it does not advise on landlord and tenant problems and refers renters to Tenants Queensland.',
@@ -62,10 +62,13 @@ const DOORS=[
   s:[['You may be a boarder or lodger. Most of the tenancy law may not cover you, but any bond you pay is still covered and must go to the RTA.','你可能算“寄宿者”（boarder/lodger），大部分租房法未必适用，但你交的押金仍然受保护，必须存进 RTA。'],['Some room rentals count as rooming accommodation, which is covered. QSTARS can tell you which one you are.','有些房间出租属于“rooming accommodation”，受法律保护。打 QSTARS 问清楚你属于哪一种。']]}];
 
 const NEWRULES=[
- ['Bond: 4 weeks of rent at most, for every kind of tenancy, since 30 September 2024.','押金：2024 年 9 月 30 日起，所有租约最多 4 周房租。'],
+ ['Bond: 4 weeks of rent at most for houses, units and rooms, since 30 September 2024 (caravans and other moveable homes have a lower cap).','押金：2024 年 9 月 30 日起，房屋、公寓和单间最多 4 周房租（房车等可移动住所上限更低）。'],
+ ['Rent in advance: 2 weeks at most for a room, whatever the agreement, and for a periodic agreement; 1 month for a whole place on a fixed term.','预付房租：单间（不论租约）和无固定期租约最多 2 周；整套房固定期租约最多 1 个月。'],
+ ['Paying rent: since 30 September 2024 the landlord must offer at least one way to pay rent with no fee.','交租方式：2024 年 9 月 30 日起，房东必须提供至少一种不收手续费的交租方式。'],
  ['Rent increases: once every 12 months, tied to the property since 6 June 2024.','涨租：12 个月一次；2024 年 6 月 6 日起跟着房子算。'],
  ['Rent bidding: banned since 6 June 2024. No inviting or accepting offers above the advertised rent.','竞租：2024 年 6 月 6 日起禁止，不能邀请或接受高于广告价的出价。'],
- ['Applications: since 1 May 2025, agents and owners must use the RTA’s standard application form and cannot ask for more than it allows. New privacy rules cover renters’ information.','申请表：2025 年 5 月 1 日起必须用 RTA 的标准申请表，不能要求超出表格范围的资料；租客个人资料有新的隐私规定。']];
+ ['Applications: since 1 May 2025, agents and owners must use the RTA’s standard application form and cannot ask for more than it allows. New privacy rules cover renters’ information. You can show original ID instead of handing over copies, and there must be a way to apply with no fee.','申请表：2025 年 5 月 1 日起必须用 RTA 的标准申请表，不能要求超出表格范围的资料；租客个人资料有新的隐私规定。你可以出示证件原件而不交复印件，而且必须有免费申请的方式。'],
+ ['Entry: since 1 May 2025 the landlord must give at least 48 hours’ notice to enter, and after a notice to leave can show the place at most twice a week.','进屋：2025 年 5 月 1 日起房东进屋至少要提前 48 小时通知；发出退租通知后，每周最多带人看房两次。']];
 
 function rightsHtml(){const tel=n=>`<a class="tel" href="tel:${n.replace(/\s/g,'')}">${ico('phone')} ${n}</a>`;
  return `<section class="rhero"><div class="rh-t"><span class="kick">${t('Know your rights','租客权益')}</span><h1>${t('Who helps renters,<br><em>and what they can do.</em>','谁能帮租客，<br><em>能帮到哪一步。</em>')}</h1></div><div class="rh-bird">${ibis(92,'idle',t('Bin Bin the ibis','宾宾，一只白鹮'))}</div></section>

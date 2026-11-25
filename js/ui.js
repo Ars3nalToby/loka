@@ -32,9 +32,22 @@ const isSaved=(k,id)=>S.saved[k].includes(id);
 // ───────── trust, rules, community ─────────
 const ROLE={owner:['Owner','业主'],head:['Tenant sub-letting','二房东（转租）'],agent:['Licensed agent','持牌中介']};
 const IC={home:'<path d="M3 11l9-7 9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',homes:'<path d="M3 19v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 16h18M6 10V6h12v4"/>',jobs:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',ask:'<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'};
-function openSheet(html){document.getElementById('sheetIn').innerHTML=`<button class="x" data-a="close">✕</button>`+html;document.getElementById('sheet').classList.add('on');document.documentElement.classList.add('lock')}
-function closeSheet(){document.getElementById('sheet').classList.remove('on');document.documentElement.classList.remove('lock')}
-function copy(s,msg){try{navigator.clipboard.writeText(s).then(()=>toast(msg),()=>toast(t('Copy blocked here','此处无法复制')))}catch(e){toast(t('Copy blocked here','此处无法复制'))}}
+// Sheets are dialogs: announced as such, focus moves in, Escape closes, focus returns where it was.
+let sheetFrom=null;
+function openSheet(html){const sh=document.getElementById('sheet'),inn=document.getElementById('sheetIn');
+ if(!sh.classList.contains('on'))sheetFrom=document.activeElement;
+ inn.innerHTML=`<button class="x" data-a="close" aria-label="${t('Close','关闭')}">✕</button>`+html;
+ inn.setAttribute('role','dialog');inn.setAttribute('aria-modal','true');const h=inn.querySelector('.tt');if(h){h.id='sheetTitle';inn.setAttribute('aria-labelledby','sheetTitle')}else inn.removeAttribute('aria-labelledby');
+ sh.classList.add('on');document.documentElement.classList.add('lock');inn.tabIndex=-1;try{inn.focus({preventScroll:true})}catch(e){}}
+function closeSheet(){document.getElementById('sheet').classList.remove('on');document.documentElement.classList.remove('lock');
+ if(sheetFrom&&document.contains(sheetFrom)){try{sheetFrom.focus({preventScroll:true})}catch(e){}}sheetFrom=null}
+addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('sheet')?.classList.contains('on'))closeSheet()});
+// Copy, with fallbacks for in-app browsers (WeChat, Instagram) that block the clipboard API:
+// 1) clipboard API, 2) the old select-and-copy, 3) show the text in a sheet to long-press and copy by hand.
+function copy(s,msg){const manual=()=>openSheet(`<div class="tt" style="font-size:20px">${t('Copy this','复制这段文字')}</div><div class="meta">${t('Your browser blocked copying. Press and hold the text below, then Copy.','此浏览器不允许自动复制。请长按下方文字，再选“复制”。')}</div><textarea class="copybox" rows="6" readonly>${esc(s)}</textarea>`);
+ const old=()=>{try{const ta=document.createElement('textarea');ta.value=s;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();if(ok){toast(msg);return true}}catch(e){}return false};
+ try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(s).then(()=>toast(msg),()=>{if(!old())manual()});return}}catch(e){}
+ if(!old())manual()}
 const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
 
 // Line icons for tiles and guides (24x24, stroke). Use ico(name) to get an <svg>.

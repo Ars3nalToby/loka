@@ -56,9 +56,9 @@ function render(){
   ${rview==='map'?`<div class="rmap">${mapSvg({rooms:true})}${hf.z?`<button class="mzout" data-a="hz" data-v="${hf.z}">${t('Whole city','看全城')}</button>`:''}</div><div id="mprev">${mapPreview()}</div><div class="maplegend"><span><i class="g"></i>${t('Verified','已核实')}</span><span><i class="k"></i>${t('Not yet verified','尚未全部核实')}</span><span><i class="sq"></i>${t('Campus','校区')}</span></div>`:`<div id="cnt" class="cntl"></div><div id="list">${listHomes()}</div>`}`;
  }
  if(tab==='jobs'){
-  h+=`<h1>${t('Jobs that <em>pay legally.</em>','找工，<em>时薪合法。</em>')}</h1><div class="sub">${t(`National minimum from 1 July 2026: $${RULES.minWage}/h, or $${RULES.minCasual}/h casual. Your award may be higher.`,`2026年7月1日起全国最低工资：$${RULES.minWage}/时，临时工 $${RULES.minCasual}/时。行业 award 可能更高。`)}</div>
+  h+=`<h1>${t('Jobs at or above <em>the minimum.</em>','找工，<em>不低于最低工资。</em>')}</h1><div class="sub">${t(`National minimum from 1 July 2026: $${RULES.minWage}/h, or $${RULES.minCasual}/h casual. Your award may be higher.`,`2026年7月1日起全国最低工资：$${RULES.minWage}/时，临时工 $${RULES.minCasual}/时。行业 award 可能更高。`)}</div>
   <input class="search" id="jq" placeholder="${t('Suburb or role','区或职位')}" value="${esc(jf.q)}">
-  <div class="chips"><button class="chip ${jf.zh?'on':''}" data-a="jf" data-k="zh">${t('Mandarin a plus','会中文优先')}</button><button class="chip ${jf.cash?'on':''}" data-a="jf" data-k="cash">${t('Cash','现金')}</button><button class="chip ${jf.fair?'on':''}" data-a="jf" data-k="fair">${t('Hide under-minimum pay','隐藏低于最低工资')}</button></div>
+  <div class="chips"><button class="chip ${jf.zh?'on':''}" data-a="jf" data-k="zh">${t('Mandarin a plus','会中文优先')}</button><button class="chip ${jf.fair?'on':''}" data-a="jf" data-k="fair">${t('Hide under-minimum pay','隐藏低于最低工资')}</button></div>
   <div class="bar2"><span id="cnt"></span><button class="post" data-a="newjob">+ ${t('Post a job','发布工作')}</button></div><div id="list">${listJobs()}</div>`;
  }
  if(tab==='play'){
@@ -81,7 +81,7 @@ function render(){
  if(tab==='earn'){const mx=Math.max(...S.scouts.map(x=>x.earned));
   h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Loka pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Loka 不按入住或入职发放现金。')}</div>
   <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Invite the landlord','邀请房东','Type the room details (never their contact). Send them the link: they check it and post it themselves.','填写房间资料（不填对方联系方式），把链接发给房东，由房东自己核对并发布。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
-  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="scoutnew">${t('Invite a landlord','邀请房东')}</button></div><div class="cta"><button class="btn ghost" data-a="flyer" data-v="landlord">${t('Print a noticeboard flyer','打印公告栏传单')}</button></div></div>
+  <div class="cta"><button class="btn" data-a="scoutnew">${t('Invite a landlord','邀请房东')}</button></div><div class="cta"><button class="btn ghost" data-a="flyer" data-v="landlord">${t('Print a noticeboard flyer','打印公告栏传单')}</button></div></div>
   <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
@@ -109,9 +109,9 @@ function render(){
  }
  if(tab==='tools'){
   h+=back+`<h1>${t('Do the maths first.','先把账算清。')}</h1>
-  <div class="card"><div class="tt">🏠 ${t('Move-in cost','入住要准备多少钱')}</div><div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="m_rent" type="number" inputmode="decimal" value="300"></div><div><label>${t('Agreement','租约类型')}</label><select id="m_type"><option value="room">${t('Shared room','合租房间')}</option><option value="fixed">${t('Fixed lease','固定期租约')}</option></select></div></div><div class="res" id="m_out"></div></div>
+  <div class="card"><div class="tt">🏠 ${t('Move-in cost','入住要准备多少钱')}</div><div class="g2"><div><label>${t('Rent per week $','周租 $')}</label><input id="m_rent" type="number" inputmode="decimal" value="300"></div><div><label>${t('Agreement','租约类型')}</label><select id="m_type"><option value="room">${t('Room (any agreement)','单间（任何租约）')}</option><option value="fixed">${t('Whole place, fixed lease','整套，固定期租约')}</option></select></div></div><div class="res" id="m_out"></div></div>
   <div class="card"><div class="tt">🧾 ${t('Rent split','分摊房租')}</div><div class="g2"><div><label>${t('Total rent per week $','总周租 $')}</label><input id="r_total" type="number" inputmode="decimal" value="640"></div><div><label>${t('Room sizes m², comma separated','各房间面积 m²，逗号分隔')}</label><input id="r_sizes" value="14,11"></div></div><div class="res" id="r_out"></div></div>
-  <div class="card"><div class="tt">💵 ${t('Is my pay legal?','我的时薪合法吗')}</div><div class="g2"><div><label>${t('Hourly rate $','时薪 $')}</label><input id="p_rate" type="number" inputmode="decimal" value="22"></div><div><label>${t('Type','类型')}</label><select id="p_type"><option value="c">${t('Casual','临时工')}</option><option value="p">${t('Part / full time','兼职/全职')}</option></select></div></div><div><label>${t('Hours per week','每周工时')}</label><input id="p_hrs" type="number" inputmode="decimal" value="20"></div><div class="res" id="p_out"></div></div>
+  <div class="card"><div class="tt">💵 ${t('Is my pay above the minimum?','我的时薪达到最低工资吗')}</div><div class="g2"><div><label>${t('Hourly rate $','时薪 $')}</label><input id="p_rate" type="number" inputmode="decimal" value="22"></div><div><label>${t('Type','类型')}</label><select id="p_type"><option value="c">${t('Casual','临时工')}</option><option value="p">${t('Part / full time','兼职/全职')}</option></select></div></div><div><label>${t('Hours per week','每周工时')}</label><input id="p_hrs" type="number" inputmode="decimal" value="20"></div><div class="res" id="p_out"></div></div>
   <div class="card"><div class="tt">⏱ ${t('Student visa hours','学生签证工时')}</div><div class="g2"><div><label>${t('Week 1 hours','第 1 周工时')}</label><input id="s_w1" type="number" inputmode="decimal" value="26"></div><div><label>${t('Week 2 hours','第 2 周工时')}</label><input id="s_w2" type="number" inputmode="decimal" value="24"></div></div><div class="res" id="s_out"></div></div>`;
  }
  if(tab==='me'){
@@ -201,7 +201,6 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='adrem'){if(confirm(t('Take this listing down? The lister can post it again.','下架这条信息？发布人可以重新发布。')))dbAdmin(b.dataset.k,v,{status:'removed'},t('Taken down','已下架'))}
  if(a==='adrep'){ADREP=null;sb.from('reports').update({open:false}).eq('id',v).then(r=>{toast(r.error?dbErr(r.error):t('Report closed','已处理举报'));render()})}
  if(a==='adver'){const x=S.homes.find(q=>q.id===v);if(x.db&&x.verified){dbAdmin('homes',v,{verified:false,verified_at:null},t('Verification removed','已取消核实'));return}if(x.verified){x.verified=false;x.vdate='';save();render()}else verifyForm(v)}
- if(a==='adpay'){S.scouts[+v].owed=0;save();render();toast(t('Recorded','已记录'))}
  if(a==='home')homeDetail(v);
  if(a==='job')jobDetail(v);
  if(a==='fav'){const k=b.dataset.k,i=S.saved[k].indexOf(v);i>-1?S.saved[k].splice(i,1):S.saved[k].push(v);save();render();if(b.dataset.re==='home')homeDetail(v);if(b.dataset.re==='job')jobDetail(v);toast(i>-1?t('Removed','已取消'):t('Saved','已收藏'))}
@@ -231,9 +230,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='scoutno'){scoutDone();closeSheet()}
  if(a==='newjob')jobForm();
  if(a==='createhome'){const by=S.me||val('h_by'),title=val('h_title'),rent=+val('h_rent');if(!by||!title||!rent||!val('h_contact'))return toast(t('Name, title, rent and contact are required','名字、标题、租金、联系方式必填'));if(!SUB(val('h_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));const hb=Math.max(0,+val('h_bond')||0),adv=Math.max(0,+val('h_adv')||0),agr=val('h_agr'),role=val('h_role'),ck=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};
-  const pb=publishBlock(rent,hb,adv,agr);
+  const pb=publishBlock(rent,hb,adv,agr,val('h_type'));
   if(pb==='bond')return toast(t('Bond cannot be more than 4 weeks of rent','押金不能超过 4 周房租'));
-  if(pb==='advance')return toast(t('That is more rent in advance than Queensland allows','预付房租超过昆州上限'));
+  if(pb==='advance')return toast(val('h_type')==='unit'?t('That is more rent in advance than Queensland allows (2 weeks periodic, 4 weeks fixed term on Loka)','预付房租超过昆州上限（无固定期 2 周，固定期在 Loka 最多 4 周）'):t('Rooms can ask for at most 2 weeks of rent in advance, even on a fixed term (Queensland rule)','单间最多只能预付 2 周房租，固定期租约也一样（昆州规定）'));
   if(!ck('h_c1')||!ck('h_c2')||!ck('h_c4')||(role==='head'&&!ck('h_c3')))return toast(t('Please tick the declarations','请勾选声明'));S.me=by;
   const n={id:'h'+Date.now(),type:val('h_type'),title,area:val('h_area')||'Brisbane',near:val('h_near'),rent,bond:Math.max(0,+val('h_bond')||0),bills:val('h_bills')==='1',furn:val('h_furn')==='1',verified:false,zh:S.lang==='zh',reward:0,ago:0,by,contact:val('h_contact'),note:val('h_note'),agr,adv,role,consent:role==='head'};
   if(dbLive()){const row={type:n.type,agr:agr==='fixed'?'fixed':'room',role:ROLE[role]?role:'owner',owner_consent:role==='head'&&ck('h_c3'),title:title.slice(0,140),area:n.area,near:(n.near||'').slice(0,140),rent,bond:hb,adv_weeks:adv,bills:n.bills,furnished:n.furn,chinese_ok:S.lang==='zh',note:(n.note||'').slice(0,1200),
@@ -242,7 +241,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
   S.homes.push(n);save();tab='homes';render();homeDetail(n.id)}
  if(a==='createjob'){const by=S.me||val('j_by'),title=val('j_title'),pay=+val('j_pay');if(!by||!title||!pay||!val('j_contact'))return toast(t('Name, role, pay and contact are required','名字、职位、时薪、联系方式必填'));
   if(!SUB(val('j_area')))return toast(t('Pick a suburb from the list. Loka covers the inner city and south side.','请从列表选择区名。Loka 目前覆盖市中心和南区。'));
-  const jk=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};if(!jk('j_c1')||!jk('j_c2')||!jk('j_c3'))return toast(t('Please tick the declarations','请勾选声明'));S.me=by;
+  const jk=i=>{const e=document.getElementById(i);return !!(e&&e.checked)};if(!jk('j_c1')||!jk('j_c2')||!jk('j_c3'))return toast(t('Please tick the declarations','请勾选声明'));
+  {const cas=val('j_cas')==='1',min=cas?RULES.minCasual:RULES.minWage;if(pay<min)return toast(t(`Loka cannot publish pay under the national adult minimum ($${min.toFixed(2)}/h${cas?' casual':''}). Advertising pay below the legal minimum is against the Fair Work Act.`,`Loka 不能发布低于全国成人最低工资（$${min.toFixed(2)}/时${cas?'，临时工':''}）的工作。刊登低于法定最低工资的招聘违反《公平工作法》。`))}
+  S.me=by;
   const n={id:'j'+Date.now(),title,area:val('j_area')||'Brisbane',pay,casual:val('j_cas')==='1',hrs:val('j_hrs')||'–',student:true,zh:/中文|mandarin|chinese/i.test(val('j_lang')),cash:false,reward:0,ago:0,lang:val('j_lang')||'English',by,contact:val('j_contact'),note:val('j_note')};
   if(dbLive()){const row={title:title.slice(0,140),area:n.area,pay,casual:n.casual,hours:(val('j_hrs')||'').slice(0,60),languages:(n.lang||'').slice(0,60),note:(n.note||'').slice(0,1200),decl_award_pay:true,decl_no_cash_only:true,decl_true:true,by_name:by.slice(0,40)};
    b.disabled=true;dbCreateJob(row,n.contact.slice(0,140)).then(id=>{if(id){closeSheet();tab='jobs';render();jobDetail(id);toast(t('Sent for review. It goes live once an admin checks it.','已提交审核，管理员核对后公开。'))}}).catch(e=>toast(dbErr(e))).finally(()=>{b.disabled=false});return}
@@ -261,7 +262,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='copy')copy(v,t('Copied','已复制'));
  if(a==='invite')copy(inviteText(q),t('Invite copied','文案已复制'));
  if(a==='poster')poster(v);
- if(a==='theme'){posterTheme=v;poster(b.dataset.id)}
+ if(a==='ptheme'){posterTheme=v;poster(b.dataset.id)}
  if(a==='create'){const host=S.me||val('f_host'),title=val('f_title'),st=val('f_start');if(!host||!title||!st)return toast(t('Name, title and time are required','名字、标题、时间必填'));S.me=host;
   const price=Math.max(0,+val('f_price')||0),nq={id:'s'+Date.now(),sport:val('f_sport'),title,area:val('f_area')||'Brisbane',venue:val('f_venue')||t('TBC','待定'),start:new Date(st).toISOString(),mins:+val('f_mins')||60,level:val('f_level'),price,cap:Math.max(2,+val('f_cap')||2),host,payid:val('f_payid'),note:val('f_note'),players:[{n:host,paid:true}],wait:[]};
   S.squads.push(nq);save();tab='play';render();poster(nq.id)}

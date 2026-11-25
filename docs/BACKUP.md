@@ -17,6 +17,7 @@ Set up 23 Nov 2026 (Claude Opus 5.5). Code: `api/daily.js`. Schedule: `crons` in
 | `SUPABASE_SECRET_KEY` | Supabase → Project Settings → API keys → secret key (`sb_secret_…`). Bypasses all row rules: never in the repo, never in chat | Backup |
 | `RESEND_API_KEY` | A second Resend key, Sending access, domain lokabne.au, named "Loka backups" | Backup |
 | `BACKUP_TO` | The owner's inbox | Backup |
+| `BACKUP_KEY` | A long passphrase (5+ random words). Keep it in a password manager: without it the backups cannot be opened, and without the variable the backup is **not sent** | Backup (encryption) |
 
 After adding or changing a variable, redeploy (Deployments → … → Redeploy) so the function sees it.
 To test at once: Vercel → Settings → Cron Jobs → Run. On a Brisbane Monday this also sends the backup.
@@ -41,3 +42,12 @@ To test at once: Vercel → Settings → Cron Jobs → Run. On a Brisbane Monday
 
 The backup holds users' emails and listing contacts. It is described in the Privacy page ("Who else
 handles it"). Keep the backup emails in one Gmail label; delete ones older than about 3 months.
+
+
+## Opening an encrypted backup (from 25 Nov 2026)
+
+The emailed file `loka-backup-<date>.json.gz.enc` is encrypted with `BACKUP_KEY` (AES-256-GCM). On any computer with Node:
+
+    node tools/decrypt-backup.mjs loka-backup-2026-11-30.json.gz.enc
+
+It asks for the passphrase and writes `loka-backup-2026-11-30.json`. Then follow the restore steps above.

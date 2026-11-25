@@ -19,7 +19,7 @@ async function authInit(){if(!authReady())return;
   const {data}=await sb.auth.getSession();AUTHU=data.session?data.session.user:null;
   sb.auth.onAuthStateChange((ev,session)=>{const was=AUTHU&&AUTHU.id;AUTHU=session?session.user:null;if(ev==='SIGNED_IN')afterSignIn();render();
    if((AUTHU&&AUTHU.id)!==was)setTimeout(dbLoad,0)});
-  if(AUTHU)await needMfa();render();dbLoad()}catch(e){console.warn('Auth unavailable',e)}}
+  if(AUTHU)await needMfa();render();dbLoad()}catch(e){console.warn('Auth unavailable',e);if(typeof openPendingRoom==='function')openPendingRoom()}}
 
 // ---------- Australian mobile numbers ----------
 // Accepts 0412 345 678, 412345678, +61 412 345 678, 61412345678. Returns +61412345678 or null.

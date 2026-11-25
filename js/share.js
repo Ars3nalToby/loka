@@ -91,14 +91,23 @@ function openFromHash(){if(typeof openDraftFromHash==='function'&&openDraftFromH
  const g=location.hash.match(/^#\/go\/([a-z]+)$/);if(g&&GO_TABS.includes(g[1])){tab=g[1];render();scrollTo(0,0);history.replaceState(null,'',location.pathname+location.search);return}
  const m=location.hash.match(/^#\/room\/([\w-]+)/);if(!m)return;const id=m[1];
  if(S.homes.some(h=>h.id===id)){tab='homes';render();homeDetail(id)}
+ // A first-time visitor (QR, WeChat link) has no saved copy yet: wait for the database before saying "not found".
+ else if(typeof authReady==='function'&&authReady()&&!(typeof DB!=='undefined'&&DB.on)){PEND_ROOM=id;tab='homes';render();toast(t('Opening the room…','正在打开这间房…'))}
  else{tab='homes';render();toast(t('That room is not on Loka yet, or it was taken down.','这间房还没上 Loka，或已下架。'))}
  history.replaceState(null,'',location.pathname+location.search)}
+// Called by dbLoad() when it finishes (also when it fails, so the visitor always gets an answer).
+let PEND_ROOM=null;
+function openPendingRoom(){const id=PEND_ROOM;if(!id)return;PEND_ROOM=null;
+ if(S.homes.some(h=>h.id===id)){tab='homes';render();homeDetail(id)}
+ else toast(t('That room is not on Loka yet, or it was taken down.','这间房还没上 Loka，或已下架。'))}
 addEventListener('hashchange',openFromHash);
 
 // Line icons for the share sheet (24x24, stroke)
 Object.assign(LI,{
- igl:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9"/>',
- thr:'<path d="M16.6 11.2c-.4-2.7-2.2-4-4.6-4-2.8 0-4.6 2-4.6 4.9 0 3 1.9 5 4.8 5 2.4 0 4.2-1.4 4.2-3.5 0-2-1.6-3-3.6-3-1.8 0-2.9.9-2.9 2.1s1 1.9 2.2 1.9c2.6 0 3.5-2.6 3.5-4.9"/><path d="M19.5 13c0 4.7-3.3 7.5-7.5 7.5S4.5 17.3 4.5 12 7.8 3.5 12 3.5c3.2 0 5.6 1.5 6.7 4"/>',
+ // Meta's brand rules allow only its own unaltered logos, so these are plain generic icons, not redrawn logos:
+ // a phone-shaped story frame for Instagram Stories and an @ sign for Threads. The button text names the app.
+ igl:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M9.5 8.5h5M9.5 12h5M9.5 15.5h3"/>',
+ thr:'<circle cx="12" cy="12" r="3.6"/><path d="M15.6 12v1.4a2.6 2.6 0 0 0 5.2 0V12a8.8 8.8 0 1 0-3.4 6.9"/>',
  chat:'<path d="M4 5.5h16v10H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>',
  lnk:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
  share:'<path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"/><path d="M5 12v7.5h14V12"/>'

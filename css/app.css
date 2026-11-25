@@ -874,3 +874,4 @@ button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulatio
 .llcard:active{transform:scale(.985)}
 [data-theme=dark] .llcard{background:#2a241b;border-color:rgba(201,154,43,.35)}
 @media (prefers-reduced-motion:reduce){.tk-in,.walker,.llcard::after,.llcard em,.ll-door,.ll-key,.ll-win{animation:none!important}}
+.copybox{width:100%;margin-top:12px;font:inherit;font-size:16px;line-height:1.5;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--txt);resize:none}

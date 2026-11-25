@@ -9,7 +9,7 @@ import vm from 'node:vm';
 const ctx = vm.createContext({ t: (en) => en });
 vm.runInContext(readFileSync(new URL('../js/rules.js', import.meta.url), 'utf8'), ctx);
 const run = (code) => vm.runInContext(code, ctx);
-const gate = (rent, bond, adv, agr) => run(`publishBlock(${rent},${bond},${adv},${JSON.stringify(agr)})`);
+const gate = (rent, bond, adv, agr, type = 'unit') => run(`publishBlock(${rent},${bond},${adv},${JSON.stringify(agr)},${JSON.stringify(type)})`);
 const flags = (h) => run(`homeFlags(${JSON.stringify(h)})`);
 
 test('limits match Queensland rules', () => {
@@ -24,6 +24,15 @@ test('room agreement: 2 weeks advance allowed', () => assert.equal(gate(300, 0, 
 test('room agreement: 3 weeks advance refused', () => assert.equal(gate(300, 0, 3, 'room'), 'advance'));
 test('fixed term: 4 weeks advance allowed', () => assert.equal(gate(300, 0, 4, 'fixed'), null));
 test('fixed term: 5 weeks advance refused', () => assert.equal(gate(300, 0, 5, 'fixed'), 'advance'));
+test('rooming accommodation: 2 weeks max even on a fixed term (RTA)', () => {
+  assert.equal(gate(300, 0, 2, 'fixed', 'room'), null);
+  assert.equal(gate(300, 0, 3, 'fixed', 'room'), 'advance');
+  assert.equal(gate(300, 0, 4, 'fixed', 'student'), 'advance');
+});
+test('homeFlags flags a fixed-term room asking 4 weeks in advance', () => {
+  assert.equal(flags({ rent: 300, bond: 0, adv: 4, agr: 'fixed', type: 'room', note: '' }).length, 1);
+  assert.equal(flags({ rent: 300, bond: 0, adv: 4, agr: 'fixed', type: 'unit', note: '' }).length, 0);
+});
 test('bond is checked before advance', () => assert.equal(gate(300, 2000, 9, 'room'), 'bond'));
 
 test('homeFlags warns on a sample that breaks the rules', () => {

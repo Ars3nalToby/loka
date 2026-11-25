@@ -48,7 +48,7 @@ async function dbLoad(){if(!dbLive()||DB.loading)return;DB.loading=true;
   DB.on=true;DB.err='';
   if(AUTHU){const p=await sb.from('profiles').select('is_admin').eq('id',AUTHU.id).maybeSingle();DB.admin=!!(p.data&&p.data.is_admin)}else DB.admin=false;
   save()}catch(e){DB.err=String(e&&e.message||e);console.warn('Loka database unavailable, showing the saved copy.',e)}
- finally{DB.loading=false;render()}}
+ finally{DB.loading=false;render();if(typeof openPendingRoom==='function')openPendingRoom()}}
 
 // Plain words for what the database refuses.
 function dbErr(e){const m=String(e&&(e.message||e.details)||e||'');
@@ -109,5 +109,9 @@ async function dbReport(kind,x){if(needSignIn())return;
 
 // Admin actions. The database checks is_admin again; these buttons only appear for admins.
 async function dbAdmin(kind,id,patch,msg){const {error}=await sb.from(kind).update(patch).eq('id',id);
- if(error)return toast(dbErr(error));toast(msg);await dbLoad()}
+ if(error)return toast(dbErr(error));
+ // Publishing (or un-hiding) means an admin has looked: close the reports on it, or the next single report
+ // would hide it again straight away.
+ if(patch.status==='published'||patch.hidden_by_reports===false){const r=await sb.from('reports').update({open:false}).eq('kind',kind).eq('item',id).eq('open',true);if(r.error)console.warn('Reports not closed',r.error)}
+ toast(msg);await dbLoad()}
 async function dbReports(){if(!DB.admin)return [];const {data}=await sb.from('reports').select('id,kind,item,why,created_at').eq('open',true).order('created_at');return data||[]}

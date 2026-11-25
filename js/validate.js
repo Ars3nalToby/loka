@@ -36,7 +36,7 @@ function cleanData(D){if(!D||typeof D!=='object')return seed();
  const ids=a=>Array.isArray(a)?a.filter(v=>typeof v==='string'&&ID_RE.test(v)).slice(0,500):[];
  D.saved={homes:ids(D.saved&&D.saved.homes),jobs:ids(D.saved&&D.saved.jobs)};
  D.done=Array.isArray(D.done)?D.done.filter(v=>typeof v==='string'||typeof v==='number').slice(0,100):[];
- D.scouts=Array.isArray(D.scouts)?D.scouts.filter(x=>x&&typeof x==='object').slice(0,200).map(x=>({n:vstr(x.n,60),leads:clampNum(x.leads,0,1e5,0),won:clampNum(x.won,0,1e5,0),earned:clampNum(x.earned,0,1e7,0),owed:clampNum(x.owed,0,1e7,0)})):[];
+ D.scouts=Array.isArray(D.scouts)?D.scouts.filter(x=>x&&typeof x==='object').slice(0,200).map(x=>({n:vstr(x.n,60),leads:clampNum(x.leads,0,1e5,0),checks:clampNum(x.checks!=null?x.checks:0,0,1e5,0),earned:clampNum(x.earned,0,1e7,0)})):[];
  const idMap=(o,val)=>{const r={};if(o&&typeof o==='object')for(const k of Object.keys(o))if(ID_RE.test(k)){const v=val(o[k]);if(v!==undefined)r[k]=v}return r};
  D.mine=idMap(D.mine,v=>Array.isArray(v)?v.filter(x=>typeof x==='string').slice(0,10):undefined);
  D.inspd=idMap(D.inspd,v=>v==='ok'||v==='bad'?v:undefined);

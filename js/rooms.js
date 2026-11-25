@@ -52,7 +52,7 @@ function verifyForm(id){const x=S.homes.find(q=>q.id===id);if(!x)return;const st
  openSheet(`<div class="tt" style="font-size:21px">${t('Loka Check this listing','核实这条房源')}</div><div class="meta">${esc(ttl(x.title))} · ${esc(x.area)}</div>
  <div class="code" style="margin:12px 0"><span>${t('Today’s code to ask for on the video call','视频时要求对方出示的当日验证码')}</span><b>${lokaCode(x.id)}</b></div>
  ${ck('id','I sighted the lister’s photo ID and kept no copy, photo or number.','我查看过发布人的证件，没有留存复印件、照片或号码。')}${ck('live','I saw the room live (visit or video) and the lister held up today’s code.','我实时看过房（实地或视频），对方出示了当日验证码。')}${ck('right','I sighted proof they can let it: ownership, or the owner’s written permission to sub-let.','我查看过出租权证明：产权，或业主的书面转租同意。')}
- <div class="li ${checkState(x).c.terms?'y':'n'}">${t('Fair terms under Qld rules: checked automatically','条款符合昆州规定：系统自动检查')}</div>
+ <div class="li ${checkState(x).c.terms?'y':'n'}">${t('Rent, bond and advance within Qld limits: checked automatically','租金、押金、预付在昆州上限内：系统自动检查')}</div>
  <button class="btn" data-a="adverok" data-v="${id}">${t('Save checks','保存核实结果')}</button><div class="note">${t('Only tick what you actually did. Each tick is shown publicly with today’s date.','只勾选你确实做过的事。每一项都会连同今天的日期公开显示。')}</div>`)}
 function homeForm(){openSheet(`<div class="tt" style="font-size:21px">${t('List a place','发布房源')}</div>
  <label>${t('Type','类型')}</label><select id="h_type">${Object.keys(HT).map(k=>`<option value="${k}">${HT[k][0]} ${t(HT[k][1],HT[k][2])}</option>`).join('')}</select>

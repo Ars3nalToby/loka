@@ -33,7 +33,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated;
   alter default privileges in schema public grant all on tables to anon, authenticated;
   alter default privileges in schema public grant execute on functions to anon, authenticated;`);
-for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql', '007_wanted.sql', '008_post_limit_qa_close.sql'])
+for (const f of ['001_init.sql', '002_lock_functions.sql', '003_lister_name.sql', '004_admin_emails.sql', '005_contact_reveal_limit.sql', '006_owner_alerts_report_guard.sql', '007_wanted.sql', '008_post_limit_qa_close.sql', '009_audit_fixes.sql'])
   await db.exec(readFileSync(new URL('../../supabase/migrations/' + f, import.meta.url), 'utf8'));
 await db.exec(`insert into auth.users(id) values ('${A}'),('${B}'),('${ADM}'); update public.profiles set is_admin = true where id = '${ADM}';`);
 ok((await db.query('select count(*)::int c from public.suburbs')).rows[0].c === 53, '53 suburbs loaded from js/suburbs.js');
@@ -116,7 +116,7 @@ r = await as(B, `update public.reports set open = false`);
 ok(!!r.err || r.n === 0, 'a reporter cannot close reports');
 
 // Jobs share the same guards
-r = await as(A, `insert into public.jobs(title,area,pay,decl_award_pay,decl_no_cash_only,decl_true,status) values ('Kitchen hand','Sunnybank',30,true,true,true,'published') returning status`);
+r = await as(A, `insert into public.jobs(title,area,pay,decl_award_pay,decl_no_cash_only,decl_true,status) values ('Kitchen hand','Sunnybank',34,true,true,true,'published') returning status`);
 ok(r.rows?.[0]?.status === 'pending', 'a new job is forced to pending');
 
 // Admin by confirmed email (004)
@@ -239,6 +239,39 @@ r = await as(B, `insert into public.answers(owner, question, body) values ($1, $
 ok(!!r.err, '[008] a signed-in user cannot post straight into the unmoderated answers table');
 r = await as(B, `select * from private.post_log`);
 ok(!!r.err, '[008] nobody using the app can read the posting log');
+
+// Audit fixes (009), 25 Nov 2026
+const F = 'f0000000-0000-4000-8000-00000000000f', G = '0a000000-0000-4000-8000-0000000000aa', H = '0b000000-0000-4000-8000-0000000000bb', P = '0c000000-0000-4000-8000-0000000000cc';
+await db.exec(`reset role; set session authorization postgres; insert into auth.users(id) values ('${F}'),('${G}'),('${H}'),('${P}')`);
+r = await as(F, `update public.profiles set created_at = now() - interval '30 days' where id = $1`, [F]);
+ok(/account age cannot change/.test(r.err || ''), '[009] an account cannot make itself look older');
+const h9 = (await db.query(`insert into public.homes(owner,type,agr,title,area,rent,bond,adv_weeks,decl_fixed_price,decl_bond_rta,decl_sublet_ok,decl_true,status)
+  values ('${A}','room','room','Room nine','Sunnybank',250,1000,2,true,true,true,true,'published') returning id`)).rows[0].id;
+for (const u of [F, G, H]) { await as(u, `update public.profiles set created_at = now() - interval '9 days' where id = $1`, [u]); await as(u, `insert into public.reports(kind,item,why) values ('homes',$1,'fake')`, [h9]); }
+r = await as('anon', `select id from public.homes where id = $1`, [h9]);
+ok(r.rows.length === 1, '[009] three new accounts that tried to backdate themselves still cannot hide a room');
+let back = 0;
+for (let i = 0; i < 5; i++) { const q = await as(P, ...ins(home({ title: 'Backdated ' + i, created_at: '2020-01-01T00:00:00Z' }))); if (!q.err) back++; }
+ok(back === 3, '[009] backdating created_at does not get around the 3-a-day limit');
+r = await as(P, `select min(created_at) > now() - interval '1 hour' as fresh from public.homes where owner = $1`, [P]);
+ok(r.rows?.[0]?.fresh === true, '[009] the database, not the phone, sets created_at on a new post');
+await db.exec(`reset role; set session authorization postgres; delete from public.homes where owner = '${P}'; delete from private.post_log where owner = '${P}'`);
+r = await as(P, ...ins(home({ title: 'Future', created_at: '2030-01-01T00:00:00Z' })));
+r = await as(P, `select created_at < now() + interval '1 minute' as ok from public.homes where owner = $1`, [P]);
+ok(r.rows?.[0]?.ok === true, '[009] a future date cannot pin a room to the top');
+await db.query(`insert into public.home_contacts values ($1, 'wechat: amy_bne')`, [h9]).catch(() => {});
+r = await as(A, `update public.home_contacts set contact = 'wechat: scammer_88' where home_id = $1`, [h9]);
+ok(!r.err && r.n === 1, '[009] setup: owner edited their contact');
+r = await db.query(`select status from public.homes where id = $1`, [h9]);
+ok(r.rows[0].status === 'pending', '[009] changing the contact on a published room sends it back to review');
+r = await as(G, ...ins(home({ title: 'Fixed room', agr: 'fixed', adv_weeks: 4 })));
+ok(/qld_rent_in_advance/.test(r.err || ''), '[009] a room on a fixed term cannot ask 4 weeks in advance (rooming: 2 weeks)');
+r = await as(B, ...ins(home({ title: 'Fixed unit', type: 'unit', agr: 'fixed', adv_weeks: 4 })));
+ok(!r.err, '[009] a whole place on a fixed term may ask 4 weeks in advance');
+r = await as(B, `insert into public.jobs(title,area,pay,casual,decl_award_pay,decl_no_cash_only,decl_true) values ('Kitchen hand','Sunnybank',30,true,true,true,true)`);
+ok(/fw_min_wage_2026/.test(r.err || ''), '[009] a casual job under $33.05/h is refused');
+r = await as(B, `insert into public.jobs(title,area,pay,casual,decl_award_pay,decl_no_cash_only,decl_true) values ('Shop assistant','Sunnybank',26.44,false,true,true,true)`);
+ok(!r.err, '[009] a permanent job at the national minimum is allowed');
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database checks passed.');
 process.exit(fails ? 1 : 0);

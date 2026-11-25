@@ -20,7 +20,7 @@ const CHECKS=[
  {k:'id',ico:'idc',en:'Lister ID sighted',zh:'发布人证件已查看',how:['The lister showed photo ID on a video call or in person. Loka looked and kept no copy, photo or number.','发布人通过视频或当面出示带照片的证件。Loka 只看，不留复印件、照片或号码。']},
  {k:'live',ico:'cam',en:'Room seen live, with today’s code',zh:'实时看过房，并出示当日验证码',how:['A Loka scout visited, or the lister did a live video call walking through the room while holding today’s Loka code on paper. The code changes daily, so old photos cannot pass.','Loka 探房员实地看过，或发布人实时视频带看，并手持写有当日 Loka 验证码的纸。验证码每天更换，旧照片无法冒充。']},
  {k:'right',ico:'key',en:'Allowed to rent it out',zh:'有权出租',how:['The lister showed they own it (e.g. a rates notice in their name), or showed the owner’s written permission to sub-let. Loka looked and kept no copy.','发布人证明是业主（例如本人名下的地税单），或出示业主的书面转租同意。Loka 只看，不留存。']},
- {k:'terms',ico:'scale',en:'Fair terms under Qld rules',zh:'条款符合昆州规定',how:['Checked automatically: one fixed weekly rent, bond 4 weeks or less, rent in advance within the limit. Re-checked every time the listing is shown.','自动检查：固定周租、押金不超过 4 周、预付房租不超上限。每次显示房源都会重新检查。']}
+ {k:'terms',ico:'scale',en:'Rent, bond and advance within Qld limits',zh:'租金、押金、预付在昆州上限内',how:['Checked automatically: one fixed weekly rent, bond 4 weeks or less, rent in advance within the limit. Re-checked every time the listing is shown.','自动检查：固定周租、押金不超过 4 周、预付房租不超上限。每次显示房源都会重新检查。']}
 ];
 // Line icons used by the ladder (24x24, stroke).
 Object.assign(LI,{
@@ -57,7 +57,7 @@ const RSTEPS=[
  {k:'see',en:'Inspect before any money moves',zh:'付任何钱之前先看房',how:['In person, or the live video above. Never pay a “holding deposit” for a place you have not seen.','亲自看房，或上面的实时视频。没看过的房，不要付任何“定金”。']},
  {k:'who',en:'Confirm who you are renting from',zh:'确认出租人是谁',how:['Ask for the owner’s full name. If it is a sub-let, ask to see the owner’s written permission. A real lister will not mind.','问清业主全名。如属转租，请对方出示业主的书面同意。正规的发布人不会介意。']},
  {k:'paper',en:'Get it in writing, with receipts',zh:'签书面协议，所有付款要收据',how:['Sign a written agreement before paying. Get a receipt for every payment. Pay to a bank account in a real name, not cash with no receipt.','付款前签好书面协议，每笔付款都要收据。转账到实名银行账户，不要付没有收据的现金。']},
- {k:'rta',en:'Bond: wait for the RTA’s own message',zh:'押金：等 RTA 本身发来的确认',how:['Bond must be lodged with the RTA within 10 days. The RTA then sends you an Acknowledgement of rental bond with a bond number. No message? Call the RTA on 1300 366 311.','押金必须在 10 天内存入 RTA。RTA 会直接发给你“押金确认”（Acknowledgement of rental bond），附押金编号。没收到？打 RTA 电话 1300 366 311。'],link:'https://www.rta.qld.gov.au/renting/starting-a-tenancy/rental-bond'}
+ {k:'rta',en:'Bond: wait for the RTA’s own message',zh:'押金：等 RTA 本身发来的确认',how:['Bond must be lodged with the RTA within 10 days. The RTA then sends you an Acknowledgement of rental bond with a bond number. It comes by email or post. Nothing after a few weeks? Call the RTA on 1300 366 311.','押金必须在 10 天内存入 RTA。RTA 会直接发给你“押金确认”（Acknowledgement of rental bond），附押金编号，以电邮或邮寄方式寄出。几周后还没收到？打 RTA 电话 1300 366 311。'],link:'https://www.rta.qld.gov.au/renting/starting-a-tenancy/rental-bond'}
 ];
 function myChecks(id){S.mine=S.mine||{};return S.mine[id]||[]}
 function renterHtml(x){const m=myChecks(x.id),n=m.length,pct=Math.round(n/RSTEPS.length*100),code=lokaCode(x.id);

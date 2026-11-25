@@ -5,7 +5,7 @@ let S=store.get()||seed();if(!S.qa)S.qa=seedQA();
 (()=>{const d=seed();for(const h of S.homes){const o=d.homes.find(x=>x.id===h.id);if(o&&h.id==='h6'&&/girls only/.test(h.title||''))h.title=o.title;if(o&&!h.checks){h.checks=o.checks;if(o.vdate&&!h.vdate)h.vdate=o.vdate;if(!h.insp)h.insp=o.insp}}})();
 let tab='home',filter='all',posterTheme='neon';
 const HF0={type:'all',max:0,q:'',bills:false,clean:false,zh:false,nobond:false,z:'',c:''};
-let hf={...HF0},jf={q:'',fair:false,zh:false,cash:false};
+let hf={...HF0},jf={q:'',fair:false,zh:false};
 let mq={b:350,z:'south',zh:false};
 let rview='list'; // Rooms page: 'list' or 'map'
 let hfOpen=false; // Rooms page: is the Filters drawer open

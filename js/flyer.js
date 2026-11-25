@@ -34,7 +34,7 @@ const FLYER_KINDS={
   pts:[['写下预算、区域、入住日期','Say your budget, area and move-in date.'],
        ['房东看到合适的会来找你','Landlords with a match can find you.'],
        ['免费 · 不收中介费','Free. No agent fee.'],
-       ['防骗：先看房，再付钱','Scam-safe: see the room and get the agreement before you pay.']],
+       ['防骗：先看房，再付钱','Safety tip: see the room and get the agreement before you pay.']],
   strip:'免费求租 · Wanted'}};
 function flyerUrl(kind,src){const k=FLYER_KINDS[kind]||FLYER_KINDS.landlord,s=srcClean(src)||'flyer';return `${location.origin}/?src=${s}#/go/${k.go}`}
 
@@ -152,7 +152,7 @@ function flyerCard(){return `<div class="card scout-card"><div class="tt">${ico(
 const GOLIST_KEY='loka.golist';
 function flyerLanding(){openSheet(`<div class="tt" style="font-size:22px">${t('List your room on Loka, free','在 Loka 免费发布房源')}</div>
  <div class="sub">${t('Brisbane rooms for students and locals, in English and 中文.','布里斯班房源，面向学生和本地人，中英文都可以。')}</div>
- <div class="card">${[['No fees or commission, ever.','永远不收费用或佣金。'],['Renters contact you directly. Loka never handles rent or bond.','租客直接联系你，Loka 不经手租金或押金。'],['Bond and rent in advance are checked against Queensland rules before it goes up.','发布前按昆州规定检查押金和预付租金。'],['Edit or take it down anytime.','随时修改或下架。']].map(r=>`<div class="rule">✓ ${t(r[0],r[1])}</div>`).join('')}</div>
+ <div class="card">${[['Free to list. No commission when someone moves in.','免费发布，有人入住也不收佣金。'],['Renters contact you directly. Loka never handles rent or bond.','租客直接联系你，Loka 不经手租金或押金。'],['Bond and rent in advance are checked against Queensland rules before it goes up.','发布前按昆州规定检查押金和预付租金。'],['Edit or take it down anytime.','随时修改或下架。']].map(r=>`<div class="rule">✓ ${t(r[0],r[1])}</div>`).join('')}</div>
  <button class="btn" data-a="golist">${flyerNeedsAuth()?t('Sign in with email to start','用邮箱登录后开始'):t('Start my listing','开始填写')}</button>
  <button class="btn ghost" data-a="tab" data-v="homes">${t('Just looking','先看看')}</button>`)}
 function flyerNeedsAuth(){return (typeof authReady==='function'&&authReady()||dbLive())&&!AUTHU}
@@ -162,7 +162,7 @@ function flyerAfterSignIn(){let f=null;try{f=sessionStorage.getItem(GOLIST_KEY);
 // ---------- Home: things that make a passer-by stop and look (25 Nov 2026) ----------
 // Ticker under the poster: the promises Loka actually keeps, scrolling like a shop sign. Decorative
 // (aria-hidden): every line is also said elsewhere on the page in full.
-const TICK=[['Free to list','免费发布'],['No agent fees','不收中介费'],['中文 OK','中文 OK'],['Bond checked: 4 weeks max','押金自动检查：最多 4 周'],['Renter rights on one page','租客权益一页看懂'],['Scam-safe tips','防骗提示'],['50c Translink fares','50 分公交'],['Sunnybank · Inner city · UQ side','布村 · 市中心 · UQ 一带']];
+const TICK=[['Free to list','免费发布'],['No agent fees','不收中介费'],['中文 OK','中文 OK'],['Bond checked: 4 weeks max','押金自动检查：最多 4 周'],['Renter rights on one page','租客权益一页看懂'],['Anti-scam tips','防骗提示'],['50c Translink fares','50 分公交'],['Sunnybank · Inner city · UQ side','布村 · 市中心 · UQ 一带']];
 function ticker(){const row=TICK.map(x=>`<span>${esc(t(x[0],x[1]))}</span><i>✦</i>`).join('');
  return `<div class="lticker" aria-hidden="true"><div class="tk-in">${row}${row}</div></div>`}
 // Bin Bin the ibis strolls along the skyline. Skipped when the phone asks for less motion.

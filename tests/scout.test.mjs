@@ -26,6 +26,9 @@ test('contact details are refused: phone, email, WeChat', () => {
   { ctx.o = { ...good, note }; assert.equal(run('scoutEncode(o)'), null, note); }
   ctx.o = { ...good, title: 'Room 0412345678' }; assert.equal(run('scoutEncode(o)'), null, 'phone in title');
 });
+test('web links are refused in a draft (no Loka-branded page pointing elsewhere)', () => {
+  for (const note of ['pay deposit at https://bit.ly/x', 'see www.fake-rent.com', 'details: rent-now.xyz']) { ctx.o = { ...good, note }; assert.equal(run('scoutEncode(o)'), null, note); }
+});
 test('ordinary notes are not mistaken for phone numbers', () => {
   for (const note of ['Available 1 12 2026', 'bond 4 weeks ($920), 5 min to bus 130', '2 rooms, 3 bathrooms, 10 mins to UQ', 'Rent $230 per week, bond $920']) { ctx.o = { ...good, note }; assert.notEqual(run('scoutEncode(o)'), null, note); }
   for (const note of ['(07) 3123 4567', '0412-345-678', '+61 412 345 678']) { ctx.o = { ...good, note }; assert.equal(run('scoutEncode(o)'), null, note); }
@@ -55,10 +58,10 @@ test('a waiting draft expires after 14 days and is removed once used', () => {
   store['loka.draft'] = JSON.stringify({ d: good, at: Date.now() - 15 * 864e5 }); assert.equal(run('scoutPending()'), null);
   run('scoutSave(scoutClean(o))'); run('scoutDone()'); assert.equal(run('scoutPending()'), null);
 });
-test('messages name the noticeboard, say it is free, and let the landlord say no', () => {
-  const m = run(`scoutMessages('https://lokabne.au/#/draft/abc','Sunnybank Plaza',true)`);
-  assert.match(m.zh, /Sunnybank Plaza/); assert.match(m.zh, /创办人/); assert.match(m.zh, /免费/); assert.match(m.zh, /忽略/);
-  assert.match(m.en, /I run Loka/); assert.match(m.en, /ignore/); assert.match(m.en, /lokabne\.au\/#\/draft\/abc$/);
+test('messages say who is writing, name the noticeboard, say it is free and give a way to opt out (Spam Act)', () => {
+  const m = run(`scoutMessages('https://lokabne.au/#/draft/abc','Sunnybank Plaza',true,'Toby')`);
+  assert.match(m.zh, /Sunnybank Plaza/); assert.match(m.zh, /我是 Toby/); assert.match(m.zh, /创办人/); assert.match(m.zh, /免费/); assert.match(m.zh, /不会再联系您/);
+  assert.match(m.en, /I'm Toby/); assert.match(m.en, /I run Loka/); assert.match(m.en, /reply STOP/); assert.match(m.en, /lokabne\.au\/#\/draft\/abc$/);
   assert.match(run(`scoutMessages('u','',false)`).en, /I use Loka/);
 });
 test('the landlord form fill never touches contact, role or declarations', () => {

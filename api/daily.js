@@ -14,7 +14,10 @@
 //   SUPABASE_SECRET_KEY  for the backup only (Supabase → Project Settings → API keys → secret key).
 //   RESEND_API_KEY       for the backup only (a separate "Sending access" key for lokabne.au).
 //   BACKUP_TO            for the backup only: the owner's inbox.
-// If the three backup settings are missing, the keep-alive still runs and the reply says the backup was skipped.
+//   BACKUP_KEY           for the backup only: a long passphrase (keep it in a password manager). The file is
+//                        encrypted with it (AES-256-GCM, key from scrypt) before it is emailed, because it holds
+//                        listing contacts. Without it the backup is NOT sent. Decrypt: node tools/decrypt-backup.mjs
+// If the backup settings are missing, the keep-alive still runs and the reply says the backup was skipped.
 //
 // Security rules for this file:
 //   • Nothing from the request is used except the Authorization header. No URL, table or address comes from
@@ -23,6 +26,13 @@
 'use strict';
 const zlib = require('node:zlib');
 const crypto = require('node:crypto');
+// File layout: 'LOKA1' | salt 16 | iv 12 | tag 16 | ciphertext (gzipped JSON). tools/decrypt-backup.mjs reverses it.
+function encrypt(buf, pass) {
+  const salt = crypto.randomBytes(16), iv = crypto.randomBytes(12);
+  const key = crypto.scryptSync(String(pass), salt, 32, { N: 1 << 15, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });
+  const c = crypto.createCipheriv('aes-256-gcm', key, iv), body = Buffer.concat([c.update(buf), c.final()]);
+  return Buffer.concat([Buffer.from('LOKA1'), salt, iv, c.getAuthTag(), body]);
+}
 const SUPA = 'https://ksnjvgfptqhtydcmmqwm.supabase.co';
 const PUBLISHABLE = 'sb_publishable_JIlgPYIVzeFqupY1WANZxw_J9gomZjO'; // public by design (also in js/config.js)
 const TABLES = ['profiles', 'homes', 'home_contacts', 'jobs', 'job_contacts', 'questions', 'answers', 'reports', 'wanted', 'wanted_contacts'];
@@ -65,7 +75,7 @@ async function dumpTables(fetchFn, key) {
 async function sendBackup(fetchFn, env, now) {
   const { out, counts } = await dumpTables(fetchFn, env.SUPABASE_SECRET_KEY);
   const day = bneDate(now);
-  const file = zlib.gzipSync(Buffer.from(JSON.stringify({ project: 'loka', taken_at: new Date(now).toISOString(), tables: out })));
+  const file = encrypt(zlib.gzipSync(Buffer.from(JSON.stringify({ project: 'loka', taken_at: new Date(now).toISOString(), tables: out }))), env.BACKUP_KEY);
   const lines = TABLES.map(t => `${t}: ${counts[t]}`).join('\n');
   const r = await fetchFn('https://api.resend.com/emails', {
     method: 'POST',
@@ -73,9 +83,9 @@ async function sendBackup(fetchFn, env, now) {
     body: JSON.stringify({
       from: FROM, to: [env.BACKUP_TO], subject: `Loka weekly backup ${day}`,
       text: `Loka weekly database backup, ${day} (Brisbane).\n\nRows per table:\n${lines}\n\n` +
-        `Keep this email private: the file holds users' emails and listing contacts.\n` +
-        `Restore steps: docs/BACKUP.md in the Loka repo.`,
-      attachments: [{ filename: `loka-backup-${day}.json.gz`, content: file.toString('base64') }],
+        `The attached file is encrypted with your BACKUP_KEY passphrase. It holds listings and their contact details.\n` +
+        `To open it: node tools/decrypt-backup.mjs <file> (it asks for the passphrase). Restore steps: docs/BACKUP.md.`,
+      attachments: [{ filename: `loka-backup-${day}.json.gz.enc`, content: file.toString('base64') }],
     }),
   });
   if (!r.ok) throw new Error('backup_email_http_' + r.status);
@@ -90,6 +100,7 @@ async function handler(req, res, deps = {}) {
   try { result.keepalive = await keepAlive(fetchFn); } catch (e) { result.ok = false; result.keepalive_error = String(e.message).slice(0, 80); }
   if (isBrisbaneMonday(now)) {
     if (!env.SUPABASE_SECRET_KEY || !env.RESEND_API_KEY || !env.BACKUP_TO) result.backup = 'skipped_missing_settings';
+    else if (!env.BACKUP_KEY || String(env.BACKUP_KEY).length < 16) { result.ok = false; result.backup = 'skipped_no_encryption_key'; }
     else {
       try { result.backup = 'sent'; result.rows = await sendBackup(fetchFn, env, now); }
       catch (e) { result.ok = false; result.backup = 'failed'; result.backup_error = String(e.message).slice(0, 80); }
@@ -101,4 +112,4 @@ async function handler(req, res, deps = {}) {
   res.end(JSON.stringify(result));
 }
 module.exports = handler;
-module.exports._test = { authorised, isBrisbaneMonday, TABLES };
+module.exports._test = { authorised, isBrisbaneMonday, TABLES, encrypt };

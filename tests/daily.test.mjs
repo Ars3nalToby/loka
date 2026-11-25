@@ -3,7 +3,7 @@ import { test } from 'node:test'; import assert from 'node:assert/strict'; impor
 const handler = createRequire(import.meta.url)('../api/daily.js');
 const SUN_UTC_1715 = Date.UTC(2026, 10, 22, 17, 15); // = Mon 23 Nov 03:15 Brisbane
 const TUE_UTC_1715 = Date.UTC(2026, 10, 23, 17, 15); // = Tue 24 Nov 03:15 Brisbane
-const env = { CRON_SECRET: 's3cret-for-test', SUPABASE_SECRET_KEY: 'sb_secret_TEST', RESEND_API_KEY: 're_TEST', BACKUP_TO: 'owner@example.com' };
+const env = { CRON_SECRET: 's3cret-for-test', SUPABASE_SECRET_KEY: 'sb_secret_TEST', RESEND_API_KEY: 're_TEST', BACKUP_TO: 'owner@example.com', BACKUP_KEY: 'correct horse battery staple' };
 function run({ auth = 'Bearer s3cret-for-test', e = env, now = TUE_UTC_1715, fail } = {}) {
   const calls = []; let status, body; const headers = {};
   const fetch = async (url, opt = {}) => { calls.push({ url, opt });
@@ -31,7 +31,12 @@ test('on a Brisbane Monday it emails a gzipped backup of every table to BACKUP_T
   assert.equal(r.body.backup, 'sent'); assert.equal(r.body.rows.homes, 1);
   const mail = r.calls.find(c => c.url === 'https://api.resend.com/emails'); const m = JSON.parse(mail.opt.body);
   assert.deepEqual(m.to, ['owner@example.com']); assert.match(m.from, /no-reply@lokabne\.au/);
-  const data = JSON.parse(zlib.gunzipSync(Buffer.from(m.attachments[0].content, 'base64')));
+  const enc = Buffer.from(m.attachments[0].content, 'base64');
+  assert.equal(enc.subarray(0, 5).toString(), 'LOKA1'); assert.match(m.attachments[0].filename, /\.json\.gz\.enc$/);
+  assert.throws(() => zlib.gunzipSync(enc), 'the email attachment must not be readable without the passphrase');
+  const { decryptBackup } = await import('../tools/decrypt-backup.mjs');
+  const data = JSON.parse(zlib.gunzipSync(decryptBackup(enc, env.BACKUP_KEY)));
+  assert.throws(() => decryptBackup(enc, 'wrong passphrase'));
   assert.equal(data.tables.homes[0].title, 'Room'); assert.equal(Object.keys(data.tables).length, 10);
   assert.ok(r.calls.filter(c => c.url.includes('/rest/v1/') && !c.url.includes('suburbs')).every(c => c.opt.headers.apikey === 'sb_secret_TEST'));
 });
@@ -42,6 +47,12 @@ test('the reply never contains secrets or table contents', async () => {
 test('missing backup settings: keep-alive still runs, backup skipped', async () => {
   const r = await run({ now: SUN_UTC_1715, e: { CRON_SECRET: env.CRON_SECRET } });
   assert.equal(r.status, 200); assert.equal(r.body.keepalive, true); assert.equal(r.body.backup, 'skipped_missing_settings');
+});
+test('no BACKUP_KEY: the backup is not sent in the clear, and the run is marked failed', async () => {
+  const { BACKUP_KEY, ...e } = env;
+  const r = await run({ now: SUN_UTC_1715, e });
+  assert.equal(r.status, 500); assert.equal(r.body.backup, 'skipped_no_encryption_key');
+  assert.ok(!r.calls.some(c => c.url === 'https://api.resend.com/emails'));
 });
 test('a failed backup is reported as a failure (500), not silently ignored', async () => {
   const r = await run({ now: SUN_UTC_1715, fail: 'api.resend.com' });
