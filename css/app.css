@@ -835,3 +835,14 @@ button,[data-a]{-webkit-tap-highlight-color:transparent;touch-action:manipulatio
 
 /* Wanted 求租 bar (js/wanted.js): the dark .match card in Loka green */
 .match.wb{background:#1F6F5C;color:#F4F0E7;margin-top:10px}.match.wb em{background:#F4F0E7;color:#1F6F5C}
+/* ───────── Noticeboard flyer (25 Nov 2026, js/flyer.js) ───────── */
+.story-prev.flyer-prev{width:100%;max-width:340px;aspect-ratio:auto;display:block;background:none;box-shadow:none;border-radius:0;overflow:visible;min-height:120px}
+.story-prev.flyer-prev .sp-load{padding:40px 0;text-align:center}
+.story-prev.flyer-prev img{width:100%;height:auto;aspect-ratio:1240/1754;border-radius:10px;box-shadow:0 6px 24px rgba(25,21,18,.14)}
+.flyer-prev .meta{margin-top:8px;word-break:break-all;text-align:center}
+#printf{display:none}
+@media print{@page{size:A4 portrait;margin:0}
+ html.printing body>*:not(#printf){display:none!important}
+ html.printing #printf{display:block!important;width:210mm;height:297mm;overflow:hidden}
+ html.printing #printf img{display:block;width:210mm;height:297mm;object-fit:contain}
+ html.printing,html.printing body{background:#fff!important;margin:0!important;padding:0!important}}

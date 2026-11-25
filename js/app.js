@@ -79,7 +79,7 @@ function render(){
  if(tab==='earn'){const mx=Math.max(...S.scouts.map(x=>x.earned));
   h+=back+`<h1>${t('Seen a room or a job? <em>Share it.</em>','看到空房或招工？<em>发出来。</em>')}</h1><div class="sub">${t('Scouts post real rooms and jobs they have seen and help verify listings. Scouts earn points and a badge. Loka pays no cash per move-in or hire.','探房员发布亲眼见到的房源和工作，并协助核实。探房员获得积分和徽章；Loka 不按入住或入职发放现金。')}</div>
   <div class="card">${[['1','Spot a job or room','看到招工或空房','A shop hiring, a room free, anywhere in Brisbane.','店里招人、有房出租，布里斯班任何地方。'],['2','Invite the landlord','邀请房东','Type the room details (never their contact). Send them the link: they check it and post it themselves.','填写房间资料（不填对方联系方式），把链接发给房东，由房东自己核对并发布。'],['3','Earn points','攒积分','Points for each lead that checks out.','线索核实通过即得积分。']].map(x=>`<div class="step"><b>${x[0]}</b><div><div class="tt">${t(x[1],x[2])}</div><div class="meta">${t(x[3],x[4])}</div></div></div>`).join('')}
-  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="scoutnew">${t('Invite a landlord','邀请房东')}</button></div></div>
+  <div class="cta"><button class="btn" data-a="newjob">${t('Post a job lead','发工作线索')}</button><button class="btn ghost" data-a="scoutnew">${t('Invite a landlord','邀请房东')}</button></div><div class="cta"><button class="btn ghost" data-a="flyer" data-v="landlord">${t('Print a noticeboard flyer','打印公告栏传单')}</button></div></div>
   <div class="sec">${t('Scout leaderboard','信息员排行榜')}</div><div class="card">${S.scouts.map((x,i)=>`<div class="lb"><span class="rk">${i+1}</span><span style="width:64px;font-weight:600">${esc(x.n)}</span><span class="tr"><i style="width:${x.earned/mx*100}%"></i></span><span class="price" style="font-size:17px">${x.earned}<small> ${t('pts','分')}</small></span></div>`).join('')}</div>
   <div class="note">${t('Sample leaderboard. Points only: in Queensland, being paid for letting someone else’s property can require a real estate licence.','示例排行榜。只计积分：在昆州，替他人出租房屋并收取报酬可能需要房产中介牌照。')}</div>`;
  }
@@ -92,7 +92,7 @@ function render(){
  if(tab==='guides')h+=back+guidesHtml();
  if(tab==='check')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+checkHtml();
  if(tab==='privacy')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+privacyHtml();
- if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+((!DB.on||DB.admin)?adminHtml().replace('</h1>','</h1>'+scoutCard()):adminHtml());
+ if(tab==='admin')h+=`<button class="back" data-a="tab" data-v="me">← ${t('Me','我的')}</button>`+((!DB.on||DB.admin)?adminHtml().replace('</h1>','</h1>'+scoutCard()+flyerCard()):adminHtml());
  if(tab==='guide'){
   h+=back+`<h1>${t('Your first 30 days.','落地 30 天。')}</h1><div class="sub">${S.done.length}/${GUIDE.length} ${t('done','已完成')}</div><div class="bar"><i style="width:${S.done.length/GUIDE.length*100}%"></i></div>`;
   h+=GUIDE.map(g=>`<button class="chk ${S.done.includes(g[0])?'on':''}" data-a="done" data-v="${g[0]}"><span class="bx">${S.done.includes(g[0])?'✓':''}</span><span class="tx">${t(g[1],g[2])}</span></button>`).join('');
@@ -215,6 +215,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  if(a==='wdown'){const w=(S.wanted||[]).find(x=>x.id===v);if(!w)return;if(!w.db){S.wanted=S.wanted.filter(x=>x.id!==v);save();closeSheet();render();return}if(confirm(t('Take your post down?','下架你的求租？')))dbWanted(v,{status:'removed'},t('Taken down. Good luck in the new place!','已下架，祝新家住得开心！'))}
  if(a==='wrenew')dbWanted(v,{expires_at:new Date().toISOString()},t('Renewed. It shows again once an admin checks it.','已续期，管理员审核后重新显示。'));
  if(a==='scoutnew')scoutForm();
+ if(a==='flyer')flyerSheet(v);
+ if(a==='flyerkind'){flyerKind=v;document.querySelectorAll('[data-a="flyerkind"]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));flyerDraw()}
+ if(a==='flyerdraw')flyerDraw();
+ if(a==='golist')goList();
+ if(a==='flyersave')flyerSave();
+ if(a==='flyerprint')flyerPrint();
  if(a==='scoutmake')scoutMake();
  if(a==='scoutcopy'){if(SCOUT_LAST)copy(SCOUT_LAST[v==='en'?'en':'zh'],t('Copied. Send it to the landlord yourself.','已复制，请自己发给房东。'))}
  if(a==='scoutgo')scoutGo();

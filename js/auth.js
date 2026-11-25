@@ -49,9 +49,9 @@ async function authAct(a){if(!authReady()||authBusy)return;
  authBusy=true;try{
   if(a==='au_google'){if(!need18())return;const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)throw error}
   if(a==='au_email'){if(!need18())return;const v=(document.getElementById('au_email').value||'').trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))return toast(t('Check the email address','请检查邮箱地址'));
-   const {error}=await sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true,emailRedirectTo:location.origin+'/'}});if(error)throw error;otpTo={kind:'email',v};authSheet('code')}
+   const {error}=await sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true,emailRedirectTo:location.origin+'/',data:(typeof srcData==='function'?srcData():undefined)}});if(error)throw error;otpTo={kind:'email',v};authSheet('code')}
   if(a==='au_phone'){if(!need18())return;const p=auMobile(document.getElementById('au_phone').value);if(!p)return toast(t('Enter an Australian mobile, e.g. 0412 345 678','请输入澳洲手机号，例如 0412 345 678'));
-   const {error}=await sb.auth.signInWithOtp({phone:p});if(error)throw error;otpTo={kind:'phone',v:p};authSheet('code')}
+   const {error}=await sb.auth.signInWithOtp({phone:p,options:{data:(typeof srcData==='function'?srcData():undefined)}});if(error)throw error;otpTo={kind:'phone',v:p};authSheet('code')}
   if(a==='au_verify'){const code=(document.getElementById('au_code').value||'').replace(/\D/g,'');if(code.length<6||code.length>10)return toast(t('Type all the digits of the code','请输入完整的验证码'));
    const q=otpTo.kind==='phone'?{phone:otpTo.v,token:code,type:'sms'}:{email:otpTo.v,token:code,type:'email'};const {error}=await sb.auth.verifyOtp(q);if(error)throw error;closeSheet()}
   if(a==='au_out'){await sb.auth.signOut();closeSheet();toast(t('Signed out','已退出'))}
@@ -61,7 +61,7 @@ async function authAct(a){if(!authReady()||authBusy)return;
   if(a==='mfa_off'){const f=document.querySelector('[data-a="mfa_off"]').dataset.v;const {error}=await sb.auth.mfa.unenroll({factorId:f});if(error)throw error;accountSheet();toast(t('Two-step verification removed','已关闭两步验证'))}
   if(a==='mfa_check'){const code=(document.getElementById('mfa_code').value||'').replace(/\D/g,'');const f=document.querySelector('[data-a="mfa_check"]').dataset.v;const {error}=await sb.auth.mfa.challengeAndVerify({factorId:f,code});if(error)throw error;closeSheet();render()}
  }catch(e){toast(t('That did not work: ','未成功：')+(e&&e.message?e.message:''))}finally{authBusy=false}}
-function afterSignIn(){needMfa();if(typeof scoutAfterSignIn==='function')scoutAfterSignIn()}
+function afterSignIn(){needMfa();if(typeof scoutAfterSignIn==='function')scoutAfterSignIn();if(typeof flyerAfterSignIn==='function')flyerAfterSignIn()}
 // If the account has an authenticator app, ask for its code before treating the session as fully signed in.
 async function needMfa(){if(!sb)return false;const {data}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
  if(data&&data.currentLevel==='aal1'&&data.nextLevel==='aal2'){const {data:f}=await sb.auth.mfa.listFactors();const v=(f&&f.totp||[]).find(x=>x.status==='verified');

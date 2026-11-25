@@ -87,7 +87,8 @@ async function shareInstagram(id){const x=S.homes.find(h=>h.id===id);if(!x||!sha
 // ---------- Shared links: #/room/<id> opens that room ----------
 // Home-screen shortcuts open #/go/<tab>. Only tabs in this list are allowed.
 const GO_TABS=['wanted','homes','jobs','today','landed','play','rights','guides'];
-function openFromHash(){if(typeof openDraftFromHash==='function'&&openDraftFromHash())return;const g=location.hash.match(/^#\/go\/([a-z]+)$/);if(g&&GO_TABS.includes(g[1])){tab=g[1];render();scrollTo(0,0);history.replaceState(null,'',location.pathname+location.search);return}
+function openFromHash(){if(typeof openDraftFromHash==='function'&&openDraftFromHash())return;if(location.hash==='#/go/list'){tab='homes';render();scrollTo(0,0);history.replaceState(null,'',location.pathname+location.search);flyerLanding();return}
+ const g=location.hash.match(/^#\/go\/([a-z]+)$/);if(g&&GO_TABS.includes(g[1])){tab=g[1];render();scrollTo(0,0);history.replaceState(null,'',location.pathname+location.search);return}
  const m=location.hash.match(/^#\/room\/([\w-]+)/);if(!m)return;const id=m[1];
  if(S.homes.some(h=>h.id===id)){tab='homes';render();homeDetail(id)}
  else{tab='homes';render();toast(t('That room is not on Loka yet, or it was taken down.','这间房还没上 Loka，或已下架。'))}
