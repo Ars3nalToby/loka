@@ -63,6 +63,7 @@ function aboutHtml(){const r=(b,en,zh)=>`<div class="rule"><b>${b}</b> · ${t(en
  <div class="sec">${t('Your information','你的信息')}</div>
  ${r('ID','When Loka verifies a lister we look at ID and keep no copy. Renters can also show ID without handing over a copy.','Loka 核实发布人时只查看证件、不留存。租客也可以只出示证件，不交复印件。')}
  ${r(t('This demo','演示版'),'What you type stays on this phone.','你输入的内容只保存在这台手机上。')}
+ ${BRAND.contact?`<div class="sec">${t('Contact','联系我们')}</div><div class="rule">${t('Questions, privacy requests or a problem with a listing:','有问题、隐私请求或房源问题：')} <a href="mailto:${esc(BRAND.contact)}">${esc(BRAND.contact)}</a></div>`:''}
  <div class="note">${t('General information, not legal advice. For your own situation check the Residential Tenancies Authority.','以上为一般信息，不构成法律建议。具体情况请查阅昆州 RTA。')} <a href="https://www.rta.qld.gov.au/">rta.qld.gov.au</a></div>`}
 
 function detail(id){const q=S.squads.find(x=>x.id===id);if(!q)return;const isHost=S.me&&q.host===S.me,me=inSquad(q),w=inWait(q),l=left(q);
